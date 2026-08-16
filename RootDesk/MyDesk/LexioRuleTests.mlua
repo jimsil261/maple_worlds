@@ -1,0 +1,154 @@
+@Logic
+script LexioRuleTests extends Logic
+
+	property integer passedCount = 0
+
+	property integer failedCount = 0
+
+	method any T(integer rank, integer suit)
+		        -- Builds one test tile.
+		        return { rank = rank, suit = suit }
+	end
+
+	method void AssertTrue(boolean value, string name)
+		        -- Records one boolean assertion and logs a positive or negative result.
+		        if value then
+		            self.passedCount = self.passedCount + 1
+		            log("[LexioRuleTests][PASS] " .. name)
+		        else
+		            self.failedCount = self.failedCount + 1
+		            log_error("[LexioRuleTests][FAIL] " .. name)
+		        end
+	end
+
+	method void AssertEqual(any expected, any actual, string name)
+		        -- Records one equality assertion.
+		        self:AssertTrue(expected == actual, name .. " expected=" .. tostring(expected) .. " actual=" .. tostring(actual))
+	end
+
+	@ExecSpace("ServerOnly")
+	method void OnBeginPlay()
+		        -- Runs the complete local rule regression suite and emits positive runtime evidence.
+		        self.passedCount = 0
+		        self.failedCount = 0
+		        log("[LexioRuleTests] BEGIN")
+		        self:RunTileOrderTests()
+		        self:RunCombinationTests()
+		        self:RunComparisonTests()
+		        self:RunTrickTests()
+		        self:RunScoreTests()
+		        log("[LexioRuleTests] COMPLETE passed=" .. tostring(self.passedCount) .. " failed=" .. tostring(self.failedCount))
+		        if self.failedCount > 0 then log_error("[LexioRuleTests] SUITE FAILED") else log("[LexioRuleTests] SUITE PASSED") end
+	end
+
+	method void RunTileOrderTests()
+		        -- Verifies player-count ranges, number order, and suit order.
+		        self:AssertEqual(9, _LexioRules:GetMaxRank(3), "three_player_max")
+		        self:AssertEqual(13, _LexioRules:GetMaxRank(4), "four_player_max")
+		        self:AssertEqual(15, _LexioRules:GetMaxRank(5), "five_player_max")
+		        self:AssertTrue(_LexioRules:GetRankStrength(3, 5) < _LexioRules:GetRankStrength(15, 5), "three_below_fifteen")
+		        self:AssertTrue(_LexioRules:GetRankStrength(15, 5) < _LexioRules:GetRankStrength(1, 5), "fifteen_below_one")
+		        self:AssertTrue(_LexioRules:GetRankStrength(1, 5) < _LexioRules:GetRankStrength(2, 5), "one_below_two")
+		        local cloudTwo = _LexioRules:ClassifyPlay({ self:T(2, 1) }, 5)
+		        local sunTwo = _LexioRules:ClassifyPlay({ self:T(2, 4) }, 5)
+		        self:AssertTrue(_LexioRules:ComparePlays(sunTwo, cloudTwo) > 0, "sun_above_cloud")
+		        self:AssertTrue(not _LexioRules:IsTileValid(self:T(15, 1), 4), "rank_outside_four_player_set")
+	end
+
+	method void RunCombinationTests()
+		        -- Verifies every official combination and key invalid cases.
+		        self:AssertEqual("single", _LexioRules:ClassifyPlay({ self:T(3, 1) }, 5).kind, "single")
+		        self:AssertEqual("pair", _LexioRules:ClassifyPlay({ self:T(4, 1), self:T(4, 2) }, 5).kind, "pair")
+		        self:AssertEqual("triple", _LexioRules:ClassifyPlay({ self:T(5, 1), self:T(5, 2), self:T(5, 3) }, 5).kind, "triple")
+		        self:AssertEqual("straight", _LexioRules:ClassifyPlay({ self:T(3, 1), self:T(4, 2), self:T(5, 3), self:T(6, 4), self:T(7, 1) }, 5).kind, "straight")
+		        self:AssertEqual("flush", _LexioRules:ClassifyPlay({ self:T(3, 1), self:T(6, 1), self:T(9, 1), self:T(12, 1), self:T(15, 1) }, 5).kind, "flush")
+		        self:AssertEqual("full_house", _LexioRules:ClassifyPlay({ self:T(8, 1), self:T(8, 2), self:T(8, 3), self:T(3, 1), self:T(3, 2) }, 5).kind, "full_house")
+		        self:AssertEqual("four_kind", _LexioRules:ClassifyPlay({ self:T(15, 1), self:T(15, 2), self:T(15, 3), self:T(15, 4), self:T(10, 1) }, 5).kind, "four_kind")
+		        self:AssertEqual("straight_flush", _LexioRules:ClassifyPlay({ self:T(5, 4), self:T(6, 4), self:T(7, 4), self:T(8, 4), self:T(9, 4) }, 5).kind, "straight_flush")
+		        self:AssertEqual("straight", _LexioRules:ClassifyPlay({ self:T(12, 1), self:T(13, 2), self:T(14, 3), self:T(15, 4), self:T(1, 1) }, 5).kind, "one_after_fifteen")
+		        self:AssertEqual("straight", _LexioRules:ClassifyPlay({ self:T(6, 1), self:T(7, 2), self:T(8, 3), self:T(9, 4), self:T(1, 1) }, 3).kind, "three_player_one_special_straight")
+		        self:AssertEqual("straight", _LexioRules:ClassifyPlay({ self:T(10, 1), self:T(11, 2), self:T(12, 3), self:T(13, 4), self:T(1, 1) }, 4).kind, "four_player_one_special_straight")
+		        self:AssertTrue(not _LexioRules:ClassifyPlay({ self:T(1, 1), self:T(2, 2), self:T(3, 3), self:T(4, 4) }, 5).valid, "four_tiles_forbidden")
+		        self:AssertTrue(not _LexioRules:ClassifyPlay({ self:T(12, 1), self:T(13, 2), self:T(14, 3), self:T(15, 4), self:T(2, 1) }, 5).valid, "two_cannot_skip_one")
+		        self:AssertTrue(not _LexioRules:ClassifyPlay({ self:T(15, 1), self:T(1, 2), self:T(2, 3), self:T(3, 4), self:T(4, 1) }, 5).valid, "five_player_modulo_straight_rejected")
+		        self:AssertTrue(not _LexioRules:ClassifyPlay({ self:T(9, 1), self:T(1, 2), self:T(2, 3), self:T(3, 4), self:T(4, 1) }, 3).valid, "three_player_modulo_straight_rejected")
+		        self:AssertTrue(not _LexioRules:ClassifyPlay({ self:T(13, 1), self:T(1, 2), self:T(2, 3), self:T(3, 4), self:T(4, 1) }, 4).valid, "four_player_modulo_straight_rejected")
+		        self:AssertTrue(not _LexioRules:ClassifyPlay({ self:T(4, 1), self:T(4, 1) }, 5).valid, "duplicate_physical_tile")
+	end
+
+	method void RunComparisonTests()
+		        -- Verifies same-count comparison and the official five-card hierarchy.
+		        local pair4 = _LexioRules:ClassifyPlay({ self:T(4, 1), self:T(4, 2) }, 5)
+		        local pair11 = _LexioRules:ClassifyPlay({ self:T(11, 1), self:T(11, 2) }, 5)
+		        self:AssertTrue(_LexioRules:ComparePlays(pair11, pair4) > 0, "higher_pair_wins")
+		        local straight = _LexioRules:ClassifyPlay({ self:T(3, 1), self:T(4, 2), self:T(5, 3), self:T(6, 4), self:T(7, 1) }, 5)
+		        local flush = _LexioRules:ClassifyPlay({ self:T(3, 1), self:T(6, 1), self:T(9, 1), self:T(12, 1), self:T(15, 1) }, 5)
+		        local fullHouse = _LexioRules:ClassifyPlay({ self:T(8, 1), self:T(8, 2), self:T(8, 3), self:T(3, 1), self:T(3, 2) }, 5)
+		        local fourKind = _LexioRules:ClassifyPlay({ self:T(15, 1), self:T(15, 2), self:T(15, 3), self:T(15, 4), self:T(10, 1) }, 5)
+		        local straightFlush = _LexioRules:ClassifyPlay({ self:T(5, 4), self:T(6, 4), self:T(7, 4), self:T(8, 4), self:T(9, 4) }, 5)
+		        self:AssertTrue(_LexioRules:ComparePlays(flush, straight) > 0, "flush_above_straight")
+		        self:AssertTrue(_LexioRules:ComparePlays(fullHouse, flush) > 0, "full_house_above_flush")
+		        self:AssertTrue(_LexioRules:ComparePlays(fourKind, fullHouse) > 0, "four_kind_above_full_house")
+		        self:AssertTrue(_LexioRules:ComparePlays(straightFlush, fourKind) > 0, "straight_flush_above_four_kind")
+		        local strongest = _LexioRules:ClassifyPlay({ self:T(1, 1), self:T(2, 2), self:T(3, 3), self:T(4, 4), self:T(5, 1) }, 5)
+		        local nextStrongest = _LexioRules:ClassifyPlay({ self:T(2, 1), self:T(3, 2), self:T(4, 3), self:T(5, 4), self:T(6, 1) }, 5)
+		        self:AssertTrue(_LexioRules:ComparePlays(strongest, nextStrongest) > 0, "official_strongest_straight")
+	end
+
+	method void RunTrickTests()
+		        -- Verifies opening ownership, pass lockout, and pass reset on a legal new lead.
+		        local hands = {
+		            { self:T(4, 1), self:T(5, 1) },
+		            { self:T(3, 1), self:T(7, 2) },
+		            { self:T(8, 3), self:T(9, 4) }
+		        }
+		        self:AssertEqual(2, _LexioRules:FindInitialLeader(hands), "cloud_three_owner_is_initial_leader")
+		        self:AssertTrue(_LexioRules:CanSubmit({ self:T(7, 2) }, 5, nil, false), "initial_leader_may_open_without_cloud_three")
+		        local state = _LexioRules:CreateTrickState(1, 5)
+		        state.winningPlayerIndex = 2
+		        state.currentPlay = _LexioRules:ClassifyPlay({ self:T(4, 1) }, 5)
+		        self:AssertTrue(_LexioRules:MarkPass(state, 3), "mark_pass")
+		        self:AssertTrue(not _LexioRules:CanSubmit({ self:T(5, 1) }, 5, state.currentPlay, state.passed[3]), "passed_player_cannot_rejoin")
+		        self:AssertTrue(_LexioRules:StartNewTrick(state, 2, { self:T(6, 1) }, 5), "winner_starts_new_trick")
+		        self:AssertTrue(not state.passed[3], "new_trick_resets_pass")
+		        self:AssertTrue(not _LexioRules:StartNewTrick(state, 4, { self:T(7, 1) }, 5), "non_winner_cannot_start_new_trick")
+	end
+
+	method void RunScoreTests()
+		        -- Verifies both manual examples, two multipliers, signed ledger behavior, and zero-sum protection.
+		        local example1 = _LexioRules:CalculateScoreDeltas({
+		            { remaining = 0 }, { remaining = 1 }, { remaining = 4 }, { remaining = 5 }, { remaining = 8 }
+		        })
+		        local expected1 = { 18, 13, -2, -7, -22 }
+		        local example1Matches = true
+		        local example1Sum = 0
+		        for index = 1, 5 do
+		            if expected1[index] ~= example1[index] then example1Matches = false end
+		            example1Sum = example1Sum + example1[index]
+		        end
+		        self:AssertTrue(example1Matches, "manual_score_example1")
+		        local example2 = _LexioRules:CalculateScoreDeltas({
+		            { remaining = 0 }, { remaining = 1 }, { remaining = 3 }, { remaining = 7 }, { remaining = 8 }
+		        })
+		        local expected2 = { 19, 14, 4, -16, -21 }
+		        local example2Matches = true
+		        local example2Sum = 0
+		        for index = 1, 5 do
+		            if expected2[index] ~= example2[index] then example2Matches = false end
+		            example2Sum = example2Sum + example2[index]
+		        end
+		        self:AssertTrue(example2Matches, "manual_score_example2")
+		        self:AssertEqual(0, example1Sum + example2Sum, "manual_examples_are_zero_sum")
+		        self:AssertEqual(10, _LexioRules:GetEffectiveRemaining(5, 1), "one_two_doubles")
+		        self:AssertEqual(20, _LexioRules:GetEffectiveRemaining(5, 2), "two_twos_quadruple")
+		        self:AssertEqual(40, _LexioRules:GetEffectiveRemaining(5, 3), "three_twos_octuple")
+		        local ledger = _LexioRules:CreateScoreLedger(3)
+		        self:AssertEqual(64, ledger[1], "ledger_starts_at_64")
+		        self:AssertTrue(_LexioRules:ApplyScoreDeltas(ledger, { 100, -50, -50 }), "apply_signed_zero_sum_delta")
+		        self:AssertEqual(14, ledger[2], "ledger_signed_subtraction")
+		        self:AssertTrue(_LexioRules:ApplyScoreDeltas(ledger, { 0, -100, 100 }), "negative_score_allowed")
+		        self:AssertEqual(-86, ledger[2], "ledger_can_be_negative")
+		        self:AssertTrue(not _LexioRules:ApplyScoreDeltas(ledger, { 1, 0, 0 }), "reject_non_zero_sum_delta")
+	end
+
+end

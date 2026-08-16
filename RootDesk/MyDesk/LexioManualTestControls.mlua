@@ -1,0 +1,337 @@
+@Component
+script LexioManualTestControls extends Component
+
+	property integer requestSequence = 0
+
+	property string boundTestUserId = ""
+
+	property boolean targetTravelDispatched = false
+
+	property table isolatedFinishTiles = {}
+
+	property integer preparedFinishVersion = -1
+
+	@ExecSpace("ClientOnly")
+	method void OnBeginPlay()
+		        self._T.IsSeated = false
+		        self._T.SeatChairName = ""
+	end
+
+	@ExecSpace("ClientOnly")
+	method boolean IsSeated()
+		        return self._T.IsSeated == true
+	end
+
+	@ExecSpace("Client")
+	method void ForceStandForLobby()
+		        self._T.IsSeated = false
+		        self._T.SeatChairName = ""
+		        local controller = self.Entity.PlayerControllerComponent
+		        if controller ~= nil then controller.Enable = true end
+		        local state = self.Entity.StateComponent
+		        if state ~= nil then state:ChangeState("IDLE") end
+		        log("[LexioSeat] FORCE STAND reason=lobby_return")
+	end
+
+	@ExecSpace("ClientOnly")
+	method void OnMapLeave(Entity leftMap)
+		        if leftMap == nil or leftMap.Name ~= "map01" then return end
+		        self:RequestReleaseSeat("map_leave")
+		        self:ForceStandForLobby()
+	end
+
+	@ExecSpace("ClientOnly")
+	method void ToggleSeat()
+		        if self.Entity.CurrentMapName ~= "map01" then return end
+		        if self:IsSeated() then
+		            self:RequestReleaseSeat("key_x")
+		            return
+		        end
+		
+		        local nearestChair = nil
+		        local nearestTableId = ""
+		        local nearestSeatIndex = 0
+		        local nearestDistance = 999
+		        local playerPosition = self.Entity.TransformComponent.WorldPosition
+		        for tableIndex = 1, 3 do
+		            local tableNumber = "0" .. tostring(tableIndex)
+		            for seatIndex = 1, 3 do
+		                local chair = _EntityService:GetEntityByPath("/maps/map01/LexioTable" .. tableNumber .. "Chair" .. tostring(seatIndex))
+		                if chair ~= nil and isvalid(chair) then
+		                    local chairPosition = chair.TransformComponent.WorldPosition
+		                    local distance = Vector2.Distance(Vector2(playerPosition.x, playerPosition.y), Vector2(chairPosition.x, chairPosition.y))
+		                    if distance < nearestDistance then
+		                        nearestChair = chair
+		                        nearestTableId = "table" .. tableNumber
+		                        nearestSeatIndex = seatIndex
+		                        nearestDistance = distance
+		                    end
+		                end
+		            end
+		        end
+		        if nearestChair == nil or nearestDistance > 1.2 then
+		            log("[LexioSeat] REJECT reason=too_far distance=" .. tostring(nearestDistance))
+		            return
+		        end
+		        self:RequestSeatState(nearestTableId, nearestSeatIndex, nearestChair.Name)
+	end
+
+	@ExecSpace("Server")
+	method void RequestSeatState(string tableId, integer seatIndex, string chairName)
+		        if self.Entity.PlayerComponent == nil or self.Entity.PlayerComponent.UserId ~= senderUserId then return end
+		        if self.Entity.CurrentMapName ~= "map01" then return end
+		        local host = self.Entity.CurrentMap:GetChildByName("LexioManualSessionHost")
+		        local registry = host ~= nil and host:GetComponent("script.LexioTableRegistry") or nil
+		        if registry == nil then self:ApplySeatStateResult(false, false, "") return end
+		        local accepted = registry:TryReserveSeat(senderUserId, self.Entity, tableId, seatIndex, chairName)
+		        self:ApplySeatStateResult(accepted, accepted, accepted and chairName or "")
+	end
+
+	@ExecSpace("Server")
+	method void RequestReleaseSeat(string reason)
+		        if self.Entity.PlayerComponent == nil or self.Entity.PlayerComponent.UserId ~= senderUserId then return end
+		        local host = _EntityService:GetEntityByPath("/maps/map01/LexioManualSessionHost")
+		        local registry = host ~= nil and host:GetComponent("script.LexioTableRegistry") or nil
+		        if registry ~= nil then registry:ReleasePlayer(senderUserId, reason) end
+		        self:ApplySeatStateResult(true, false, "")
+	end
+
+	@ExecSpace("Client")
+	method void ApplySeatStateResult(boolean accepted, boolean seated, string chairName)
+		        if not accepted then
+		            log("[LexioSeat] REJECT reason=server_validation")
+		            return
+		        end
+		        local controller = self.Entity.PlayerControllerComponent
+		        local state = self.Entity.StateComponent
+		        self._T.IsSeated = seated
+		        self._T.SeatChairName = seated and chairName or ""
+		        if seated then
+		            local chair = _EntityService:GetEntityByPath("/maps/map01/" .. chairName)
+		            if chair == nil then return end
+		            local chairPosition = chair.TransformComponent.WorldPosition
+		            if controller ~= nil then controller.Enable = false end
+		            local body = self.Entity.KinematicbodyComponent
+		            if body ~= nil then body:SetWorldPosition(Vector2(chairPosition.x, chairPosition.y + 0.15)) end
+		            if state ~= nil then state:ChangeState("SIT") end
+		            log("[LexioSeat] SIT chair=" .. chairName .. " key=X")
+		        else
+		            if controller ~= nil then controller.Enable = true end
+		            if state ~= nil then state:ChangeState("IDLE") end
+		            log("[LexioSeat] STAND")
+		        end
+	end
+
+	@ExecSpace("ServerOnly")
+	method void BindTestUser(string userId)
+		        if self.Entity.PlayerComponent == nil or self.Entity.PlayerComponent.UserId ~= userId then return end
+		        self.boundTestUserId = userId
+	end
+
+	@ExecSpace("ServerOnly")
+	method boolean DispatchTargetTravel(string requestedUserId)
+		        if requestedUserId == nil or requestedUserId == "" or #requestedUserId > 32 then return false end
+		        if self.targetTravelDispatched then return false end
+		        local lobby = _EntityService:GetEntityByPath("/maps/TileMapTemplate")
+		        local entrance = _EntityService:GetEntityByPath("/maps/TileMapTemplate/LexioEntrance")
+		        local targetPlayer = _UserService:GetUserEntityByUserId(requestedUserId)
+		        if lobby == nil or entrance == nil or targetPlayer == nil or not isvalid(targetPlayer) then return false end
+		        if targetPlayer.PlayerComponent == nil or targetPlayer.PlayerComponent.UserId ~= requestedUserId then return false end
+		        if targetPlayer.CurrentMap ~= lobby or targetPlayer.CurrentMapName ~= "TileMapTemplate" then return false end
+		        local targetControls = targetPlayer:GetComponent("script.LexioManualTestControls")
+		        local travelBridge = targetPlayer:GetComponent("script.LexioTravelBridge")
+		        if targetControls == nil or targetControls.boundTestUserId ~= requestedUserId or travelBridge == nil then return false end
+		        if travelBridge.inFlight or travelBridge.cooldownRemaining > 0 then return false end
+		        local entrancePosition = entrance.TransformComponent.WorldPosition
+		        targetPlayer.TransformComponent.WorldPosition = Vector3(entrancePosition.x, entrancePosition.y, entrancePosition.z)
+		        self.targetTravelDispatched = true
+		        targetControls:ExecuteTargetTravel(requestedUserId)
+		        log("[LexioManualTarget] TRAVEL DISPATCH userId=" .. requestedUserId)
+		        return true
+	end
+
+	@ExecSpace("Client")
+	method void ExecuteTargetTravel()
+		        local player = _UserService.LocalPlayer
+		        if player == nil or player ~= self.Entity or player.PlayerComponent == nil then return end
+		        if player.PlayerComponent.UserId ~= self.boundTestUserId then return end
+		        local bridge = player:GetComponent("script.LexioTravelBridge")
+		        local entrance = _EntityService:GetEntityByPath("/maps/TileMapTemplate/LexioEntrance")
+		        if bridge == nil or entrance == nil or player.CurrentMapName ~= "TileMapTemplate" then return end
+		        log("[LexioManualTarget] TRAVEL CLIENT userId=" .. self.boundTestUserId)
+		        bridge:RequestTravel("LexioEntrance", "LEXIO_PLAY", player)
+	end
+
+	@ExecSpace("ClientOnly")
+	method any GetBridge()
+		        return self.Entity:GetComponent("script.LexioPlayerBridge")
+	end
+
+	@ExecSpace("ClientOnly")
+	method string NextRequestId(string action)
+		        self.requestSequence = self.requestSequence + 1
+		        return action .. "-" .. tostring(self.requestSequence)
+	end
+
+	@ExecSpace("ClientOnly")
+	method void SubmitTileIds(table tileIds)
+		        local bridge = self:GetBridge()
+		        local publicSnapshot = bridge ~= nil and bridge:GetMatchedPublicSnapshot() or nil
+		        if bridge == nil or publicSnapshot == nil then
+		            log_error("[LexioManualTestControls] snapshot unavailable")
+		            return
+		        end
+		        bridge:RequestSubmit(self:NextRequestId("submit"), tileIds, publicSnapshot.stateVersion)
+	end
+
+	@ExecSpace("ClientOnly")
+	method void SubmitFirstTile()
+		        local bridge = self:GetBridge()
+		        local privateHand = bridge ~= nil and bridge:GetMatchedPrivateHand() or nil
+		        if bridge == nil or privateHand == nil or #privateHand == 0 then
+		            log_error("[LexioManualTestControls] private hand unavailable")
+		            return
+		        end
+		        self:SubmitTileIds({ privateHand[1].id })
+	end
+
+	@ExecSpace("ClientOnly")
+	method void Pass()
+		        local bridge = self:GetBridge()
+		        local publicSnapshot = bridge ~= nil and bridge:GetMatchedPublicSnapshot() or nil
+		        if bridge == nil or publicSnapshot == nil then
+		            log_error("[LexioManualTestControls] snapshot unavailable")
+		            return
+		        end
+		        bridge:RequestPass(self:NextRequestId("pass"), publicSnapshot.stateVersion)
+	end
+
+	@ExecSpace("ClientOnly")
+	method void PrintState()
+		        local bridge = self:GetBridge()
+		        if bridge == nil then return end
+		        local privateHand = bridge:GetMatchedPrivateHand()
+		        local publicSnapshot = bridge:GetMatchedPublicSnapshot()
+		        local handCount = privateHand ~= nil and #privateHand or 0
+		        local version = publicSnapshot ~= nil and publicSnapshot.stateVersion or -1
+		        log("[LexioManualTestControls] role=" .. tostring(bridge._T.Role) .. " seat=" .. tostring(bridge._T.Seat) .. " hand=" .. tostring(handCount) .. " version=" .. tostring(version))
+	end
+
+	@ExecSpace("ServerOnly")
+	method boolean IsAllowedTargetAction(string action)
+		        return action == "Ready" or action == "SubmitFirstTile" or action == "Pass" or action == "FinishSubmit"
+	end
+
+	@ExecSpace("ServerOnly")
+	method integer GetCurrentTurnSeat()
+		        local currentMap = self.Entity.CurrentMap
+		        if currentMap == nil or currentMap.Name ~= "map01" then return 0 end
+		        local host = currentMap:GetChildByName("LexioManualSessionHost")
+		        local coordinator = host ~= nil and host:GetComponent("script.LexioSessionCoordinator") or nil
+		        local session = host ~= nil and host:GetComponent("script.LexioGameSession") or nil
+		        if coordinator == nil or session == nil then return 0 end
+		        local seat = session.currentPlayerIndex
+		        if seat < 1 or seat > 3 then return 0 end
+		        if coordinator.playerEntityBySeat[seat] == nil or coordinator.userIdBySeat[seat] == nil then return 0 end
+		        return seat
+	end
+
+	@ExecSpace("ServerOnly")
+	method boolean PrepareFinishScenario()
+		        local currentMap = self.Entity.CurrentMap
+		        if currentMap == nil or currentMap.Name ~= "map01" then return false end
+		        local host = currentMap:GetChildByName("LexioManualSessionHost")
+		        local coordinator = host ~= nil and host:GetComponent("script.LexioSessionCoordinator") or nil
+		        local session = host ~= nil and host:GetComponent("script.LexioGameSession") or nil
+		        if coordinator == nil or session == nil then return false end
+		        if session.phase ~= "Playing" and session.phase ~= "LeadPending" then return false end
+		        if coordinator.userIdBySeat[1] == nil or coordinator.userIdBySeat[2] == nil or coordinator.userIdBySeat[3] == nil then return false end
+		        if not coordinator.readyBySeat[1] or not coordinator.readyBySeat[2] or not coordinator.readyBySeat[3] then return false end
+		        local seat = session.currentPlayerIndex
+		        if seat < 1 or seat > 3 then return false end
+		        local targetPlayer = coordinator.playerEntityBySeat[seat]
+		        local targetUserId = coordinator.userIdBySeat[seat]
+		        if targetPlayer == nil or not isvalid(targetPlayer) or targetPlayer.PlayerComponent == nil then return false end
+		        if targetPlayer.PlayerComponent.UserId ~= targetUserId or targetPlayer.CurrentMap ~= currentMap then return false end
+		        local targetControls = targetPlayer:GetComponent("script.LexioManualTestControls")
+		        local hand = session.hands[seat]
+		        if targetControls == nil or hand == nil or #hand ~= 12 then return false end
+		        local keptTile = hand[1]
+		        if keptTile == nil or keptTile.id == nil or session.tilesById[keptTile.id] == nil then return false end
+		        local isolated = {}
+		        for index = 2, #hand do table.insert(isolated, hand[index]) end
+		        -- Test-only isolation: tilesById remains untouched and the removed tiles are not reassigned.
+		        targetControls.isolatedFinishTiles = isolated
+		        session.hands[seat] = { keptTile }
+		        session.phase = "LeadPending"
+		        session.currentPlayerIndex = seat
+		        session.winningPlayerIndex = seat
+		        session.currentPlay = nil
+		        session.currentPlayTiles = {}
+		        session.lastPublicPlay = {}
+		        session.passed = { false, false, false }
+		        session.stateVersion = session.stateVersion + 1
+		        targetControls.preparedFinishVersion = session.stateVersion
+		        coordinator:BroadcastSnapshots()
+		        log("[LexioManualFinish] PREPARED seat=" .. tostring(seat) .. " isolated=" .. tostring(#isolated) .. " version=" .. tostring(session.stateVersion))
+		        return true
+	end
+
+	@ExecSpace("ServerOnly")
+	method boolean DispatchFinishSubmit()
+		        local seat = self:GetCurrentTurnSeat()
+		        if seat == 0 then return false end
+		        return self:DispatchSeatAction(seat, "FinishSubmit")
+	end
+
+	@ExecSpace("ServerOnly")
+	method boolean DispatchSeatAction(integer seat, string action)
+		        -- Test-only server entry point. Seat is resolved through authoritative registration;
+		        -- no caller-supplied UserId is accepted.
+		        if seat < 1 or seat > 3 then return false end
+		        if not self:IsAllowedTargetAction(action) then return false end
+		        local currentMap = self.Entity.CurrentMap
+		        if currentMap == nil or currentMap.Name ~= "map01" then return false end
+		        local host = currentMap:GetChildByName("LexioManualSessionHost")
+		        if host == nil then return false end
+		        local coordinator = host:GetComponent("script.LexioSessionCoordinator")
+		        if coordinator == nil then return false end
+		        local targetUserId = coordinator.userIdBySeat[seat]
+		        local targetPlayer = coordinator.playerEntityBySeat[seat]
+		        if targetUserId == nil or targetUserId == "" then return false end
+		        if targetPlayer == nil or not isvalid(targetPlayer) then return false end
+		        if targetPlayer.PlayerComponent == nil or targetPlayer.PlayerComponent.UserId ~= targetUserId then return false end
+		        local targetControls = targetPlayer:GetComponent("script.LexioManualTestControls")
+		        if targetControls == nil then return false end
+		        log("[LexioManualTarget] DISPATCH seat=" .. tostring(seat) .. " action=" .. action)
+		        -- Hidden final parameter targets only the authoritative seat owner's client.
+		        targetControls:ExecuteTargetAction(action, targetUserId)
+		        return true
+	end
+
+	@ExecSpace("Client")
+	method void ExecuteTargetAction(string action)
+		        -- Runs only one predeclared input path on the selected client. The called Bridge
+		        -- still supplies server-assigned senderUserId and performs all ownership checks.
+		        local bridge = self:GetBridge()
+		        if bridge == nil then return end
+		        log("[LexioManualTarget] CLIENT action=" .. action .. " user=" .. tostring(_UserService.LocalPlayer.PlayerComponent.UserId))
+		        if action == "Ready" then
+		            bridge:NotifyClientReady()
+		        elseif action == "SubmitFirstTile" then
+		            self:SubmitFirstTile()
+		        elseif action == "Pass" then
+		            self:Pass()
+		        elseif action == "FinishSubmit" then
+		            self:SubmitFirstTile()
+		        end
+	end
+
+	@ExecSpace("ClientOnly")
+	@EventSender("Service", "InputService")
+	handler HandleSeatKeyDown(KeyDownEvent event)
+		        if event.key ~= KeyboardKey.X then return end
+		        self:ToggleSeat()
+	end
+
+end

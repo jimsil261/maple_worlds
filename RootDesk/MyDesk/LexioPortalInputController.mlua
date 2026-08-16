@@ -1,0 +1,37 @@
+@Logic
+script LexioPortalInputController extends Logic
+
+	@ExecSpace("Server")
+	method void RequestEntranceTravel(Entity claimedPlayer)
+		        local player = _UserService:GetUserEntityByUserId(senderUserId)
+		        if player == nil or player ~= claimedPlayer or player.PlayerComponent == nil then return end
+		        if player.PlayerComponent.UserId ~= senderUserId or player.CurrentMapName ~= "TileMapTemplate" then return end
+		        local portal = _EntityService:GetEntityByPath("/maps/TileMapTemplate/LexioEntrance")
+		        if portal == nil or not isvalid(portal) then return end
+		        local playerPosition = player.TransformComponent.WorldPosition
+		        local portalPosition = portal.TransformComponent.WorldPosition
+		        local distance = Vector2.Distance(Vector2(playerPosition.x, playerPosition.y), Vector2(portalPosition.x, portalPosition.y))
+		        if distance > 2 then return end
+		        log("[LexioPortalInput] SERVER ENTER userId=" .. senderUserId)
+		        _TeleportService:TeleportToMapPosition(player, Vector3(0, 0, 0), "map01")
+	end
+
+	@ExecSpace("ClientOnly")
+	@EventSender("Service", "InputService")
+	handler HandlePortalKeyDown(KeyDownEvent event)
+		        if event.key ~= KeyboardKey.UpArrow then return end
+		        local player = _UserService.LocalPlayer
+		        if player == nil or player.CurrentMapName ~= "TileMapTemplate" then return end
+		        local portal = _EntityService:GetEntityByPath("/maps/TileMapTemplate/LexioEntrance")
+		        if portal == nil then return end
+		        local playerPosition = player.TransformComponent.WorldPosition
+		        local portalPosition = portal.TransformComponent.WorldPosition
+		        local distance = Vector2.Distance(Vector2(playerPosition.x, playerPosition.y), Vector2(portalPosition.x, portalPosition.y))
+		        if distance > 2 then return end
+		        log("[LexioPortalInput] UP route=LEXIO_PLAY distance=" .. tostring(distance))
+		        -- Entrance travel is validated independently so a stale per-player bridge
+		        -- left over from map01 cannot reject the lobby as invalid_source_map.
+		        self:RequestEntranceTravel(player)
+	end
+
+end

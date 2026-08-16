@@ -1,0 +1,615 @@
+@Logic
+script LexioPlayUIController extends Logic
+
+	property Entity ContentRoot = "3a63e340-f873-4d50-9a59-42d93ed3b015"
+
+	property Entity Seat1Text = "f6ea12ea-9bc2-4960-b816-3110130c6fdf"
+
+	property Entity Seat2Text = "6d8ba7d5-359e-4ee3-bc4c-220bdb8383a1"
+
+	property Entity Seat3Text = "4452cf8a-c13e-4176-889b-b84ac0d7fbeb"
+
+	property Entity PhaseText = "8c2f48e7-b914-42bb-a1cd-b9d72be69a3c"
+
+	property Entity TurnText = "3c66d695-3bb1-4da2-bb0d-3c142ef8aa30"
+
+	property Entity PublicPlayText = "9f8c845e-5038-4a10-94fc-4cb4b343d846"
+
+	property Entity PublicCard1 = "0051e763-bcbb-4cd5-8360-76eb29e96fb5"
+
+	property Entity PublicCard2 = "897ddfa0-749b-439c-bdac-186b124ba976"
+
+	property Entity PublicCard3 = "171cd275-6e9f-4e69-9408-9202b9b4d502"
+
+	property Entity PublicCard4 = "17a286b1-a3b0-4dd6-863d-c5be2d000d09"
+
+	property Entity PublicCard5 = "18263146-01ab-4e4e-af8e-93a268d5d588"
+
+	property Entity ErrorText = "3ab8d447-2aed-4103-a25c-72317373818f"
+
+	property Entity HandPanelPC = "d917a397-9837-43e7-91b9-57d190fbefb3"
+
+	property Entity HandPanelMobile = "72d64189-ca66-42bd-b610-5cae2f0f823d"
+
+	property Entity SubmitButton = "22ca6ac3-40a7-4bec-aff7-cd7a755176f7"
+
+	property Entity PassButton = "5c9d4c74-e046-4ee9-986e-e3665a158a97"
+
+	property Entity RankSortButton = "afca6942-eaf9-4687-a031-27ac3311fb8a"
+
+	property Entity SuitSortButton = "4105bceb-67e0-4ef5-b5dd-4947bb739696"
+
+	property Entity MobileRankSortButton = "59eae195-6dee-4f6a-885b-fc2b934394a2"
+
+	property Entity MobileSuitSortButton = "c9a2bddd-d926-4f90-bf8b-47c120f598c7"
+
+	property Entity MobileSubmitButton = "6b186542-9b5d-4cc2-9519-951e1c540694"
+
+	property Entity MobilePassButton = "131130a4-cbd0-4d0b-af42-a26697f4c235"
+
+	property Entity FinishPanel = "e139214a-000e-4a9c-8eef-8568520b92a7"
+
+	property Entity FinishCountdownText = "4624af5a-9fd4-499b-a5d2-3b403b0c2fe6"
+
+	property Entity ReplayButton = "e913b8a6-e165-49d0-bdec-d9e9a8506ede"
+
+	property Entity ExitButton = "58fbe913-3815-4ca9-b329-c84496e2a636"
+
+	@ExecSpace("ClientOnly")
+	method void OnBeginPlay()
+		        self._T.UIReady = false
+		        self._T.ResolveAttempts = 0
+		        self._T.HandlerGeneration = 0
+		        -- nil forces the first map check to apply either the active or inactive UI state.
+		        self._T.Active = nil
+		        self._T.SelectedById = {}
+		        self._T.SelectedTileIds = {}
+		        self._T.RenderedHand = {}
+		        self._T.SortMode = "Rank"
+		        self._T.RequestSequence = 0
+		        self._T.LastSnapshotSequence = -1
+		        self._T.LastActionSequence = -1
+		        self._T.RenderedVersion = -1
+		        self._T.PendingSubmitId = ""
+		        self._T.PendingPassId = ""
+		        self._T.PendingFinishId = ""
+		        self._T.LastFinishDecisionSequence = 0
+		        self._T.MismatchElapsed = 0
+		        self._T.SnapshotCooldown = 0
+		        self._T.HiddenDefaultUI = {}
+		        self._T.EventConnections = {}
+		        self:ResolveUI()
+		        log("[LexioPlayUI] BEGIN")
+	end
+
+	@ExecSpace("ClientOnly")
+	method void OnUpdate(number delta)
+		        if not self._T.UIReady then
+		            if self._T.ResolveAttempts < 30 then self:ResolveUI() end
+		            return
+		        end
+		        self:UpdateMapActivation()
+		        if not self._T.Active then return end
+		        local bridge = self:GetLocalBridge()
+		        if bridge == nil then return end
+		        local snapshotSequence = bridge._T.SnapshotSequence or 0
+		        if snapshotSequence ~= self._T.LastSnapshotSequence then
+		            self._T.LastSnapshotSequence = snapshotSequence
+		            local privateHand = bridge:GetMatchedPrivateHand()
+		            local publicSnapshot = bridge:GetMatchedPublicSnapshot()
+		            if privateHand ~= nil and publicSnapshot ~= nil and bridge._T.MatchedStateVersion == publicSnapshot.stateVersion then
+		                self._T.MismatchElapsed = 0
+		                self:RenderSnapshot(privateHand, publicSnapshot)
+		            end
+		        end
+		        local actionSequence = bridge._T.ActionSequence or 0
+		        if actionSequence ~= self._T.LastActionSequence then
+		            self._T.LastActionSequence = actionSequence
+		            self:HandleActionResult(bridge:GetLastActionResult())
+		        end
+		        local finishSequence = bridge._T.FinishDecisionSequence or 0
+		        if finishSequence ~= self._T.LastFinishDecisionSequence then
+		            self._T.LastFinishDecisionSequence = finishSequence
+		            local result = bridge._T.LastFinishDecisionResult
+		            if result ~= nil and result.requestId == self._T.PendingFinishId and not result.ok then
+		                self._T.PendingFinishId = ""
+		                self.ErrorText.TextGUIRendererComponent.Text = "결과 선택 실패: " .. tostring(result.reason)
+		                self:UpdateFinishButtons()
+		            end
+		        end
+		        local privateVersion = bridge._T.LatestPrivateVersion or -1
+		        local publicVersion = bridge._T.LatestPublicVersion or -1
+		        if privateVersion ~= publicVersion then
+		            self._T.MismatchElapsed = self._T.MismatchElapsed + delta
+		        else
+		            self._T.MismatchElapsed = 0
+		        end
+		        if self._T.SnapshotCooldown > 0 then self._T.SnapshotCooldown = self._T.SnapshotCooldown - delta end
+		        if self._T.MismatchElapsed >= 1.5 and self._T.SnapshotCooldown <= 0 then
+		            bridge:RequestSnapshot(self:NextRequestId("snapshot"))
+		            self._T.SnapshotCooldown = 2.0
+		            self._T.MismatchElapsed = 0
+		        end
+	end
+
+	@ExecSpace("ClientOnly")
+	method void OnEndPlay()
+		        self:DisconnectButtons()
+		        self._T.UIReady = false
+		        self:RestoreDefaultUI()
+	end
+
+	@ExecSpace("ClientOnly")
+	method void ResolveUI()
+		        self._T.ResolveAttempts = (self._T.ResolveAttempts or 0) + 1
+		        local paths = {
+		            ContentRoot="/ui/LexioPlayHUD/ContentRoot", Seat1Text="/ui/LexioPlayHUD/ContentRoot/Seat1Panel/Text", Seat2Text="/ui/LexioPlayHUD/ContentRoot/Seat2Panel/Text", Seat3Text="/ui/LexioPlayHUD/ContentRoot/Seat3Panel/Text",
+		            PhaseText="/ui/LexioPlayHUD/ContentRoot/PhaseText", TurnText="/ui/LexioPlayHUD/ContentRoot/TurnText", PublicPlayText="/ui/LexioPlayHUD/ContentRoot/PublicPlayPanel/Text",
+		            PublicCard1="/ui/LexioPlayHUD/ContentRoot/PublicPlayPanel/Card1", PublicCard2="/ui/LexioPlayHUD/ContentRoot/PublicPlayPanel/Card2", PublicCard3="/ui/LexioPlayHUD/ContentRoot/PublicPlayPanel/Card3", PublicCard4="/ui/LexioPlayHUD/ContentRoot/PublicPlayPanel/Card4", PublicCard5="/ui/LexioPlayHUD/ContentRoot/PublicPlayPanel/Card5",
+		            ErrorText="/ui/LexioPlayHUD/ContentRoot/ErrorText", HandPanelPC="/ui/LexioPlayHUD/ContentRoot/HandPanelPC", HandPanelMobile="/ui/LexioPlayHUD/ContentRoot/HandPanelMobile",
+		            SubmitButton="/ui/LexioPlayHUD/ContentRoot/ActionPanel/SubmitButton", PassButton="/ui/LexioPlayHUD/ContentRoot/ActionPanel/PassButton", RankSortButton="/ui/LexioPlayHUD/ContentRoot/SortPanel/RankSortButton", SuitSortButton="/ui/LexioPlayHUD/ContentRoot/SortPanel/SuitSortButton",
+		            MobileRankSortButton="/ui/LexioPlayHUD/ContentRoot/MobileSortPanel/RankSortButton", MobileSuitSortButton="/ui/LexioPlayHUD/ContentRoot/MobileSortPanel/SuitSortButton", MobileSubmitButton="/ui/LexioPlayHUD/ContentRoot/MobileActionPanel/SubmitButton", MobilePassButton="/ui/LexioPlayHUD/ContentRoot/MobileActionPanel/PassButton",
+		            FinishPanel="/ui/LexioPlayHUD/ContentRoot/FinishPanel", FinishCountdownText="/ui/LexioPlayHUD/ContentRoot/FinishPanel/CountdownText", ReplayButton="/ui/LexioPlayHUD/ContentRoot/FinishPanel/ReplayButton", ExitButton="/ui/LexioPlayHUD/ContentRoot/FinishPanel/ExitButton"
+		        }
+		        local required = {"ContentRoot","Seat1Text","Seat2Text","Seat3Text","PhaseText","TurnText","PublicPlayText","ErrorText","HandPanelPC","HandPanelMobile","SubmitButton","PassButton","RankSortButton","SuitSortButton","MobileRankSortButton","MobileSuitSortButton","MobileSubmitButton","MobilePassButton","FinishPanel","FinishCountdownText","ReplayButton","ExitButton","PublicCard1","PublicCard2","PublicCard3","PublicCard4","PublicCard5"}
+		        for _, key in ipairs(required) do
+		            local entity = _EntityService:GetEntityByPath(paths[key])
+		            if entity == nil then log("[LexioPlayUI] RESOLVE_MISSING path=" .. paths[key]); self._T.UIReady = false; return end
+		            self[key] = entity
+		        end
+		        self._T.UIReady = true
+		        self:DisconnectButtons()
+		        self:ConnectButtons()
+		        self.ContentRoot.Enable = false
+		        self:UpdateMapActivation()
+		        log("[LexioPlayUI] RESOLVED generation=" .. tostring(self._T.HandlerGeneration))
+	end
+
+	@ExecSpace("ClientOnly")
+	method any GetLocalBridge()
+		        local player = _UserService.LocalPlayer
+		        if player == nil then return nil end
+		        return player:GetComponent("script.LexioPlayerBridge")
+	end
+
+	@ExecSpace("ClientOnly")
+	method boolean IsLocalPlayerSeated()
+		        local player = _UserService.LocalPlayer
+		        if player == nil then return false end
+		        local controls = player:GetComponent("script.LexioManualTestControls")
+		        return controls ~= nil and controls:IsSeated()
+	end
+
+	method string NextRequestId(string action)
+		        self._T.RequestSequence = self._T.RequestSequence + 1
+		        local id = "ui-" .. action .. "-" .. tostring(self._T.RequestSequence) .. "-" .. tostring(self._T.RenderedVersion)
+		        if #id > 64 then return string.sub(id, 1, 64) end
+		        return id
+	end
+
+	@ExecSpace("ClientOnly")
+	method void UpdateMapActivation()
+		        local player = _UserService.LocalPlayer
+		        local isMap01 = player ~= nil and player.CurrentMapName == "map01"
+		        local isSeated = isMap01 and self:IsLocalPlayerSeated()
+		        if not isMap01 or not isSeated then
+		            if self._T.Active == false then return end
+		            self._T.Active = false
+		            self.ContentRoot.Enable = false
+		            self.SubmitButton.ButtonComponent.Enable = false
+		            self.PassButton.ButtonComponent.Enable = false
+		            self.MobileSubmitButton.ButtonComponent.Enable = false
+		            self.MobilePassButton.ButtonComponent.Enable = false
+		            self._T.SelectedById = {}
+		            self._T.SelectedTileIds = {}
+		            self._T.PendingSubmitId = ""
+		            self._T.PendingPassId = ""
+		            self._T.PendingFinishId = ""
+		            self.FinishPanel.Enable = false
+		            self:RestoreDefaultUI()
+		            log("[LexioPlayUI] INACTIVE map01=" .. tostring(isMap01) .. " seated=" .. tostring(isSeated) .. " default_ui_restored=true")
+		            return
+		        end
+		        if self._T.Active == true then return end
+		        self._T.Active = false
+		        self.ContentRoot.Enable = false
+		        self.SubmitButton.ButtonComponent.Enable = false
+		        self.PassButton.ButtonComponent.Enable = false
+		        self.MobileSubmitButton.ButtonComponent.Enable = false
+		        self.MobilePassButton.ButtonComponent.Enable = false
+		        local bridge = self:GetLocalBridge()
+		        if bridge == nil then return end
+		        local privateHand = bridge:GetMatchedPrivateHand()
+		        local publicSnapshot = bridge:GetMatchedPublicSnapshot()
+		        local matchedVersion = bridge._T.MatchedStateVersion
+		        if privateHand == nil or publicSnapshot == nil or matchedVersion == nil or matchedVersion ~= publicSnapshot.stateVersion then return end
+		        self:RenderSnapshot(privateHand, publicSnapshot)
+		        self._T.LastSnapshotSequence = bridge._T.SnapshotSequence or 0
+		        self._T.Active = true
+		        self:HideDefaultUI()
+		        self.ContentRoot.Enable = true
+		        log("[LexioPlayUI] ACTIVE map=map01 seated=true version=" .. tostring(matchedVersion))
+	end
+
+	@ExecSpace("ClientOnly")
+	method void HideDefaultUI()
+		        local paths = {
+		            "/ui/DefaultGroup/Button_Attack",
+		            "/ui/DefaultGroup/Button_Jump",
+		            "/ui/DefaultGroup/UIJoystick"
+		        }
+		        self._T.HiddenDefaultUI = {}
+		        for _, path in ipairs(paths) do
+		            local entity = _EntityService:GetEntityByPath(path)
+		            if entity ~= nil then
+		                table.insert(self._T.HiddenDefaultUI, { entity = entity, wasEnabled = entity.Enable })
+		                entity.Enable = false
+		            end
+		        end
+	end
+
+	@ExecSpace("ClientOnly")
+	method void RestoreDefaultUI()
+		        if self._T.HiddenDefaultUI == nil then return end
+		        for _, record in ipairs(self._T.HiddenDefaultUI) do
+		            if record.entity ~= nil and isvalid(record.entity) then record.entity.Enable = record.wasEnabled end
+		        end
+		        self._T.HiddenDefaultUI = {}
+	end
+
+	@ExecSpace("ClientOnly")
+	method void ConnectButtons()
+		        self._T.HandlerGeneration = (self._T.HandlerGeneration or 0) + 1
+		        local generation = self._T.HandlerGeneration
+		        for index = 1, 12 do
+		            self:ConnectTileButton(self.HandPanelPC:GetChildByName("Tile" .. tostring(index)), index, generation)
+		            self:ConnectTileButton(self.HandPanelMobile:GetChildByName("Tile" .. tostring(index)), index, generation)
+		        end
+		        local submitConnection = self.SubmitButton:ConnectEvent(ButtonClickEvent, function(event) if self._T.HandlerGeneration == generation then self:SubmitSelected() end end)
+		        local passConnection = self.PassButton:ConnectEvent(ButtonClickEvent, function(event) if self._T.HandlerGeneration == generation then self:PassTurn() end end)
+		        local rankSortConnection = self.RankSortButton:ConnectEvent(ButtonClickEvent, function(event) if self._T.HandlerGeneration == generation then self:SetSortMode("Rank") end end)
+		        local suitSortConnection = self.SuitSortButton:ConnectEvent(ButtonClickEvent, function(event) if self._T.HandlerGeneration == generation then self:SetSortMode("Suit") end end)
+		        local mobileSubmitConnection = self.MobileSubmitButton:ConnectEvent(ButtonClickEvent, function(event) if self._T.HandlerGeneration == generation then self:SubmitSelected() end end)
+		        local mobilePassConnection = self.MobilePassButton:ConnectEvent(ButtonClickEvent, function(event) if self._T.HandlerGeneration == generation then self:PassTurn() end end)
+		        local mobileRankSortConnection = self.MobileRankSortButton:ConnectEvent(ButtonClickEvent, function(event) if self._T.HandlerGeneration == generation then self:SetSortMode("Rank") end end)
+		        local mobileSuitSortConnection = self.MobileSuitSortButton:ConnectEvent(ButtonClickEvent, function(event) if self._T.HandlerGeneration == generation then self:SetSortMode("Suit") end end)
+		        local replayConnection = self.ReplayButton:ConnectEvent(ButtonClickEvent, function(event) if self._T.HandlerGeneration == generation then self:ChooseFinish("Replay") end end)
+		        local exitConnection = self.ExitButton:ConnectEvent(ButtonClickEvent, function(event) if self._T.HandlerGeneration == generation then self:ChooseFinish("Exit") end end)
+		        table.insert(self._T.EventConnections, { entity = self.SubmitButton, connection = submitConnection })
+		        table.insert(self._T.EventConnections, { entity = self.PassButton, connection = passConnection })
+		        table.insert(self._T.EventConnections, { entity = self.RankSortButton, connection = rankSortConnection })
+		        table.insert(self._T.EventConnections, { entity = self.SuitSortButton, connection = suitSortConnection })
+		        table.insert(self._T.EventConnections, { entity = self.MobileSubmitButton, connection = mobileSubmitConnection })
+		        table.insert(self._T.EventConnections, { entity = self.MobilePassButton, connection = mobilePassConnection })
+		        table.insert(self._T.EventConnections, { entity = self.MobileRankSortButton, connection = mobileRankSortConnection })
+		        table.insert(self._T.EventConnections, { entity = self.MobileSuitSortButton, connection = mobileSuitSortConnection })
+		        table.insert(self._T.EventConnections, { entity = self.ReplayButton, connection = replayConnection })
+		        table.insert(self._T.EventConnections, { entity = self.ExitButton, connection = exitConnection })
+	end
+
+	@ExecSpace("ClientOnly")
+	method void DisconnectButtons()
+		        if self._T.EventConnections == nil then return end
+		        for _, record in ipairs(self._T.EventConnections) do
+		            if record.entity ~= nil and record.connection ~= nil and isvalid(record.entity) then record.entity:DisconnectEvent(ButtonClickEvent, record.connection) end
+		        end
+		        self._T.EventConnections = {}
+	end
+
+	@ExecSpace("ClientOnly")
+	method void SetSortMode(string mode)
+		        if mode ~= "Rank" and mode ~= "Suit" then return end
+		        self._T.SortMode = mode
+		        self:SortRenderedHand()
+		        self:RenderHandPanel(self.HandPanelPC, self._T.RenderedHand)
+		        self:RenderHandPanel(self.HandPanelMobile, self._T.RenderedHand)
+		        self:UpdateActionButtons()
+	end
+
+	@ExecSpace("ClientOnly")
+	method void SortRenderedHand()
+		        if self._T.RenderedHand == nil then return end
+		        local mode = self._T.SortMode or "Rank"
+		        table.sort(self._T.RenderedHand, function(left, right)
+		            if mode == "Suit" then
+		                if left.suit ~= right.suit then return left.suit < right.suit end
+		                if left.rank ~= right.rank then return left.rank < right.rank end
+		            else
+		                if left.rank ~= right.rank then return left.rank < right.rank end
+		                if left.suit ~= right.suit then return left.suit < right.suit end
+		            end
+		            return left.id < right.id
+		        end)
+	end
+
+	@ExecSpace("ClientOnly")
+	method void ConnectTileButton(Entity tileEntity, integer slotIndex, integer generation)
+		        if tileEntity == nil then return end
+		        local capturedIndex = slotIndex
+		        local connection = tileEntity:ConnectEvent(ButtonClickEvent, function(event) if self._T.HandlerGeneration == generation then self:ToggleSlot(capturedIndex) end end)
+		        table.insert(self._T.EventConnections, { entity = tileEntity, connection = connection })
+	end
+
+	method string SuitName(integer suit)
+		        if suit == 1 then return "파란 달팽이\n구름" end
+		        if suit == 2 then return "주황버섯\n별" end
+		        if suit == 3 then return "슬라임\n달" end
+		        return "핑크빈\n해"
+	end
+
+	method Color SuitColor(integer suit, boolean selected)
+		        if selected then return Color(1, 0.92, 0.35, 1) end
+		        if suit == 1 then return Color(0.25, 0.55, 0.95, 1) end
+		        if suit == 2 then return Color(1, 0.68, 0.2, 1) end
+		        if suit == 3 then return Color(0.35, 0.8, 0.38, 1) end
+		        return Color(0.95, 0.38, 0.55, 1)
+	end
+
+	method string MonsterRUID(integer suit)
+		        if suit == 1 then return "2f40053ed63e4b64938c8d9ed1837f89" end
+		        if suit == 2 then return "ca3a6ed536d24949b79d3f7b430cb82a" end
+		        if suit == 3 then return "460975bed1114ad6a34ea2e0e5a43953" end
+		        return "f97f9f3a41ef44ff86e29956dcbf0cbf"
+	end
+
+	method string MonsterName(integer suit)
+		        if suit == 1 then return "파란 달팽이" end
+		        if suit == 2 then return "주황버섯" end
+		        if suit == 3 then return "슬라임" end
+		        return "핑크빈"
+	end
+
+	@ExecSpace("ClientOnly")
+	method void RenderMonsterCard(Entity card, table tile, boolean selected)
+		        if card == nil or tile == nil then return end
+		        card.TextGUIRendererComponent.Text = ""
+		        card.SpriteGUIRendererComponent.Color = selected and Color(1, 0.92, 0.35, 1) or Color(1, 0.965, 0.847, 1)
+		        local aura = card:GetChildByName("PowerAura")
+		        local monster = card:GetChildByName("Monster")
+		        local rankTop = card:GetChildByName("RankTop")
+		        local rankBottom = card:GetChildByName("RankBottom")
+		        local monsterName = card:GetChildByName("MonsterName")
+		        if aura ~= nil then aura.SpriteGUIRendererComponent.Color = self:SuitColor(tile.suit, selected) end
+		        if monster ~= nil then monster.SpriteGUIRendererComponent.ImageRUID = self:MonsterRUID(tile.suit) end
+		        if rankTop ~= nil then rankTop.TextGUIRendererComponent.Text = (selected and "✓" or "") .. tostring(tile.rank) end
+		        if rankBottom ~= nil then rankBottom.TextGUIRendererComponent.Text = tostring(tile.rank) end
+		        if monsterName ~= nil then monsterName.TextGUIRendererComponent.Text = self:MonsterName(tile.suit) end
+	end
+
+	method table SortedTiles(table source)
+		        local sorted = {}
+		        if source == nil then return sorted end
+		        for _, tile in ipairs(source) do table.insert(sorted, tile) end
+		        table.sort(sorted, function(left, right)
+		            if left.rank ~= right.rank then return left.rank < right.rank end
+		            if left.suit ~= right.suit then return left.suit < right.suit end
+		            return (left.id or 0) < (right.id or 0)
+		        end)
+		        return sorted
+	end
+
+	@ExecSpace("ClientOnly")
+	method void RenderSnapshot(table privateHand, table publicSnapshot)
+		        if publicSnapshot.stateVersion == nil then return end
+		        self._T.RenderedVersion = publicSnapshot.stateVersion
+		        self._T.RenderedHand = privateHand
+		        self:SortRenderedHand()
+		        self:PruneSelection(privateHand)
+		        self:RenderHandPanel(self.HandPanelPC, privateHand)
+		        self:RenderHandPanel(self.HandPanelMobile, privateHand)
+		        self:RenderSeats(publicSnapshot)
+		        self:RenderPhase(publicSnapshot)
+		        self:RenderPublicPlay(publicSnapshot)
+		        self:RenderFinish(publicSnapshot)
+		        self:UpdateActionButtons()
+	end
+
+	@ExecSpace("ClientOnly")
+	method void PruneSelection(table privateHand)
+		        local exists = {}
+		        for _, tile in ipairs(privateHand) do exists[tile.id] = true end
+		        local selected = {}
+		        local selectedMap = {}
+		        for _, tileId in ipairs(self._T.SelectedTileIds) do
+		            if exists[tileId] then table.insert(selected, tileId) selectedMap[tileId] = true end
+		        end
+		        self._T.SelectedTileIds = selected
+		        self._T.SelectedById = selectedMap
+	end
+
+	@ExecSpace("ClientOnly")
+	method void RenderHandPanel(Entity panel, table privateHand)
+		        for index = 1, 12 do
+		            local slot = panel:GetChildByName("Tile" .. tostring(index))
+		            local tile = privateHand[index]
+		            slot.Enable = tile ~= nil
+		            if tile ~= nil then
+		                local selected = self._T.SelectedById[tile.id] == true
+		                self:RenderMonsterCard(slot, tile, selected)
+		                local baseY = slot.UITransformComponent.anchoredPosition.y
+		                if self._T.BaseY == nil then self._T.BaseY = {} end
+		                local key = slot.Id
+		                if self._T.BaseY[key] == nil then self._T.BaseY[key] = baseY end
+		                local pos = slot.UITransformComponent.anchoredPosition
+		                pos.y = self._T.BaseY[key] + (selected and 18 or 0)
+		                slot.UITransformComponent.anchoredPosition = pos
+		            end
+		        end
+	end
+
+	@ExecSpace("ClientOnly")
+	method void RenderSeats(table snapshot)
+		        local targets = { self.Seat1Text, self.Seat2Text, self.Seat3Text }
+		        for seat = 1, 3 do
+		            local name = snapshot.seatNames ~= nil and snapshot.seatNames[seat] or ("좌석 " .. tostring(seat))
+		            local remaining = snapshot.remainingCounts[seat]
+		            local status = snapshot.passed[seat] and "PASS" or "대기"
+		            if snapshot.currentPlayerIndex == seat then status = "현재 차례" end
+		            targets[seat].TextGUIRendererComponent.Text = "좌석 " .. tostring(seat) .. "  " .. name .. "\n남은 타일 " .. tostring(remaining) .. "장  |  " .. status
+		        end
+	end
+
+	@ExecSpace("ClientOnly")
+	method void RenderPhase(table snapshot)
+		        if snapshot.phase == "WaitingPlayers" then
+		            self.PhaseText.TextGUIRendererComponent.Text = "3명이 준비되기를 기다리는 중"
+		            self.TurnText.TextGUIRendererComponent.Text = "좌석이 모두 준비되면 게임이 시작됩니다."
+		        elseif snapshot.phase == "LeadPending" then
+		            self.PhaseText.TextGUIRendererComponent.Text = "새 트릭"
+		            self.TurnText.TextGUIRendererComponent.Text = "좌석 " .. tostring(snapshot.currentPlayerIndex) .. "이(가) 새 선입니다."
+		        elseif snapshot.phase == "Finished" then
+		            self.PhaseText.TextGUIRendererComponent.Text = "게임 종료"
+		            self.TurnText.TextGUIRendererComponent.Text = "승자: 좌석 " .. tostring(snapshot.winnerIndex)
+		        else
+		            self.PhaseText.TextGUIRendererComponent.Text = "진행 중"
+		            self.TurnText.TextGUIRendererComponent.Text = "현재 차례: 좌석 " .. tostring(snapshot.currentPlayerIndex)
+		        end
+	end
+
+	@ExecSpace("ClientOnly")
+	method void RenderPublicPlay(table snapshot)
+		        local cards = { self.PublicCard1, self.PublicCard2, self.PublicCard3, self.PublicCard4, self.PublicCard5 }
+		        if snapshot.phase == "LeadPending" or snapshot.lastPlay == nil or #snapshot.lastPlay == 0 then
+		            self.PublicPlayText.TextGUIRendererComponent.Text = "직전 공개 제출: 없음"
+		            for _, card in ipairs(cards) do card.Enable = false end
+		            return
+		        end
+		        self.PublicPlayText.TextGUIRendererComponent.Text = "직전 공개 제출"
+		        local sortedPlay = self:SortedTiles(snapshot.lastPlay)
+		        local count = #sortedPlay
+		        local spacing = 108
+		        local startX = -((count - 1) * spacing) / 2
+		        for index, card in ipairs(cards) do
+		            local tile = sortedPlay[index]
+		            card.Enable = tile ~= nil
+		            if tile ~= nil then
+		                local position = card.UITransformComponent.anchoredPosition
+		                position.x = startX + ((index - 1) * spacing)
+		                card.UITransformComponent.anchoredPosition = position
+		                self:RenderMonsterCard(card, tile, false)
+		            end
+		        end
+	end
+
+	@ExecSpace("ClientOnly")
+	method void RenderFinish(table snapshot)
+		        local finished = snapshot.phase == "Finished"
+		        self.FinishPanel.Enable = finished
+		        if not finished then
+		            self._T.PendingFinishId = ""
+		            return
+		        end
+		        local seconds = snapshot.finishCountdown or 10
+		        local replayCount = snapshot.finishReplayCount or 0
+		        self.FinishCountdownText.TextGUIRendererComponent.Text = tostring(seconds) .. "초 후 로비로 이동  |  한 판 더 " .. tostring(replayCount) .. "/3"
+		        self:UpdateFinishButtons()
+	end
+
+	@ExecSpace("ClientOnly")
+	method void UpdateFinishButtons()
+		        local bridge = self:GetLocalBridge()
+		        local snapshot = bridge ~= nil and bridge:GetMatchedPublicSnapshot() or nil
+		        local enabled = snapshot ~= nil and snapshot.phase == "Finished" and self._T.PendingFinishId == ""
+		        self.ReplayButton.ButtonComponent.Enable = enabled
+		        self.ExitButton.ButtonComponent.Enable = enabled
+	end
+
+	@ExecSpace("ClientOnly")
+	method void ChooseFinish(string decision)
+		        if decision ~= "Replay" and decision ~= "Exit" then return end
+		        self:UpdateFinishButtons()
+		        if not self.ReplayButton.ButtonComponent.Enable and not self.ExitButton.ButtonComponent.Enable then return end
+		        local bridge = self:GetLocalBridge()
+		        local snapshot = bridge ~= nil and bridge:GetMatchedPublicSnapshot() or nil
+		        if bridge == nil or snapshot == nil or snapshot.phase ~= "Finished" then return end
+		        local requestId = self:NextRequestId("finish")
+		        self._T.PendingFinishId = requestId
+		        self:UpdateFinishButtons()
+		        bridge:RequestFinishDecision(requestId, decision, snapshot.finishGeneration or 0)
+	end
+
+	@ExecSpace("ClientOnly")
+	method void ToggleSlot(integer slotIndex)
+		        local tile = self._T.RenderedHand[slotIndex]
+		        if tile == nil then return end
+		        if self._T.SelectedById[tile.id] then
+		            self._T.SelectedById[tile.id] = nil
+		            local nextIds = {}
+		            for _, tileId in ipairs(self._T.SelectedTileIds) do if tileId ~= tile.id then table.insert(nextIds, tileId) end end
+		            self._T.SelectedTileIds = nextIds
+		        else
+		            self._T.SelectedById[tile.id] = true
+		            table.insert(self._T.SelectedTileIds, tile.id)
+		        end
+		        self:RenderHandPanel(self.HandPanelPC, self._T.RenderedHand)
+		        self:RenderHandPanel(self.HandPanelMobile, self._T.RenderedHand)
+		        self:UpdateActionButtons()
+	end
+
+	@ExecSpace("ClientOnly")
+	method void UpdateActionButtons()
+		        local bridge = self:GetLocalBridge()
+		        local snapshot = bridge ~= nil and bridge:GetMatchedPublicSnapshot() or nil
+		        local ownSeat = bridge ~= nil and bridge._T.Seat or 0
+		        local pending = self._T.PendingSubmitId ~= "" or self._T.PendingPassId ~= ""
+		        local count = #self._T.SelectedTileIds
+		        local allowedCount = count == 1 or count == 2 or count == 3 or count == 5
+		        local ownTurn = snapshot ~= nil and snapshot.currentPlayerIndex == ownSeat
+		        local submitEnabled = snapshot ~= nil and ownTurn and allowedCount and not pending and (snapshot.phase == "Playing" or snapshot.phase == "LeadPending")
+		        local passEnabled = snapshot ~= nil and snapshot.phase == "Playing" and ownTurn and snapshot.hasCurrentPlay == true and snapshot.winningPlayerIndex ~= ownSeat and not snapshot.passed[ownSeat] and not pending
+		        self.SubmitButton.ButtonComponent.Enable = submitEnabled
+		        self.PassButton.ButtonComponent.Enable = passEnabled
+		        self.MobileSubmitButton.ButtonComponent.Enable = submitEnabled
+		        self.MobilePassButton.ButtonComponent.Enable = passEnabled
+	end
+
+	@ExecSpace("ClientOnly")
+	method void SubmitSelected()
+		        self:UpdateActionButtons()
+		        if not self.SubmitButton.ButtonComponent.Enable and not self.MobileSubmitButton.ButtonComponent.Enable then return end
+		        local bridge = self:GetLocalBridge()
+		        if bridge == nil then return end
+		        local requestId = self:NextRequestId("submit")
+		        self._T.PendingSubmitId = requestId
+		        self:UpdateActionButtons()
+		        bridge:RequestSubmit(requestId, self._T.SelectedTileIds, self._T.RenderedVersion)
+	end
+
+	@ExecSpace("ClientOnly")
+	method void PassTurn()
+		        self:UpdateActionButtons()
+		        if not self.PassButton.ButtonComponent.Enable and not self.MobilePassButton.ButtonComponent.Enable then return end
+		        local bridge = self:GetLocalBridge()
+		        if bridge == nil then return end
+		        local requestId = self:NextRequestId("pass")
+		        self._T.PendingPassId = requestId
+		        self:UpdateActionButtons()
+		        bridge:RequestPass(requestId, self._T.RenderedVersion)
+	end
+
+	@ExecSpace("ClientOnly")
+	method void HandleActionResult(table result)
+		        if result == nil then return end
+		        if result.requestId == self._T.PendingSubmitId then self._T.PendingSubmitId = "" end
+		        if result.requestId == self._T.PendingPassId then self._T.PendingPassId = "" end
+		        if result.ok then
+		            self.ErrorText.TextGUIRendererComponent.Text = result.action .. " 성공"
+		            if result.action == "Submit" then self._T.SelectedById = {} self._T.SelectedTileIds = {} end
+		        else
+		            self.ErrorText.TextGUIRendererComponent.Text = self:ReasonText(result.reason)
+		        end
+		        self:UpdateActionButtons()
+	end
+
+	method string ReasonText(string reason)
+		        if reason == "not_turn" then return "현재 당신의 차례가 아닙니다." end
+		        if reason == "already_passed" then return "이 트릭에서는 이미 패스했습니다." end
+		        if reason == "illegal_play" then return "낼 수 없는 타일 조합입니다." end
+		        if reason == "tile_ownership" then return "손패가 갱신되었습니다. 다시 선택해 주세요." end
+		        if reason == "stale_version" then return "게임 상태가 변경되었습니다. 최신 상태로 갱신합니다." end
+		        if reason == "winner_cannot_pass" then return "새 트릭을 시작해야 합니다." end
+		        if reason == "invalid_request_id" then return "요청을 다시 시도해 주세요." end
+		        return "현재 단계에서는 사용할 수 없는 동작입니다. (" .. tostring(reason) .. ")"
+	end
+
+end

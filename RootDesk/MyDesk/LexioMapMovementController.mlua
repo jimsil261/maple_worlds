@@ -1,0 +1,27 @@
+@Logic
+script LexioMapMovementController extends Logic
+
+	property number map01InputSpeed = 1.2
+
+	@ExecSpace("ClientOnly")
+	method void OnBeginPlay()
+		        self._T.BaseInputSpeed = nil
+		        self._T.LastAppliedMap = ""
+	end
+
+	@ExecSpace("ClientOnly")
+	method void OnUpdate(number delta)
+		        local player = _UserService.LocalPlayer
+		        if player == nil or player.MovementComponent == nil then return end
+		        if self._T.BaseInputSpeed == nil then self._T.BaseInputSpeed = player.MovementComponent.InputSpeed end
+		        local mapName = player.CurrentMapName or ""
+		        local targetSpeed = self._T.BaseInputSpeed
+		        if mapName == "map01" then targetSpeed = self.map01InputSpeed end
+		        if player.MovementComponent.InputSpeed ~= targetSpeed then player.MovementComponent.InputSpeed = targetSpeed end
+		        if self._T.LastAppliedMap ~= mapName then
+		            self._T.LastAppliedMap = mapName
+		            log("[LexioMovement] map=" .. mapName .. " speed=" .. tostring(targetSpeed))
+		        end
+	end
+
+end

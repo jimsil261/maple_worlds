@@ -1,0 +1,303 @@
+@Logic
+script LexioRules extends Logic
+
+	property integer INITIAL_SCORE = 64
+
+	property integer SUIT_CLOUD = 1
+
+	property integer SUIT_STAR = 2
+
+	property integer SUIT_MOON = 3
+
+	property integer SUIT_SUN = 4
+
+	method integer GetMaxRank(integer playerCount)
+		        -- Returns the highest numbered tile used for the requested player count.
+		        if playerCount == 3 then return 9 end
+		        if playerCount == 4 then return 13 end
+		        if playerCount == 5 then return 15 end
+		        return 0
+	end
+
+	method integer GetRankStrength(integer rank, integer playerCount)
+		        -- Maps the official 3..max,1,2 order to an increasing strength value.
+		        local maxRank = self:GetMaxRank(playerCount)
+		        if maxRank == 0 or rank < 1 or rank > maxRank then return 0 end
+		        if rank == 1 then return maxRank - 1 end
+		        if rank == 2 then return maxRank end
+		        return rank - 2
+	end
+
+	method boolean IsTileValid(any tile, integer playerCount)
+		        -- Validates a tile against the player-count-specific tile range and four suits.
+		        if tile == nil then return false end
+		        if tile.rank == nil or tile.suit == nil then return false end
+		        if self:GetRankStrength(tile.rank, playerCount) == 0 then return false end
+		        return tile.suit >= self.SUIT_CLOUD and tile.suit <= self.SUIT_SUN
+	end
+
+	method table CopyAndSortTiles(table tiles, integer playerCount)
+		        -- Returns tiles sorted from weak to strong without mutating the caller's array.
+		        local copied = {}
+		        for _, tile in ipairs(tiles) do table.insert(copied, tile) end
+		        table.sort(copied, function(a, b)
+		            local ar = self:GetRankStrength(a.rank, playerCount)
+		            local br = self:GetRankStrength(b.rank, playerCount)
+		            if ar ~= br then return ar < br end
+		            return a.suit < b.suit
+		        end)
+		        return copied
+	end
+
+	method boolean HasDuplicateTile(table tiles)
+		        -- Detects physically impossible duplicate rank-and-suit tiles.
+		        local seen = {}
+		        for _, tile in ipairs(tiles) do
+		            local key = tostring(tile.rank) .. ":" .. tostring(tile.suit)
+		            if seen[key] then return true end
+		            seen[key] = true
+		        end
+		        return false
+	end
+
+	method table BuildRankCounts(table tiles)
+		        -- Counts tiles by number for combination classification.
+		        local counts = {}
+		        for _, tile in ipairs(tiles) do
+		            counts[tile.rank] = (counts[tile.rank] or 0) + 1
+		        end
+		        return counts
+	end
+
+	method table FindStraightKey(table tiles, integer playerCount)
+		        -- Matches only the official straight whitelist and returns its ordered strength key.
+		        local maxRank = self:GetMaxRank(playerCount)
+		        if #tiles ~= 5 or maxRank == 0 then return nil end
+		        local present = {}
+		        for _, tile in ipairs(tiles) do
+		            if present[tile.rank] then return nil end
+		            present[tile.rank] = tile
+		        end
+		
+		        local function matches(ranks)
+		            for _, rank in ipairs(ranks) do
+		                if present[rank] == nil then return false end
+		            end
+		            return true
+		        end
+		
+		        if matches({ 1, 2, 3, 4, 5 }) then
+		            return { maxRank - 3, present[2].suit }
+		        end
+		        if matches({ 2, 3, 4, 5, 6 }) then
+		            return { maxRank - 4, present[2].suit }
+		        end
+		        local specialStart = maxRank - 3
+		        if matches({ specialStart, specialStart + 1, specialStart + 2, maxRank, 1 }) then
+		            return { maxRank - 5, present[1].suit }
+		        end
+		        for startRank = 3, maxRank - 4 do
+		            if matches({ startRank, startRank + 1, startRank + 2, startRank + 3, startRank + 4 }) then
+		                return { startRank - 2, present[startRank + 4].suit }
+		            end
+		        end
+		        return nil
+	end
+
+	method table ClassifyPlay(table tiles, integer playerCount)
+		        -- Validates and classifies one legal tile submission.
+		        if tiles == nil then return { valid = false, reason = "tiles_nil" } end
+		        local count = #tiles
+		        if count ~= 1 and count ~= 2 and count ~= 3 and count ~= 5 then
+		            return { valid = false, reason = "invalid_tile_count" }
+		        end
+		        for _, tile in ipairs(tiles) do
+		            if not self:IsTileValid(tile, playerCount) then
+		                return { valid = false, reason = "invalid_tile" }
+		            end
+		        end
+		        if self:HasDuplicateTile(tiles) then
+		            return { valid = false, reason = "duplicate_tile" }
+		        end
+		
+		        local sorted = self:CopyAndSortTiles(tiles, playerCount)
+		        local rankCounts = self:BuildRankCounts(sorted)
+		        if count == 1 then
+		            return { valid = true, kind = "single", count = 1,
+		                key = { self:GetRankStrength(sorted[1].rank, playerCount), sorted[1].suit } }
+		        end
+		        if count == 2 or count == 3 then
+		            local rank = sorted[1].rank
+		            for _, tile in ipairs(sorted) do
+		                if tile.rank ~= rank then return { valid = false, reason = "rank_mismatch" } end
+		            end
+		            local kind = count == 2 and "pair" or "triple"
+		            return { valid = true, kind = kind, count = count,
+		                key = { self:GetRankStrength(rank, playerCount), sorted[#sorted].suit } }
+		        end
+		
+		        local isFlush = true
+		        for index = 2, #sorted do
+		            if sorted[index].suit ~= sorted[1].suit then isFlush = false break end
+		        end
+		        local straightKey = self:FindStraightKey(sorted, playerCount)
+		        if straightKey ~= nil and isFlush then
+		            return { valid = true, kind = "straight_flush", count = 5, category = 5, key = straightKey,
+		                todo = "straight_suit_tiebreak_not_explicit" }
+		        end
+		
+		        local tripleRank = nil
+		        local pairRank = nil
+		        local fourRank = nil
+		        for rank, rankCount in pairs(rankCounts) do
+		            if rankCount == 4 then fourRank = rank end
+		            if rankCount == 3 then tripleRank = rank end
+		            if rankCount == 2 then pairRank = rank end
+		        end
+		        if fourRank ~= nil then
+		            return { valid = true, kind = "four_kind", count = 5, category = 4,
+		                key = { self:GetRankStrength(fourRank, playerCount) }, todo = "four_kind_kicker_unspecified" }
+		        end
+		        if tripleRank ~= nil and pairRank ~= nil then
+		            return { valid = true, kind = "full_house", count = 5, category = 3,
+		                key = { self:GetRankStrength(tripleRank, playerCount) }, todo = "full_house_pair_tiebreak_unspecified" }
+		        end
+		        if isFlush then
+		            local key = {}
+		            for index = #sorted, 1, -1 do
+		                table.insert(key, self:GetRankStrength(sorted[index].rank, playerCount))
+		            end
+		            table.insert(key, sorted[1].suit)
+		            return { valid = true, kind = "flush", count = 5, category = 2, key = key }
+		        end
+		        if straightKey ~= nil then
+		            return { valid = true, kind = "straight", count = 5, category = 1, key = straightKey,
+		                todo = "straight_suit_tiebreak_not_explicit" }
+		        end
+		        return { valid = false, reason = "invalid_five_tile_combination" }
+	end
+
+	method integer CompareKeys(table left, table right)
+		        -- Lexicographically compares two numeric comparison keys.
+		        local length = math.max(#left, #right)
+		        for index = 1, length do
+		            local a = left[index] or 0
+		            local b = right[index] or 0
+		            if a < b then return -1 end
+		            if a > b then return 1 end
+		        end
+		        return 0
+	end
+
+	method integer ComparePlays(table left, table right)
+		        -- Compares classified plays and returns -1, 0, or 1; invalid or unequal-count plays return 0.
+		        if left == nil or right == nil or not left.valid or not right.valid then return 0 end
+		        if left.count ~= right.count then return 0 end
+		        if left.count == 5 and left.category ~= right.category then
+		            return left.category < right.category and -1 or 1
+		        end
+		        if left.kind ~= right.kind then return 0 end
+		        return self:CompareKeys(left.key, right.key)
+	end
+
+	method boolean CanSubmit(table tiles, integer playerCount, any currentPlay, boolean hasPassed)
+		        -- Applies pass lockout, equal-count, and strictly-higher submission rules.
+		        if hasPassed then return false end
+		        local play = self:ClassifyPlay(tiles, playerCount)
+		        if not play.valid then return false end
+		        if currentPlay == nil then return true end
+		        return self:ComparePlays(play, currentPlay) > 0
+	end
+
+	method integer FindInitialLeader(table hands)
+		        -- Finds the sole player holding cloud 3; returns zero for missing or duplicated ownership.
+		        local ownerIndex = 0
+		        for playerIndex, hand in ipairs(hands) do
+		            for _, tile in ipairs(hand) do
+		                if tile.rank == 3 and tile.suit == self.SUIT_CLOUD then
+		                    if ownerIndex ~= 0 then return 0 end
+		                    ownerIndex = playerIndex
+		                end
+		            end
+		        end
+		        return ownerIndex
+	end
+
+	method table CreateTrickState(integer leaderIndex, integer playerCount)
+		        -- Creates pass-state tracking for one trick.
+		        local passed = {}
+		        for index = 1, playerCount do passed[index] = false end
+		        return { leaderIndex = leaderIndex, winningPlayerIndex = 0, currentPlay = nil, passed = passed }
+	end
+
+	method boolean MarkPass(table state, integer playerIndex)
+		        -- Permanently marks a player passed for the current trick.
+		        if state == nil or state.passed == nil or state.passed[playerIndex] == nil then return false end
+		        if playerIndex == state.winningPlayerIndex then return false end
+		        state.passed[playerIndex] = true
+		        return true
+	end
+
+	method boolean StartNewTrick(table state, integer playerIndex, table tiles, integer playerCount)
+		        -- Starts a new trick only from the prior winner's legal lead and resets every pass flag.
+		        if state == nil or state.winningPlayerIndex ~= playerIndex then return false end
+		        if not self:CanSubmit(tiles, playerCount, nil, false) then return false end
+		        for index = 1, playerCount do state.passed[index] = false end
+		        state.leaderIndex = playerIndex
+		        state.winningPlayerIndex = playerIndex
+		        state.currentPlay = self:ClassifyPlay(tiles, playerCount)
+		        return true
+	end
+
+	method integer GetEffectiveRemaining(integer remainingCount, integer remainingTwos)
+		        -- Applies the official x2/x4/x8 penalty multiplier for one to three remaining twos.
+		        if remainingCount < 0 or remainingTwos < 0 or remainingTwos > 3 then return -1 end
+		        local multiplier = 1
+		        for _ = 1, remainingTwos do multiplier = multiplier * 2 end
+		        return remainingCount * multiplier
+	end
+
+	method table CalculateScoreDeltas(table standings)
+		        -- Calculates zero-sum pairwise score transfers from ordered finishing standings.
+		        local deltas = {}
+		        local effective = {}
+		        for index, entry in ipairs(standings) do
+		            local value = self:GetEffectiveRemaining(entry.remaining, entry.twos or 0)
+		            if value < 0 then return nil end
+		            effective[index] = value
+		            deltas[index] = 0
+		        end
+		        for better = 1, #standings - 1 do
+		            for worse = better + 1, #standings do
+		                local transfer = effective[worse] - effective[better]
+		                if transfer > 0 then
+		                    deltas[better] = deltas[better] + transfer
+		                    deltas[worse] = deltas[worse] - transfer
+		                end
+		            end
+		        end
+		        return deltas
+	end
+
+	method table CreateScoreLedger(integer playerCount)
+		        -- Creates a signed-integer score ledger with 64 points per player.
+		        if playerCount < 3 or playerCount > 5 then return nil end
+		        local ledger = {}
+		        for index = 1, playerCount do ledger[index] = self.INITIAL_SCORE end
+		        return ledger
+	end
+
+	method boolean ApplyScoreDeltas(table ledger, table deltas)
+		        -- Applies signed score deltas without chip-availability or zero-floor constraints.
+		        if ledger == nil or deltas == nil or #ledger ~= #deltas then return false end
+		        local sum = 0
+		        for _, delta in ipairs(deltas) do
+		            if delta ~= math.floor(delta) then return false end
+		            sum = sum + delta
+		        end
+		        if sum ~= 0 then return false end
+		        for index, delta in ipairs(deltas) do ledger[index] = ledger[index] + delta end
+		        return true
+	end
+
+end

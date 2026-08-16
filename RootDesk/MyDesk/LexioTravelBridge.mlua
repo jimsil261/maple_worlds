@@ -1,0 +1,220 @@
+@Component
+script LexioTravelBridge extends Component
+
+	property string boundUserId = ""
+
+	property string allowedMapName = ""
+
+	property boolean inFlight = false
+
+	property string destinationMapName = ""
+
+	property number flightElapsed = 0
+
+	property number cooldownRemaining = 0
+
+	property number requestCooldown = 1
+
+	property number flightTimeout = 8
+
+	property boolean lifecycleRetryActive = false
+
+	property number lifecycleRetryElapsed = 0
+
+	property integer lifecycleRetryAttempts = 0
+
+	property integer lifecycleGeneration = 0
+
+	@ExecSpace("ServerOnly")
+	method void BindServer(Entity playerEntity, string userId, string mapName)
+		        if playerEntity ~= self.Entity then return end
+		        if playerEntity.PlayerComponent == nil then return end
+		        if playerEntity.PlayerComponent.UserId ~= userId then return end
+		        self.boundUserId = userId
+		        self.allowedMapName = mapName
+		        if self.inFlight and playerEntity.CurrentMapName == self.destinationMapName then
+		            self:CompleteTravel("arrived_on_bind")
+		        end
+	end
+
+	@ExecSpace("ServerOnly")
+	method void OnUpdate(number delta)
+		        if self.cooldownRemaining > 0 then self.cooldownRemaining = math.max(0, self.cooldownRemaining - delta) end
+		        if self.lifecycleRetryActive then
+		            self.lifecycleRetryElapsed = self.lifecycleRetryElapsed + delta
+		            if self.lifecycleRetryElapsed >= 0.5 then
+		                self.lifecycleRetryElapsed = 0
+		                self.lifecycleRetryAttempts = self.lifecycleRetryAttempts + 1
+		                local generation = self.lifecycleGeneration
+		                if self:TryRegisterCurrentPlayer() then
+		                    if generation == self.lifecycleGeneration then self.lifecycleRetryActive = false end
+		                    log("[LexioTravelBridge] MAP ENTER RETRY stopped userId=" .. tostring(self.boundUserId) .. " reason=registered attempts=" .. tostring(self.lifecycleRetryAttempts))
+		                elseif self.lifecycleRetryAttempts >= 6 then
+		                    if generation == self.lifecycleGeneration then self.lifecycleRetryActive = false end
+		                    log_warning("[LexioTravelBridge] MAP ENTER RETRY stopped userId=" .. tostring(self.boundUserId) .. " reason=timeout attempts=" .. tostring(self.lifecycleRetryAttempts))
+		                end
+		            end
+		        end
+		        if not self.inFlight then return end
+		        self.flightElapsed = self.flightElapsed + delta
+		        if self.Entity.CurrentMapName == self.destinationMapName then
+		            self:CompleteTravel("arrived")
+		            return
+		        end
+		        if self.flightElapsed >= self.flightTimeout then
+		            log_warning("[LexioTravel] TIMEOUT userId=" .. self.boundUserId .. " destination=" .. self.destinationMapName)
+		            self:CompleteTravel("timeout")
+		        end
+	end
+
+	@ExecSpace("ServerOnly")
+	method boolean TryRegisterCurrentPlayer()
+		        local playerEntity = self.Entity
+		        if playerEntity == nil or not isvalid(playerEntity) or playerEntity.PlayerComponent == nil then return false end
+		        local userId = playerEntity.PlayerComponent.UserId
+		        if userId == nil or userId == "" or playerEntity.CurrentMapName ~= "map01" then return false end
+		        local host = _EntityService:GetEntityByPath("/maps/map01/LexioManualSessionHost")
+		        if host == nil or not isvalid(host) or host.CurrentMap ~= playerEntity.CurrentMap then return false end
+		        local coordinator = host:GetComponent("script.LexioSessionCoordinator")
+		        if coordinator == nil then return false end
+		        return coordinator:RegisterPlayerEntity(playerEntity)
+	end
+
+	@ExecSpace("ServerOnly")
+	method void OnMapEnter(Entity enteredMap)
+		        self.lifecycleGeneration = self.lifecycleGeneration + 1
+		        self.lifecycleRetryActive = false
+		        self.lifecycleRetryElapsed = 0
+		        self.lifecycleRetryAttempts = 0
+		        local playerEntity = self.Entity
+		        if playerEntity == nil or not isvalid(playerEntity) or playerEntity.PlayerComponent == nil then return end
+		        local userId = playerEntity.PlayerComponent.UserId
+		        if userId == nil or userId == "" then return end
+		        if enteredMap == nil or playerEntity.CurrentMap ~= enteredMap or enteredMap.Name ~= "map01" then return end
+		        if self:TryRegisterCurrentPlayer() then return end
+		        self.lifecycleRetryActive = true
+		        log("[LexioTravelBridge] MAP ENTER RETRY started userId=" .. userId .. " generation=" .. tostring(self.lifecycleGeneration))
+	end
+
+	@ExecSpace("ServerOnly")
+	method void OnMapLeave(Entity leftMap)
+		        self.lifecycleGeneration = self.lifecycleGeneration + 1
+		        self.lifecycleRetryActive = false
+		        self.lifecycleRetryElapsed = 0
+		        self.lifecycleRetryAttempts = 0
+		        if leftMap == nil or leftMap.Name ~= "map01" then return end
+		        local playerEntity = self.Entity
+		        if playerEntity == nil or not isvalid(playerEntity) or playerEntity.PlayerComponent == nil then return end
+		        local host = _EntityService:GetEntityByPath("/maps/map01/LexioManualSessionHost")
+		        local coordinator = host ~= nil and host:GetComponent("script.LexioSessionCoordinator") or nil
+		        if coordinator ~= nil then coordinator:RemovePlayerEntity(playerEntity) end
+	end
+
+	@ExecSpace("ServerOnly")
+	method void CompleteTravel(string reason)
+		        log("[LexioTravel] COMPLETE userId=" .. self.boundUserId .. " destination=" .. self.destinationMapName .. " reason=" .. reason)
+		        self.inFlight = false
+		        self.destinationMapName = ""
+		        self.flightElapsed = 0
+	end
+
+	method table GetRoute(string routeId)
+		        if routeId == "LEXIO_PLAY" then
+		            return {
+		                sourceMap = "TileMapTemplate",
+		                objectKey = "LexioEntrance",
+		                objectPath = "/maps/TileMapTemplate/LexioEntrance",
+		                destinationMap = "map01",
+		                destinationPosition = Vector3(0, 0, 0)
+		            }
+		        end
+		        if routeId == "LEXIO_EXIT" then
+		            return {
+		                sourceMap = "map01",
+		                objectKey = "LexioExit",
+		                objectPath = "/maps/map01/LexioExit",
+		                destinationMap = "TileMapTemplate",
+		                destinationPosition = Vector3(-2, 0, 0)
+		            }
+		        end
+		        return nil
+	end
+
+	@ExecSpace("ServerOnly")
+	method string ValidateRequest(string callerUserId, string objectKey, string routeId, Entity claimedPlayerEntity)
+		        if callerUserId == nil or callerUserId == "" or callerUserId ~= self.boundUserId then return "caller_mismatch" end
+		        if claimedPlayerEntity ~= self.Entity then return "player_mismatch" end
+		        if self.Entity.PlayerComponent == nil or self.Entity.PlayerComponent.UserId ~= callerUserId then return "player_mismatch" end
+		        if self.inFlight then return "in_flight" end
+		        if self.cooldownRemaining > 0 then return "cooldown" end
+		        local route = self:GetRoute(routeId)
+		        if route == nil then return "invalid_route" end
+		        if objectKey ~= route.objectKey then return "invalid_object" end
+		        if self.allowedMapName ~= route.sourceMap or self.Entity.CurrentMapName ~= route.sourceMap then return "invalid_source_map" end
+		        local source = _EntityService:GetEntityByPath(route.objectPath)
+		        if source == nil or not isvalid(source) then return "missing_object" end
+		        if source.CurrentMap == nil or source.CurrentMap.Name ~= route.sourceMap then return "invalid_object_map" end
+		        if source.InteractionComponent == nil then return "missing_interaction" end
+		        local interactable = source:GetComponent("script.LexioTravelInteractable")
+		        if interactable == nil or interactable.ObjectKey ~= objectKey or interactable.RouteId ~= routeId then return "object_contract" end
+		        local playerPosition = self.Entity.TransformComponent.WorldPosition
+		        local sourcePosition = source.TransformComponent.WorldPosition
+		        local distance = Vector2.Distance(Vector2(playerPosition.x, playerPosition.y), Vector2(sourcePosition.x, sourcePosition.y))
+		        if distance > interactable.ServerUseDistance then return "too_far" end
+		        if routeId == "LEXIO_EXIT" then
+		            local host = self.Entity.CurrentMap:GetChildByName("LexioManualSessionHost")
+		            local coordinator = host ~= nil and host:GetComponent("script.LexioSessionCoordinator") or nil
+		            if coordinator ~= nil then
+		                local exitReason = coordinator:GetExitRejectionReason(callerUserId, self.Entity)
+		                if exitReason ~= "" then return exitReason end
+		            end
+		        end
+		        return ""
+	end
+
+	@ExecSpace("ServerOnly")
+	method boolean BeginTravel(string objectKey, string routeId, Entity claimedPlayerEntity, string callerUserId)
+		        local rejection = self:ValidateRequest(callerUserId, objectKey, routeId, claimedPlayerEntity)
+		        if rejection ~= "" then
+		            log_warning("[LexioTravel] REJECT userId=" .. tostring(callerUserId) .. " route=" .. tostring(routeId) .. " reason=" .. rejection)
+		            return false
+		        end
+		        local route = self:GetRoute(routeId)
+		        if routeId == "LEXIO_EXIT" then
+		            local host = self.Entity.CurrentMap:GetChildByName("LexioManualSessionHost")
+		            local coordinator = host ~= nil and host:GetComponent("script.LexioSessionCoordinator") or nil
+		            if coordinator ~= nil then coordinator:PreparePlayerExit(callerUserId, self.Entity) end
+		        end
+		        self.inFlight = true
+		        self.destinationMapName = route.destinationMap
+		        self.flightElapsed = 0
+		        self.cooldownRemaining = self.requestCooldown
+		        log("[LexioTravel] BEGIN userId=" .. callerUserId .. " route=" .. routeId .. " destination=" .. route.destinationMap)
+		        _TeleportService:TeleportToMapPosition(self.Entity, route.destinationPosition, route.destinationMap)
+		        return true
+	end
+
+	@ExecSpace("ServerOnly")
+	method boolean ReturnFinishedPlayerToLobby(string callerUserId, integer finishGeneration)
+		        if callerUserId == nil or callerUserId == "" or callerUserId ~= self.boundUserId then return false end
+		        if finishGeneration <= 0 then return false end
+		        if self.Entity == nil or not isvalid(self.Entity) or self.Entity.PlayerComponent == nil then return false end
+		        if self.Entity.PlayerComponent.UserId ~= callerUserId or self.Entity.CurrentMapName ~= "map01" then return false end
+		        if self.inFlight then return false end
+		        self.inFlight = true
+		        self.destinationMapName = "TileMapTemplate"
+		        self.flightElapsed = 0
+		        self.cooldownRemaining = self.requestCooldown
+		        local controls = self.Entity:GetComponent("script.LexioManualTestControls")
+		        if controls ~= nil then controls:ForceStandForLobby(callerUserId) end
+		        log("[LexioTravel] FINISHED RETURN userId=" .. callerUserId .. " generation=" .. tostring(finishGeneration))
+		        _TeleportService:TeleportToMapPosition(self.Entity, Vector3(-2, 0, 0), "TileMapTemplate")
+		        return true
+	end
+
+	@ExecSpace("Server")
+	method void RequestTravel(string objectKey, string routeId, Entity claimedPlayerEntity)
+		        self:BeginTravel(objectKey, routeId, claimedPlayerEntity, senderUserId)
+	end
+
+end

@@ -1,0 +1,95 @@
+@Component
+script LexioTableRegistry extends Component
+
+	property table seatOwnerByKey = {}
+
+	property table seatByUserId = {}
+
+	property table playerByUserId = {}
+
+	@ExecSpace("ServerOnly")
+	method void OnBeginPlay()
+		self.seatOwnerByKey = {}
+		self.seatByUserId = {}
+		self.playerByUserId = {}
+		log("[LexioTableRegistry] READY tables=3 seats=9")
+	end
+
+	method boolean IsValidTableSeat(string tableId, integer seatIndex, string chairName)
+		if tableId ~= "table01" and tableId ~= "table02" and tableId ~= "table03" then return false end
+		if seatIndex < 1 or seatIndex > 3 then return false end
+		local tableNumber = string.sub(tableId, 6, 7)
+		return chairName == "LexioTable" .. tableNumber .. "Chair" .. tostring(seatIndex)
+	end
+
+	method string MakeSeatKey(string tableId, integer seatIndex)
+		return tableId .. ":" .. tostring(seatIndex)
+	end
+
+	@ExecSpace("ServerOnly")
+	method boolean TryReserveSeat(string userId, Entity playerEntity, string tableId, integer seatIndex, string chairName)
+		if userId == nil or userId == "" or playerEntity == nil or not isvalid(playerEntity) then return false end
+		if playerEntity.PlayerComponent == nil or playerEntity.PlayerComponent.UserId ~= userId then return false end
+		if playerEntity.CurrentMap ~= self.Entity.CurrentMap or playerEntity.CurrentMapName ~= "map01" then return false end
+		if not self:IsValidTableSeat(tableId, seatIndex, chairName) then
+			log("[LexioTableRegistry] REJECT reason=invalid_seat userId=" .. userId)
+			return false
+		end
+		local chair = _EntityService:GetEntityByPath("/maps/map01/" .. chairName)
+		if chair == nil or not isvalid(chair) then return false end
+		local playerPosition = playerEntity.TransformComponent.WorldPosition
+		local chairPosition = chair.TransformComponent.WorldPosition
+		local distance = Vector2.Distance(Vector2(playerPosition.x, playerPosition.y), Vector2(chairPosition.x, chairPosition.y))
+		if distance > 1.2 then
+			log("[LexioTableRegistry] REJECT reason=too_far userId=" .. userId .. " distance=" .. tostring(distance))
+			return false
+		end
+		local existing = self.seatByUserId[userId]
+		local seatKey = self:MakeSeatKey(tableId, seatIndex)
+		if existing ~= nil and existing.key ~= seatKey then
+			log("[LexioTableRegistry] REJECT reason=already_seated userId=" .. userId)
+			return false
+		end
+		local owner = self.seatOwnerByKey[seatKey]
+		if owner ~= nil and owner ~= userId then
+			log("[LexioTableRegistry] REJECT reason=occupied key=" .. seatKey)
+			return false
+		end
+		self.seatOwnerByKey[seatKey] = userId
+		self.seatByUserId[userId] = { key = seatKey, tableId = tableId, seatIndex = seatIndex, chairName = chairName }
+		self.playerByUserId[userId] = playerEntity
+		log("[LexioTableRegistry] RESERVED userId=" .. userId .. " table=" .. tableId .. " seat=" .. tostring(seatIndex))
+		return true
+	end
+
+	@ExecSpace("ServerOnly")
+	method boolean ReleasePlayer(string userId, string reason)
+		local seat = self.seatByUserId[userId]
+		if seat == nil then return true end
+		if self.seatOwnerByKey[seat.key] == userId then self.seatOwnerByKey[seat.key] = nil end
+		self.seatByUserId[userId] = nil
+		self.playerByUserId[userId] = nil
+		log("[LexioTableRegistry] RELEASED userId=" .. userId .. " table=" .. seat.tableId .. " seat=" .. tostring(seat.seatIndex) .. " reason=" .. tostring(reason))
+		return true
+	end
+
+	method table FindPlayerSeat(string userId)
+		return self.seatByUserId[userId]
+	end
+
+	method table GetTablePlayers(string tableId)
+		local players = {}
+		for seatIndex = 1, 3 do
+			local userId = self.seatOwnerByKey[self:MakeSeatKey(tableId, seatIndex)]
+			if userId ~= nil then table.insert(players, { userId = userId, playerEntity = self.playerByUserId[userId], seatIndex = seatIndex }) end
+		end
+		return players
+	end
+
+	@ExecSpace("ServerOnly")
+	@EventSender("Service", "UserService")
+	handler HandleUserLeaveEvent(UserLeaveEvent event)
+		self:ReleasePlayer(event.UserId, "user_leave")
+	end
+
+end

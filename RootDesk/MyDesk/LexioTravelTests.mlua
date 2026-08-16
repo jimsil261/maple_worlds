@@ -1,0 +1,51 @@
+@Component
+script LexioTravelTests extends Component
+
+	property integer passedCount = 0
+
+	property integer failedCount = 0
+
+	method void AssertTrue(boolean value, string name)
+		        if value then
+		            self.passedCount = self.passedCount + 1
+		            log("[LexioTravelTests][PASS] " .. name)
+		        else
+		            self.failedCount = self.failedCount + 1
+		            log_error("[LexioTravelTests][FAIL] " .. name)
+		        end
+	end
+
+	method void AssertEqual(any expected, any actual, string name)
+		        self:AssertTrue(expected == actual, name .. " expected=" .. tostring(expected) .. " actual=" .. tostring(actual))
+	end
+
+	@ExecSpace("ServerOnly")
+	method void RunStaticContractTests(any bridge)
+		        self:AssertTrue(bridge:GetRoute("LEXIO_PLAY") ~= nil, "allowed_entry_route")
+		        self:AssertTrue(bridge:GetRoute("LEXIO_EXIT") ~= nil, "allowed_exit_route")
+		        self:AssertTrue(bridge:GetRoute("LEXIO_PRIVATE") == nil, "private_room_not_implemented")
+		        self:AssertTrue(bridge:GetRoute("LEXIO_QUICK_MATCH") == nil, "quick_match_not_implemented")
+		        self:AssertEqual("map01", bridge:GetRoute("LEXIO_PLAY").destinationMap, "entry_destination_allowlisted")
+		        self:AssertEqual("TileMapTemplate", bridge:GetRoute("LEXIO_EXIT").destinationMap, "exit_destination_allowlisted")
+	end
+
+	@ExecSpace("ServerOnly")
+	method void OnBeginPlay()
+		        self.passedCount = 0
+		        self.failedCount = 0
+		        local bridge = self.Entity:GetComponent("script.LexioTravelBridge")
+		        local coordinatorEntity = self.Entity:GetChildByName("LexioTravelTestCoordinator")
+		        local coordinator = coordinatorEntity ~= nil and coordinatorEntity:GetComponent("script.LexioSessionCoordinator") or nil
+		        self:AssertTrue(bridge ~= nil, "travel_bridge_available")
+		        self:AssertTrue(coordinator ~= nil, "session_coordinator_available")
+		        if bridge == nil or coordinator == nil then return end
+		        self:RunStaticContractTests(bridge)
+		        self:AssertTrue(coordinator:IsExitPhaseAllowed("WaitingPlayers"), "waiting_players_exit_allowed")
+		        self:AssertTrue(not coordinator:IsExitPhaseAllowed("Playing"), "playing_exit_rejected")
+		        self:AssertTrue(not coordinator:IsExitPhaseAllowed("LeadPending"), "lead_pending_exit_rejected")
+		        self:AssertTrue(coordinator:IsExitPhaseAllowed("Finished"), "finished_exit_allowed")
+		        log("[LexioTravelTests] RUNTIME CASES REGISTERED: allowed travel, arbitrary route, distance, player mismatch, duplicate request, arrival, HUD restoration")
+		        log("[LexioTravelTests] COMPLETE passed=" .. tostring(self.passedCount) .. " failed=" .. tostring(self.failedCount))
+	end
+
+end

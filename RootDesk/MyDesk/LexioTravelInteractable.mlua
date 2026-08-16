@@ -1,0 +1,24 @@
+@Component
+script LexioTravelInteractable extends Component
+
+	property string ObjectKey = ""
+
+	property string RouteId = ""
+
+	property number ServerUseDistance = 2
+
+	@ExecSpace("ClientOnly")
+	@EventSender("Self")
+	handler HandleInteractionEvent(InteractionEvent event)
+		        local player = _UserService.LocalPlayer
+		        if player == nil or event.InteractionEntity ~= player then return end
+		        local bridge = player:GetComponent("script.LexioTravelBridge")
+		        if bridge == nil then
+		            log_warning("[LexioTravelInteractable] bridge unavailable route=" .. self.RouteId)
+		            return
+		        end
+		        log("[LexioTravelInteractable] INTERACT route=" .. self.RouteId)
+		        bridge:RequestTravel(self.ObjectKey, self.RouteId, player)
+	end
+
+end

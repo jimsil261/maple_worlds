@@ -1,0 +1,276 @@
+@Component
+script LexioPlayerBridge extends Component
+
+	property Entity SessionEntity = ""
+
+	property Entity CoordinatorEntity = ""
+
+	property Entity ownerPlayerEntity = ""
+
+	property string boundUserId = ""
+
+	property integer seatIndex = 0
+
+	property string role = "Unbound"
+
+	property string lastRequestId = ""
+
+	property string lastRequestSignature = ""
+
+	property table lastRequestEnvelope = {}
+
+	@ExecSpace("ServerOnly")
+	method void BindServer(Entity sessionEntity, Entity coordinatorEntity, Entity playerEntity, string userId, integer seat, string assignedRole)
+		        self.SessionEntity = sessionEntity
+		        self.CoordinatorEntity = coordinatorEntity
+		        self.ownerPlayerEntity = playerEntity
+		        self.boundUserId = userId
+		        self.seatIndex = seat
+		        self.role = assignedRole
+		        self.lastRequestId = ""
+		        self.lastRequestSignature = ""
+		        self.lastRequestEnvelope = {}
+		        self:RequestClientReady(userId)
+	end
+
+	@ExecSpace("Client")
+	method void RequestClientReady(string expectedUserId)
+		        local player = _UserService.LocalPlayer
+		        if player == nil or player ~= self.Entity or player.PlayerComponent == nil then return end
+		        if player.PlayerComponent.UserId ~= expectedUserId then return end
+		        self:NotifyClientReady()
+	end
+
+	@ExecSpace("ClientOnly")
+	method void OnBeginPlay()
+		        -- Client availability handshake. The server authenticates senderUserId before marking ready.
+		        self:NotifyClientReady()
+	end
+
+	@ExecSpace("ServerOnly")
+	method boolean IsAuthenticatedCaller(string callerUserId)
+		        if callerUserId == nil or callerUserId == "" then return false end
+		        if callerUserId ~= self.boundUserId then return false end
+		        if self.ownerPlayerEntity == nil or not isvalid(self.ownerPlayerEntity) then return false end
+		        if self.ownerPlayerEntity ~= self.Entity then return false end
+		        if self.ownerPlayerEntity.PlayerComponent == nil then return false end
+		        if callerUserId ~= self.ownerPlayerEntity.PlayerComponent.UserId then return false end
+		        return true
+	end
+
+	method boolean IsRequestIdValid(string requestId)
+		        return requestId ~= nil and requestId ~= "" and #requestId <= 64
+	end
+
+	method string BuildSubmitSignature(table tileIds, integer expectedStateVersion)
+		        local signature = "submit:" .. tostring(expectedStateVersion)
+		        if tileIds == nil then return signature .. ":nil" end
+		        for _, tileId in ipairs(tileIds) do signature = signature .. ":" .. tostring(tileId) end
+		        return signature
+	end
+
+	@ExecSpace("ServerOnly")
+	method any GetSession()
+		        if self.SessionEntity == nil or not isvalid(self.SessionEntity) then return nil end
+		        return self.SessionEntity:GetComponent("script.LexioGameSession")
+	end
+
+	@ExecSpace("ServerOnly")
+	method any GetCoordinator()
+		        if self.CoordinatorEntity == nil or not isvalid(self.CoordinatorEntity) then return nil end
+		        return self.CoordinatorEntity:GetComponent("script.LexioSessionCoordinator")
+	end
+
+	@ExecSpace("ServerOnly")
+	method void SendEnvelope(table envelope)
+		        local session = self:GetSession()
+		        local privateHand = nil
+		        local publicSnapshot = nil
+		        if session ~= nil then
+		            if session:IsRegisteredUser(self.boundUserId) then
+		                privateHand = { stateVersion = session.stateVersion, tiles = session:BuildPrivateHandSnapshot(self.boundUserId) }
+		            end
+		            local coordinator = self:GetCoordinator()
+		            if coordinator ~= nil then publicSnapshot = coordinator:BuildClientPublicSnapshot() end
+		        end
+		        -- Official targeted Client-call syntax: the hidden final argument is target UserId.
+		        self:ReceiveActionResult(envelope.requestId, envelope.action, envelope.ok, envelope.reason, envelope.stateVersion, privateHand, publicSnapshot, self.boundUserId)
+	end
+
+	@ExecSpace("ServerOnly")
+	method void CacheAndSend(string requestId, string signature, string action, table result)
+		        local envelope = {
+		            requestId = requestId,
+		            action = action,
+		            ok = result.ok,
+		            reason = result.reason,
+		            stateVersion = result.stateVersion
+		        }
+		        self.lastRequestId = requestId
+		        self.lastRequestSignature = signature
+		        self.lastRequestEnvelope = envelope
+		        self:SendEnvelope(envelope)
+	end
+
+	@ExecSpace("ServerOnly")
+	method void SendUncachedRejection(string requestId, string action, string reason)
+		        local session = self:GetSession()
+		        local version = 0
+		        if session ~= nil then version = session.stateVersion end
+		        self:SendEnvelope({ requestId = requestId or "", action = action, ok = false, reason = reason, stateVersion = version })
+	end
+
+	@ExecSpace("Server")
+	method void NotifyClientReady()
+		        if not self:IsAuthenticatedCaller(senderUserId) then return end
+		        local coordinator = self:GetCoordinator()
+		        if coordinator == nil then return end
+		        coordinator:MarkReady(self.boundUserId, self.ownerPlayerEntity)
+	end
+
+	@ExecSpace("Server")
+	method void RequestSubmit(string requestId, table tileIds, integer expectedStateVersion)
+		        if not self:IsAuthenticatedCaller(senderUserId) then return end
+		        if not self:IsRequestIdValid(requestId) then
+		            self:SendUncachedRejection(requestId, "Submit", "invalid_request_id")
+		            return
+		        end
+		        local signature = self:BuildSubmitSignature(tileIds, expectedStateVersion)
+		        if requestId == self.lastRequestId then
+		            -- Reuse never re-enters game logic, even if the new payload differs.
+		            self:SendEnvelope(self.lastRequestEnvelope)
+		            return
+		        end
+		        local session = self:GetSession()
+		        if self.role ~= "Player" or session == nil or not session:IsRegisteredUser(senderUserId) then
+		            self:CacheAndSend(requestId, signature, "Submit", { ok = false, reason = "not_player", stateVersion = session ~= nil and session.stateVersion or 0 })
+		            return
+		        end
+		        local result = session:SubmitForUser(senderUserId, tileIds, expectedStateVersion)
+		        self:CacheAndSend(requestId, signature, "Submit", result)
+		        if result.ok then
+		            local coordinator = self:GetCoordinator()
+		            if coordinator ~= nil then coordinator:BroadcastSnapshots() end
+		        end
+	end
+
+	@ExecSpace("Server")
+	method void RequestPass(string requestId, integer expectedStateVersion)
+		        if not self:IsAuthenticatedCaller(senderUserId) then return end
+		        if not self:IsRequestIdValid(requestId) then
+		            self:SendUncachedRejection(requestId, "Pass", "invalid_request_id")
+		            return
+		        end
+		        local signature = "pass:" .. tostring(expectedStateVersion)
+		        if requestId == self.lastRequestId then
+		            self:SendEnvelope(self.lastRequestEnvelope)
+		            return
+		        end
+		        local session = self:GetSession()
+		        if self.role ~= "Player" or session == nil or not session:IsRegisteredUser(senderUserId) then
+		            self:CacheAndSend(requestId, signature, "Pass", { ok = false, reason = "not_player", stateVersion = session ~= nil and session.stateVersion or 0 })
+		            return
+		        end
+		        local result = session:PassForUser(senderUserId, expectedStateVersion)
+		        self:CacheAndSend(requestId, signature, "Pass", result)
+		        if result.ok then
+		            local coordinator = self:GetCoordinator()
+		            if coordinator ~= nil then coordinator:BroadcastSnapshots() end
+		        end
+	end
+
+	@ExecSpace("Server")
+	method void RequestSnapshot(string requestId)
+		        if not self:IsAuthenticatedCaller(senderUserId) then return end
+		        if not self:IsRequestIdValid(requestId) then return end
+		        self:PushCurrentSnapshot()
+	end
+
+	@ExecSpace("Server")
+	method void RequestFinishDecision(string requestId, string decision, integer finishGeneration)
+		        if not self:IsAuthenticatedCaller(senderUserId) then return end
+		        if not self:IsRequestIdValid(requestId) then self:SendUncachedRejection(requestId, "FinishDecision", "invalid_request_id") return end
+		        local coordinator = self:GetCoordinator()
+		        local session = self:GetSession()
+		        if self.role ~= "Player" or coordinator == nil or session == nil then self:SendUncachedRejection(requestId, "FinishDecision", "not_player") return end
+		        local result = coordinator:SubmitFinishDecision(senderUserId, self.ownerPlayerEntity, decision, finishGeneration)
+		        self:ReceiveFinishDecisionResult(requestId, result.ok, result.reason, self.boundUserId)
+	end
+
+	@ExecSpace("ServerOnly")
+	method void PushCurrentSnapshot()
+		        local session = self:GetSession()
+		        if session == nil then return end
+		        local privateHand = nil
+		        if self.role == "Player" and session:IsRegisteredUser(self.boundUserId) then
+		            privateHand = { stateVersion = session.stateVersion, tiles = session:BuildPrivateHandSnapshot(self.boundUserId) }
+		        elseif self.role == "Player" and session.phase == "WaitingPlayers" then
+		            privateHand = { stateVersion = session.stateVersion, tiles = {} }
+		        end
+		        local coordinator = self:GetCoordinator()
+		        if coordinator == nil then return end
+		        self:ReceiveSnapshot(self.role, self.seatIndex, privateHand, coordinator:BuildClientPublicSnapshot(), self.boundUserId)
+	end
+
+	@ExecSpace("ClientOnly")
+	method void StoreSnapshotParts(table privateHand, table publicSnapshot)
+		        if privateHand == nil or publicSnapshot == nil then return end
+		        if privateHand.stateVersion == nil or publicSnapshot.stateVersion == nil then return end
+		        if self._T.PrivateByVersion == nil then self._T.PrivateByVersion = {} end
+		        if self._T.PublicByVersion == nil then self._T.PublicByVersion = {} end
+		        self._T.PrivateByVersion[privateHand.stateVersion] = privateHand
+		        self._T.PublicByVersion[publicSnapshot.stateVersion] = publicSnapshot
+		        self._T.LatestPrivateVersion = privateHand.stateVersion
+		        self._T.LatestPublicVersion = publicSnapshot.stateVersion
+		        local version = publicSnapshot.stateVersion
+		        local matchedPrivate = self._T.PrivateByVersion[version]
+		        local matchedPublic = self._T.PublicByVersion[version]
+		        if matchedPrivate == nil or matchedPublic == nil then return end
+		        self._T.MatchedPrivateHand = matchedPrivate.tiles
+		        self._T.MatchedPublicSnapshot = matchedPublic
+		        self._T.MatchedStateVersion = version
+		        self._T.SnapshotSequence = (self._T.SnapshotSequence or 0) + 1
+		        -- Bound the client cache to the single rendered version.
+		        self._T.PrivateByVersion = { [version] = matchedPrivate }
+		        self._T.PublicByVersion = { [version] = matchedPublic }
+	end
+
+	@ExecSpace("ClientOnly")
+	method table GetMatchedPrivateHand()
+		        return self._T.MatchedPrivateHand
+	end
+
+	@ExecSpace("ClientOnly")
+	method table GetMatchedPublicSnapshot()
+		        return self._T.MatchedPublicSnapshot
+	end
+
+	@ExecSpace("ClientOnly")
+	method table GetLastActionResult()
+		        return self._T.LastActionResult
+	end
+
+	@ExecSpace("Client")
+	method void ReceiveActionResult(string requestId, string action, boolean ok, string reason, integer stateVersion, table privateHand, table publicSnapshot)
+		        log("[LexioPlayerBridge] RESULT requestId=" .. requestId .. " action=" .. action .. " ok=" .. tostring(ok) .. " reason=" .. reason .. " version=" .. tostring(stateVersion))
+		        self:StoreSnapshotParts(privateHand, publicSnapshot)
+		        self._T.LastActionResult = { requestId = requestId, action = action, ok = ok, reason = reason, stateVersion = stateVersion }
+		        self._T.ActionSequence = (self._T.ActionSequence or 0) + 1
+	end
+
+	@ExecSpace("Client")
+	method void ReceiveSnapshot(string assignedRole, integer seat, table privateHand, table publicSnapshot)
+		        self._T.Role = assignedRole
+		        self._T.Seat = seat
+		        self:StoreSnapshotParts(privateHand, publicSnapshot)
+		        log("[LexioPlayerBridge] SNAPSHOT role=" .. assignedRole .. " seat=" .. tostring(seat) .. " version=" .. tostring(publicSnapshot.stateVersion))
+	end
+
+	@ExecSpace("Client")
+	method void ReceiveFinishDecisionResult(string requestId, boolean ok, string reason)
+		        self._T.LastFinishDecisionResult = { requestId = requestId, ok = ok, reason = reason }
+		        self._T.FinishDecisionSequence = (self._T.FinishDecisionSequence or 0) + 1
+		        log("[LexioPlayerBridge] FINISH RESULT requestId=" .. requestId .. " ok=" .. tostring(ok) .. " reason=" .. reason)
+	end
+
+end

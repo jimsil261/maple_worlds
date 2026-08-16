@@ -1,0 +1,140 @@
+@Component
+script LexioGameSessionTests extends Component
+
+	property integer passedCount = 0
+
+	property integer failedCount = 0
+
+	method void AssertTrue(boolean value, string name)
+		        -- Records one integration-test assertion.
+		        if value then
+		            self.passedCount = self.passedCount + 1
+		            log("[LexioGameSessionTests][PASS] " .. name)
+		        else
+		            self.failedCount = self.failedCount + 1
+		            log_error("[LexioGameSessionTests][FAIL] " .. name)
+		        end
+	end
+
+	method void AssertEqual(any expected, any actual, string name)
+		        -- Records one equality assertion.
+		        self:AssertTrue(expected == actual, name .. " expected=" .. tostring(expected) .. " actual=" .. tostring(actual))
+	end
+
+	method table BuildFixedDeckForLeader(integer leaderIndex)
+		        -- Builds a deterministic valid deck placing cloud 3 in the requested round-robin seat.
+		        local session = self:GetSession()
+		        local deck = session:BuildOrderedDeck()
+		        local cloudThreeIndex = 0
+		        for index, tile in ipairs(deck) do
+		            if tile.rank == 3 and tile.suit == 1 then cloudThreeIndex = index break end
+		        end
+		        local targetIndex = leaderIndex
+		        deck[cloudThreeIndex], deck[targetIndex] = deck[targetIndex], deck[cloudThreeIndex]
+		        return deck
+	end
+
+	method any GetSession()
+		        -- Resolves the co-located test session component without modifying a production player model.
+		        local session = self.Entity:GetComponent("script.LexioGameSession")
+		        return session
+	end
+
+	@ExecSpace("ServerOnly")
+	method void OnBeginPlay()
+		        -- Runs deterministic server-authority integration tests on a dedicated test entity.
+		        self.passedCount = 0
+		        self.failedCount = 0
+		        local session = self:GetSession()
+		        session:ResetSession()
+		        local startVersion = session.stateVersion
+		        local start = session:StartGame({ "userA", "userB", "userC" }, self:BuildFixedDeckForLeader(2))
+		        self:AssertTrue(start.ok, "start_game")
+		        self:AssertEqual(startVersion + 1, session.stateVersion, "start_increments_version_once")
+		        self:AssertEqual("Playing", session.phase, "waiting_to_playing")
+		        self:AssertEqual(2, session.initialLeaderIndex, "cloud_three_owner_leads")
+		        self:AssertEqual(12, #session.hands[1], "player_a_dealt_12")
+		        self:AssertEqual(12, #session.hands[2], "player_b_dealt_12")
+		        self:AssertEqual(12, #session.hands[3], "player_c_dealt_12")
+		
+		        local privateB = session:BuildPrivateHandSnapshot("userB")
+		        self:AssertTrue(privateB[1].id ~= nil and privateB[1].rank ~= nil and privateB[1].suit ~= nil, "private_hand_has_full_tile_data")
+		        local public = session:BuildPublicSnapshot()
+		        self:AssertTrue(public.remainingCounts[1] == 12 and public.hands == nil, "public_snapshot_hides_hands")
+		
+		        local rejectedVersion = session.stateVersion
+		        local rejectedHandCount = #session.hands[1]
+		        local outOfTurn = session:SubmitForUser("userA", { session.hands[1][1].id }, rejectedVersion)
+		        self:AssertTrue(not outOfTurn.ok, "out_of_turn_rejected")
+		        self:AssertEqual(rejectedVersion, session.stateVersion, "rejection_preserves_version")
+		        self:AssertEqual(rejectedHandCount, #session.hands[1], "rejection_preserves_hand")
+		
+		        local leadTileId = session.hands[2][1].id
+		        local leadVersion = session.stateVersion
+		        local lead = session:SubmitForUser("userB", { leadTileId }, leadVersion)
+		        self:AssertTrue(lead.ok, "leader_submits_any_legal_tile")
+		        self:AssertEqual(leadVersion + 1, session.stateVersion, "submission_increments_version_once")
+		        self:AssertEqual(2, session.winningPlayerIndex, "submitter_becomes_winner")
+		        self:AssertEqual(3, session.currentPlayerIndex, "turn_advances_to_c")
+		        self:AssertTrue(session.lastPublicPlay[1].rank ~= nil and session.lastPublicPlay[1].suit ~= nil, "public_play_has_rank_and_suit")
+		        self:AssertTrue(session.lastPublicPlay[1].id == nil, "public_play_hides_tile_id")
+		
+		        local passCVersion = session.stateVersion
+		        self:AssertTrue(session:PassForUser("userC", passCVersion).ok, "c_passes")
+		        self:AssertEqual(passCVersion + 1, session.stateVersion, "pass_increments_version_once")
+		        self:AssertEqual(1, session.currentPlayerIndex, "turn_advances_to_a")
+		        local passAVersion = session.stateVersion
+		        self:AssertTrue(session:PassForUser("userA", passAVersion).ok, "a_passes")
+		        self:AssertEqual("LeadPending", session.phase, "winner_wrap_ends_trick")
+		        self:AssertEqual(2, session.currentPlayerIndex, "winner_receives_new_lead")
+		        self:AssertTrue(session.passed[1] and session.passed[3], "passes_persist_until_legal_lead")
+		
+		        local stale = session:SubmitForUser("userB", { session.hands[2][1].id }, passAVersion)
+		        self:AssertTrue(not stale.ok, "stale_request_rejected")
+		        local newLeadVersion = session.stateVersion
+		        local newLead = session:SubmitForUser("userB", { session.hands[2][1].id }, newLeadVersion)
+		        self:AssertTrue(newLead.ok, "winner_starts_new_trick")
+		        self:AssertEqual("Playing", session.phase, "lead_pending_to_playing")
+		        self:AssertTrue(not session.passed[1] and not session.passed[2] and not session.passed[3], "new_lead_resets_passes")
+		
+		        local foreignVersion = session.stateVersion
+		        local foreignTile = session.hands[1][1].id
+		        local foreign = session:SubmitForUser("userC", { foreignTile }, foreignVersion)
+		        self:AssertTrue(not foreign.ok, "foreign_tile_rejected")
+		        self:AssertEqual(foreignVersion, session.stateVersion, "foreign_tile_rejection_is_atomic")
+		
+		        session:ResetSession()
+		        session:StartGame({ "userA", "userB", "userC" }, self:BuildFixedDeckForLeader(2))
+		        local opening = session:SubmitForUser("userB", { session.hands[2][1].id }, session.stateVersion)
+		        self:AssertTrue(opening.ok, "higher_play_scenario_opens")
+		        local strongerTileId = 0
+		        local openingPlay = session.currentPlay
+		        for _, tile in ipairs(session.hands[3]) do
+		            local candidate = _LexioRules:ClassifyPlay({ tile }, 3)
+		            if _LexioRules:ComparePlays(candidate, openingPlay) > 0 then strongerTileId = tile.id break end
+		        end
+		        self:AssertTrue(strongerTileId ~= 0, "higher_tile_found_for_c")
+		        self:AssertTrue(session:SubmitForUser("userC", { strongerTileId }, session.stateVersion).ok, "c_becomes_new_winner")
+		        self:AssertEqual(3, session.winningPlayerIndex, "winning_index_replaced")
+		        self:AssertTrue(session:PassForUser("userA", session.stateVersion).ok, "a_passes_to_new_winner")
+		        self:AssertTrue(session:PassForUser("userB", session.stateVersion).ok, "b_passes_to_new_winner")
+		        self:AssertEqual("LeadPending", session.phase, "new_winner_wrap_ends_trick")
+		        self:AssertEqual(3, session.currentPlayerIndex, "new_winner_gets_lead")
+		
+		        session:ResetSession()
+		        session:StartGame({ "userA", "userB", "userC" }, self:BuildFixedDeckForLeader(2))
+		        session.hands[2] = { session.hands[2][1] }
+		        local finishVersion = session.stateVersion
+		        self:AssertTrue(session:SubmitForUser("userB", { session.hands[2][1].id }, finishVersion).ok, "last_tile_submission_succeeds")
+		        self:AssertEqual("Finished", session.phase, "playing_to_finished")
+		        self:AssertEqual(2, session.winnerIndex, "empty_hand_player_wins")
+		        self:AssertEqual(finishVersion + 1, session.stateVersion, "finish_increments_version_once")
+		        local afterFinishVersion = session.stateVersion
+		        self:AssertTrue(not session:PassForUser("userA", afterFinishVersion).ok, "finished_rejects_pass")
+		        self:AssertEqual(afterFinishVersion, session.stateVersion, "finished_rejection_is_atomic")
+		
+		        log("[LexioGameSessionTests] COMPLETE passed=" .. tostring(self.passedCount) .. " failed=" .. tostring(self.failedCount))
+		        if self.failedCount == 0 then log("[LexioGameSessionTests] SUITE PASSED") else log_error("[LexioGameSessionTests] SUITE FAILED") end
+	end
+
+end

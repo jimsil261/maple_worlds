@@ -1,0 +1,20 @@
+# temporary files
+.tmp/
+.tmp*
+
+# AI / local tooling
+.codex/
+.agents/
+.msw-ai/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+
+# Python cache
+__pycache__/
+*.pyc

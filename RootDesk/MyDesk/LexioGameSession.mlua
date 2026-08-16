@@ -1,0 +1,334 @@
+@Component
+script LexioGameSession extends Component
+
+	property string phase = "WaitingPlayers"
+
+	property table userIds = {}
+
+	property table userIndexById = {}
+
+	property table hands = {}
+
+	property table tilesById = {}
+
+	property integer currentPlayerIndex = 0
+
+	property integer initialLeaderIndex = 0
+
+	property integer winningPlayerIndex = 0
+
+	property any currentPlay = nil
+
+	property table currentPlayTiles = {}
+
+	property table lastPublicPlay = {}
+
+	property table passed = {}
+
+	property integer trickNumber = 0
+
+	property integer turnNumber = 0
+
+	property integer stateVersion = 0
+
+	property integer winnerIndex = 0
+
+	@ExecSpace("ServerOnly")
+	method void ResetSession()
+		        -- Restores the component to its only pre-game state without starting a game.
+		        self.phase = "WaitingPlayers"
+		        self.userIds = {}
+		        self.userIndexById = {}
+		        self.hands = {}
+		        self.tilesById = {}
+		        self.currentPlayerIndex = 0
+		        self.initialLeaderIndex = 0
+		        self.winningPlayerIndex = 0
+		        self.currentPlay = nil
+		        self.currentPlayTiles = {}
+		        self.lastPublicPlay = {}
+		        self.passed = {}
+		        self.trickNumber = 0
+		        self.turnNumber = 0
+		        self.stateVersion = 0
+		        self.winnerIndex = 0
+	end
+
+	method boolean IsTransitionAllowed(string fromPhase, string toPhase)
+		        -- Restricts the session to the four approved phase transitions.
+		        if fromPhase == "WaitingPlayers" and toPhase == "Playing" then return true end
+		        if fromPhase == "Playing" and toPhase == "LeadPending" then return true end
+		        if fromPhase == "Playing" and toPhase == "Finished" then return true end
+		        if fromPhase == "LeadPending" and toPhase == "Playing" then return true end
+		        return false
+	end
+
+	@ExecSpace("ServerOnly")
+	method boolean SetPhase(string nextPhase)
+		        -- Changes phase only through the approved transition graph.
+		        if not self:IsTransitionAllowed(self.phase, nextPhase) then return false end
+		        self.phase = nextPhase
+		        return true
+	end
+
+	method table BuildOrderedDeck()
+		        -- Creates the complete three-player deck of 36 unique server-owned tile records.
+		        local deck = {}
+		        for rank = 1, 9 do
+		            for suit = 1, 4 do
+		                local id = ((rank - 1) * 4) + suit
+		                table.insert(deck, { id = id, rank = rank, suit = suit })
+		            end
+		        end
+		        return deck
+	end
+
+	@ExecSpace("ServerOnly")
+	method table ShuffleDeck(table orderedDeck)
+		        -- Applies the production server RNG through an isolated Fisher-Yates shuffle.
+		        local deck = {}
+		        for _, tile in ipairs(orderedDeck) do table.insert(deck, tile) end
+		        for index = #deck, 2, -1 do
+		            local swapIndex = _UtilLogic:RandomIntegerRange(1, index)
+		            deck[index], deck[swapIndex] = deck[swapIndex], deck[index]
+		        end
+		        return deck
+	end
+
+	method table CopyDeck(table sourceDeck)
+		        -- Copies a supplied deterministic test deck without invoking production RNG.
+		        local deck = {}
+		        for _, tile in ipairs(sourceDeck) do
+		            table.insert(deck, { id = tile.id, rank = tile.rank, suit = tile.suit })
+		        end
+		        return deck
+	end
+
+	method boolean ValidateDeck(table deck)
+		        -- Requires exactly one copy of every rank-and-suit tile in the three-player set.
+		        if deck == nil or #deck ~= 36 then return false end
+		        local ids = {}
+		        local tiles = {}
+		        for _, tile in ipairs(deck) do
+		            if not _LexioRules:IsTileValid(tile, 3) then return false end
+		            if tile.id == nil or ids[tile.id] then return false end
+		            local key = tostring(tile.rank) .. ":" .. tostring(tile.suit)
+		            if tiles[key] then return false end
+		            ids[tile.id] = true
+		            tiles[key] = true
+		        end
+		        return true
+	end
+
+	@ExecSpace("ServerOnly")
+	method table StartGame(table registeredUserIds, table fixedDeck)
+		        -- Starts one three-player game using server RNG or an injected deterministic deck.
+		        if self.phase ~= "WaitingPlayers" then return self:Reject("phase") end
+		        if registeredUserIds == nil or #registeredUserIds ~= 3 then return self:Reject("player_count") end
+		        local seenUsers = {}
+		        for _, userId in ipairs(registeredUserIds) do
+		            if userId == nil or userId == "" or seenUsers[userId] then return self:Reject("invalid_user") end
+		            seenUsers[userId] = true
+		        end
+		        local deck = nil
+		        if fixedDeck ~= nil then deck = self:CopyDeck(fixedDeck) else deck = self:ShuffleDeck(self:BuildOrderedDeck()) end
+		        if not self:ValidateDeck(deck) then return self:Reject("invalid_deck") end
+		
+		        local newHands = { {}, {}, {} }
+		        local newTilesById = {}
+		        for deckIndex, tile in ipairs(deck) do
+		            local playerIndex = ((deckIndex - 1) % 3) + 1
+		            table.insert(newHands[playerIndex], tile)
+		            newTilesById[tile.id] = tile
+		        end
+		        local leaderIndex = _LexioRules:FindInitialLeader(newHands)
+		        if leaderIndex == 0 then return self:Reject("leader_not_found") end
+		
+		        self.userIds = { registeredUserIds[1], registeredUserIds[2], registeredUserIds[3] }
+		        self.userIndexById = {
+		            [registeredUserIds[1]] = 1,
+		            [registeredUserIds[2]] = 2,
+		            [registeredUserIds[3]] = 3
+		        }
+		        self.hands = newHands
+		        self.tilesById = newTilesById
+		        self.initialLeaderIndex = leaderIndex
+		        self.currentPlayerIndex = leaderIndex
+		        self.winningPlayerIndex = 0
+		        self.currentPlay = nil
+		        self.currentPlayTiles = {}
+		        self.lastPublicPlay = {}
+		        self.passed = { false, false, false }
+		        self.trickNumber = 1
+		        self.turnNumber = 1
+		        self.winnerIndex = 0
+		        if not self:SetPhase("Playing") then return self:Reject("transition") end
+		        self.stateVersion = self.stateVersion + 1
+		        return self:Accept()
+	end
+
+	method boolean IsRegisteredUser(string userId)
+		        -- Checks server registration without trusting a client-supplied player index.
+		        return userId ~= nil and self.userIndexById[userId] ~= nil
+	end
+
+	method table ResolveOwnedTiles(integer playerIndex, table tileIds)
+		        -- Resolves distinct submitted IDs exclusively from the requester's server hand.
+		        if tileIds == nil then return nil end
+		        local hand = self.hands[playerIndex]
+		        local requested = {}
+		        for _, tileId in ipairs(tileIds) do
+		            if requested[tileId] then return nil end
+		            requested[tileId] = true
+		        end
+		        local selected = {}
+		        for tileId, _ in pairs(requested) do
+		            local found = nil
+		            for _, tile in ipairs(hand) do
+		                if tile.id == tileId then found = tile break end
+		            end
+		            if found == nil then return nil end
+		            table.insert(selected, found)
+		        end
+		        if #selected ~= #tileIds then return nil end
+		        return selected
+	end
+
+	method table Reject(string reason)
+		        -- Returns a rejection result without mutating any authoritative state.
+		        return { ok = false, reason = reason, stateVersion = self.stateVersion }
+	end
+
+	method table Accept()
+		        -- Returns the authoritative version after one successful atomic state change.
+		        return { ok = true, reason = "", stateVersion = self.stateVersion }
+	end
+
+	method integer FindNextUnpassed(integer fromIndex)
+		        -- Finds the next unpassed seat in circular order, including the winner on wraparound.
+		        for offset = 1, 3 do
+		            local candidate = ((fromIndex + offset - 1) % 3) + 1
+		            if not self.passed[candidate] then return candidate end
+		        end
+		        return 0
+	end
+
+	@ExecSpace("ServerOnly")
+	method void EnterLeadPending()
+		        -- Ends the current trick immediately when turn traversal returns to its winner.
+		        self:SetPhase("LeadPending")
+		        self.currentPlayerIndex = self.winningPlayerIndex
+		        self.currentPlay = nil
+		        self.currentPlayTiles = {}
+	end
+
+	@ExecSpace("ServerOnly")
+	method void RemoveTilesFromHand(integer playerIndex, table selectedTiles)
+		        -- Removes already-validated tiles from one server-authoritative hand.
+		        local selectedIds = {}
+		        for _, tile in ipairs(selectedTiles) do selectedIds[tile.id] = true end
+		        local remaining = {}
+		        for _, tile in ipairs(self.hands[playerIndex]) do
+		            if not selectedIds[tile.id] then table.insert(remaining, tile) end
+		        end
+		        self.hands[playerIndex] = remaining
+	end
+
+	@ExecSpace("ServerOnly")
+	method table SubmitForUser(string userId, table tileIds, integer expectedStateVersion)
+		        -- Validates then atomically commits one server-authoritative submission.
+		        if self.phase ~= "Playing" and self.phase ~= "LeadPending" then return self:Reject("phase") end
+		        if expectedStateVersion ~= self.stateVersion then return self:Reject("stale_version") end
+		        if not self:IsRegisteredUser(userId) then return self:Reject("unregistered_user") end
+		        local playerIndex = self.userIndexById[userId]
+		        if playerIndex ~= self.currentPlayerIndex then return self:Reject("not_turn") end
+		        if self.phase == "LeadPending" and playerIndex ~= self.winningPlayerIndex then return self:Reject("not_trick_winner") end
+		        if self.phase == "Playing" and self.passed[playerIndex] then return self:Reject("already_passed") end
+		        local selected = self:ResolveOwnedTiles(playerIndex, tileIds)
+		        if selected == nil then return self:Reject("tile_ownership") end
+		
+		        local previousPlay = self.phase == "Playing" and self.currentPlay or nil
+		        if not _LexioRules:CanSubmit(selected, 3, previousPlay, false) then return self:Reject("illegal_play") end
+		        local classified = _LexioRules:ClassifyPlay(selected, 3)
+		        local willFinish = #self.hands[playerIndex] == #selected
+		        if self.phase == "LeadPending" and not self:IsTransitionAllowed("LeadPending", "Playing") then return self:Reject("transition") end
+		        if self.phase == "Playing" and willFinish and not self:IsTransitionAllowed("Playing", "Finished") then return self:Reject("transition") end
+		
+		        self:RemoveTilesFromHand(playerIndex, selected)
+		        if self.phase == "LeadPending" then
+		            self:SetPhase("Playing")
+		            self.passed = { false, false, false }
+		            self.trickNumber = self.trickNumber + 1
+		        end
+		        self.currentPlay = classified
+		        self.currentPlayTiles = selected
+		        self.lastPublicPlay = self:BuildPublicTiles(selected)
+		        self.winningPlayerIndex = playerIndex
+		        self.turnNumber = self.turnNumber + 1
+		
+		        if #self.hands[playerIndex] == 0 then
+		            self:SetPhase("Finished")
+		            self.winnerIndex = playerIndex
+		        else
+		            local nextIndex = self:FindNextUnpassed(playerIndex)
+		            if nextIndex == self.winningPlayerIndex then self:EnterLeadPending() else self.currentPlayerIndex = nextIndex end
+		        end
+		        self.stateVersion = self.stateVersion + 1
+		        return self:Accept()
+	end
+
+	@ExecSpace("ServerOnly")
+	method table PassForUser(string userId, integer expectedStateVersion)
+		        -- Validates then atomically commits a pass and closes the trick on winner wraparound.
+		        if self.phase ~= "Playing" then return self:Reject("phase") end
+		        if expectedStateVersion ~= self.stateVersion then return self:Reject("stale_version") end
+		        if not self:IsRegisteredUser(userId) then return self:Reject("unregistered_user") end
+		        local playerIndex = self.userIndexById[userId]
+		        if playerIndex ~= self.currentPlayerIndex then return self:Reject("not_turn") end
+		        if self.winningPlayerIndex == 0 or playerIndex == self.winningPlayerIndex then return self:Reject("winner_cannot_pass") end
+		        if self.passed[playerIndex] then return self:Reject("already_passed") end
+		
+		        self.passed[playerIndex] = true
+		        self.turnNumber = self.turnNumber + 1
+		        local nextIndex = self:FindNextUnpassed(playerIndex)
+		        if nextIndex == self.winningPlayerIndex then self:EnterLeadPending() else self.currentPlayerIndex = nextIndex end
+		        self.stateVersion = self.stateVersion + 1
+		        return self:Accept()
+	end
+
+	method table BuildPublicTiles(table tiles)
+		        -- Exposes only rank and suit for tiles already played publicly.
+		        local publicTiles = {}
+		        for _, tile in ipairs(tiles) do table.insert(publicTiles, { rank = tile.rank, suit = tile.suit }) end
+		        return publicTiles
+	end
+
+	@ExecSpace("ServerOnly")
+	method table BuildPrivateHandSnapshot(string userId)
+		        -- Exposes id, rank, and suit only for the registered owner's own hand.
+		        if not self:IsRegisteredUser(userId) then return nil end
+		        local snapshot = {}
+		        for _, tile in ipairs(self.hands[self.userIndexById[userId]]) do
+		            table.insert(snapshot, { id = tile.id, rank = tile.rank, suit = tile.suit })
+		        end
+		        return snapshot
+	end
+
+	@ExecSpace("ServerOnly")
+	method table BuildPublicSnapshot()
+		        -- Exposes turn state and remaining counts without leaking opponents' tile identities.
+		        return {
+		            phase = self.phase,
+		            currentPlayerIndex = self.currentPlayerIndex,
+		            winningPlayerIndex = self.winningPlayerIndex,
+		            remainingCounts = { #self.hands[1], #self.hands[2], #self.hands[3] },
+		            passed = { self.passed[1], self.passed[2], self.passed[3] },
+		            lastPlay = self.lastPublicPlay,
+		            trickNumber = self.trickNumber,
+		            turnNumber = self.turnNumber,
+		            stateVersion = self.stateVersion,
+		            winnerIndex = self.winnerIndex
+		        }
+	end
+
+end
