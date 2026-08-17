@@ -31,15 +31,15 @@
           "@components": [
             {
               "@type": "MOD.Core.MapComponent",
-              "AirAccelerationXFactor": 1.0,
-              "AirDecelerationXFactor": 1.0,
-              "FallSpeedMaxXFactor": 1.0,
-              "FallSpeedMaxYFactor": 1.0,
-              "Gravity": 1.0,
+              "AirAccelerationXFactor": 1,
+              "AirDecelerationXFactor": 1,
+              "FallSpeedMaxXFactor": 1,
+              "FallSpeedMaxYFactor": 1,
+              "Gravity": 1,
               "IsInstanceMap": false,
               "TileMapMode": 1,
-              "WalkAccelerationFactor": 1.0,
-              "WalkDrag": 1.0,
+              "WalkAccelerationFactor": 1,
+              "WalkDrag": 1,
               "Enable": true
             },
             {
@@ -73,7 +73,7 @@
                 "r": 0.549019635,
                 "g": 0.34117648,
                 "b": 0.164705887,
-                "a": 1.0
+                "a": 1
               },
               "TemplateRUID": "794ad8421e2543d8a6d2c70307637450",
               "Type": 2,
@@ -139,27 +139,27 @@
             {
               "@type": "MOD.Core.TransformComponent",
               "Rotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
+                "x": 0,
+                "y": 0,
+                "z": 0
               },
               "Position": {
-                "x": 0.0,
-                "y": 0.0,
+                "x": 0,
+                "y": 0,
                 "z": 999.999
               },
               "QuaternionRotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0,
-                "w": 1.0
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
               },
               "Scale": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
+                "x": 1,
+                "y": 1,
+                "z": 1
               },
-              "ZRotation": 0.0,
+              "ZRotation": 0,
               "Enable": true
             },
             {
@@ -171,20 +171,20 @@
               "FlipY": false,
               "IgnoreMapLayerCheck": false,
               "OrderInLayer": 0,
-              "PlayRate": 1.0,
+              "PlayRate": 1,
               "RenderSetting": 0,
               "SortingLayer": "Default",
               "SpriteRUID": "8ef238e0d0ca4bb783aca526cff35d11",
               "StartFrameIndex": 0,
               "TiledSize": {
-                "x": 1.0,
-                "y": 1.0
+                "x": 1,
+                "y": 1
               },
               "Color": {
-                "r": 1.0,
-                "g": 1.0,
-                "b": 1.0,
-                "a": 1.0
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
               },
               "Enable": true
             },
@@ -222,22 +222,22 @@
             {
               "@type": "MOD.Core.TransformComponent",
               "Rotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
+                "x": 0,
+                "y": 0,
+                "z": 0
               },
               "Position": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 1000.0
+                "x": 0,
+                "y": 0,
+                "z": 1000
               },
               "QuaternionRotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0,
-                "w": 1.0
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
               },
-              "ZRotation": 0.0,
+              "ZRotation": 0,
               "Enable": true
             },
             {
@@ -1174,27 +1174,27 @@
             {
               "@type": "MOD.Core.TransformComponent",
               "Rotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
+                "x": 0,
+                "y": 0,
+                "z": 0
               },
               "Position": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
+                "x": 0,
+                "y": 0,
+                "z": 0
               },
               "QuaternionRotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0,
-                "w": 1.0
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
               },
               "Scale": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
+                "x": 1,
+                "y": 1,
+                "z": 1
               },
-              "ZRotation": 0.0,
+              "ZRotation": 0,
               "Enable": true
             },
             {
@@ -1239,27 +1239,27 @@
             {
               "@type": "MOD.Core.TransformComponent",
               "Rotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
+                "x": 0,
+                "y": 0,
+                "z": 0
               },
               "Position": {
-                "x": 3.0,
-                "y": 0.0,
-                "z": 0.0
+                "x": 3,
+                "y": 0,
+                "z": 0
               },
               "QuaternionRotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0,
-                "w": 1.0
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
               },
               "Scale": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
+                "x": 1,
+                "y": 1,
+                "z": 1
               },
-              "ZRotation": 0.0,
+              "ZRotation": 0,
               "Enable": true
             },
             {
@@ -1270,15 +1270,15 @@
               "FlipX": false,
               "FlipY": false,
               "OrderInLayer": 2,
-              "PlayRate": 1.0,
+              "PlayRate": 1,
               "RenderSetting": 0,
               "SpriteRUID": "aba58d2139ca4736bab39f6b4c39aa37",
               "StartFrameIndex": 0,
               "Color": {
-                "r": 1.0,
-                "g": 1.0,
-                "b": 1.0,
-                "a": 1.0
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
               },
               "Enable": true
             },
@@ -1287,8 +1287,8 @@
               "ActionKey": 273,
               "ActionName": "로비로 돌아가기",
               "BoxSize": {
-                "x": 2.0,
-                "y": 2.0
+                "x": 2,
+                "y": 2
               },
               "IsLegacy": false,
               "ShowActionInfo": true,
@@ -1299,7 +1299,7 @@
               "Enable": true,
               "ObjectKey": "LexioExit",
               "RouteId": "LEXIO_EXIT",
-              "ServerUseDistance": 2.0
+              "ServerUseDistance": 2
             }
           ],
           "@version": 1
@@ -1331,27 +1331,27 @@
             {
               "@type": "MOD.Core.TransformComponent",
               "Rotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
+                "x": 0,
+                "y": 0,
+                "z": 0
               },
               "Position": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
+                "x": 0,
+                "y": 0,
+                "z": 0
               },
               "QuaternionRotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0,
-                "w": 1.0
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
               },
               "Scale": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
+                "x": 1,
+                "y": 1,
+                "z": 1
               },
-              "ZRotation": 0.0,
+              "ZRotation": 0,
               "Enable": true
             },
             {
@@ -1377,64 +1377,56 @@
           "displayOrder": 7,
           "pathConstraints": "///",
           "revision": 1,
-          "origin": {
-            "type": "Model",
-            "entry_id": "lexiochair",
-            "sub_entity_id": null,
-            "root_entity_id": "bc86c3de-8483-4e3f-ad49-289354f9320f",
-            "replaced_model_id": null
-          },
-          "modelId": "lexiochair",
+          "modelId": "lexiobamboochair",
           "@components": [
             {
               "@type": "MOD.Core.TransformComponent",
-              "Rotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
-              },
               "Position": {
                 "x": -4.9,
                 "y": 1.25,
-                "z": 0.0
+                "z": 0
               },
               "QuaternionRotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0,
-                "w": 1.0
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
               },
               "Scale": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
+                "x": 2.4,
+                "y": 2.4,
+                "z": 1
               },
-              "ZRotation": 0.0,
               "Enable": true
             },
             {
               "@type": "MOD.Core.SpriteRendererComponent",
-              "ActionSheet": {},
+              "SpriteRUID": "1efe0467459c42d891c91459f1363415",
+              "Color": {
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
+              },
               "DrawMode": 0,
-              "EndFrameIndex": 2147483647,
               "FlipX": false,
               "FlipY": false,
+              "PlayRate": 1,
               "OrderInLayer": 1,
-              "PlayRate": 1.0,
-              "RenderSetting": 0,
-              "SortingLayer": "MapLayer0",
-              "SpriteRUID": "89c877897e20474b993e677cb4eb0948",
               "StartFrameIndex": 0,
-              "Color": {
-                "r": 1.0,
-                "g": 1.0,
-                "b": 1.0,
-                "a": 1.0
-              },
-              "Enable": true
+              "EndFrameIndex": 2147483647,
+              "Enable": true,
+              "SortingLayer": "MapLayer0"
             }
           ],
-          "@version": 1
+          "@version": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "lexiobamboochair",
+            "sub_entity_id": null,
+            "root_entity_id": "bc86c3de-8483-4e3f-ad49-289354f9320f",
+            "replaced_model_id": null
+          }
         }
       },
       {
@@ -1451,64 +1443,56 @@
           "displayOrder": 8,
           "pathConstraints": "///",
           "revision": 1,
-          "origin": {
-            "type": "Model",
-            "entry_id": "lexiochair",
-            "sub_entity_id": null,
-            "root_entity_id": "c98b22d1-5227-4d0f-8778-4ba6cb97a847",
-            "replaced_model_id": null
-          },
-          "modelId": "lexiochair",
+          "modelId": "lexiobamboochair",
           "@components": [
             {
               "@type": "MOD.Core.TransformComponent",
-              "Rotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
-              },
               "Position": {
-                "x": -4.0,
+                "x": -4,
                 "y": 0.9,
-                "z": 0.0
+                "z": 0
               },
               "QuaternionRotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0,
-                "w": 1.0
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
               },
               "Scale": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
+                "x": 2.4,
+                "y": 2.4,
+                "z": 1
               },
-              "ZRotation": 0.0,
               "Enable": true
             },
             {
               "@type": "MOD.Core.SpriteRendererComponent",
-              "ActionSheet": {},
+              "SpriteRUID": "1efe0467459c42d891c91459f1363415",
+              "Color": {
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
+              },
               "DrawMode": 0,
-              "EndFrameIndex": 2147483647,
               "FlipX": false,
               "FlipY": false,
+              "PlayRate": 1,
               "OrderInLayer": 1,
-              "PlayRate": 1.0,
-              "RenderSetting": 0,
-              "SortingLayer": "MapLayer0",
-              "SpriteRUID": "89c877897e20474b993e677cb4eb0948",
               "StartFrameIndex": 0,
-              "Color": {
-                "r": 1.0,
-                "g": 1.0,
-                "b": 1.0,
-                "a": 1.0
-              },
-              "Enable": true
+              "EndFrameIndex": 2147483647,
+              "Enable": true,
+              "SortingLayer": "MapLayer0"
             }
           ],
-          "@version": 1
+          "@version": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "lexiobamboochair",
+            "sub_entity_id": null,
+            "root_entity_id": "c98b22d1-5227-4d0f-8778-4ba6cb97a847",
+            "replaced_model_id": null
+          }
         }
       },
       {
@@ -1525,64 +1509,56 @@
           "displayOrder": 9,
           "pathConstraints": "///",
           "revision": 1,
-          "origin": {
-            "type": "Model",
-            "entry_id": "lexiochair",
-            "sub_entity_id": null,
-            "root_entity_id": "e725730f-dc31-4899-83d9-2994fa1fc40b",
-            "replaced_model_id": null
-          },
-          "modelId": "lexiochair",
+          "modelId": "lexiobamboochair",
           "@components": [
             {
               "@type": "MOD.Core.TransformComponent",
-              "Rotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
-              },
               "Position": {
                 "x": -3.1,
                 "y": 1.25,
-                "z": 0.0
+                "z": 0
               },
               "QuaternionRotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0,
-                "w": 1.0
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
               },
               "Scale": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
+                "x": 2.4,
+                "y": 2.4,
+                "z": 1
               },
-              "ZRotation": 0.0,
               "Enable": true
             },
             {
               "@type": "MOD.Core.SpriteRendererComponent",
-              "ActionSheet": {},
+              "SpriteRUID": "1efe0467459c42d891c91459f1363415",
+              "Color": {
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
+              },
               "DrawMode": 0,
-              "EndFrameIndex": 2147483647,
               "FlipX": false,
               "FlipY": false,
+              "PlayRate": 1,
               "OrderInLayer": 1,
-              "PlayRate": 1.0,
-              "RenderSetting": 0,
-              "SortingLayer": "MapLayer0",
-              "SpriteRUID": "89c877897e20474b993e677cb4eb0948",
               "StartFrameIndex": 0,
-              "Color": {
-                "r": 1.0,
-                "g": 1.0,
-                "b": 1.0,
-                "a": 1.0
-              },
-              "Enable": true
+              "EndFrameIndex": 2147483647,
+              "Enable": true,
+              "SortingLayer": "MapLayer0"
             }
           ],
-          "@version": 1
+          "@version": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "lexiobamboochair",
+            "sub_entity_id": null,
+            "root_entity_id": "e725730f-dc31-4899-83d9-2994fa1fc40b",
+            "replaced_model_id": null
+          }
         }
       },
       {
@@ -1599,64 +1575,56 @@
           "displayOrder": 10,
           "pathConstraints": "///",
           "revision": 1,
+          "modelId": "lexiotable",
+          "@components": [
+            {
+              "@type": "MOD.Core.TransformComponent",
+              "Position": {
+                "x": -4,
+                "y": 2.05,
+                "z": 0
+              },
+              "QuaternionRotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
+              },
+              "Scale": {
+                "x": 1,
+                "y": 1,
+                "z": 1
+              },
+              "Enable": true
+            },
+            {
+              "@type": "MOD.Core.SpriteRendererComponent",
+              "SpriteRUID": "ef89ea7b1e2b495498613d062b38c558",
+              "Color": {
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
+              },
+              "DrawMode": 0,
+              "FlipX": false,
+              "FlipY": false,
+              "PlayRate": 1,
+              "OrderInLayer": 0,
+              "StartFrameIndex": 0,
+              "EndFrameIndex": 2147483647,
+              "Enable": true,
+              "SortingLayer": "MapLayer0"
+            }
+          ],
+          "@version": 1,
           "origin": {
             "type": "Model",
             "entry_id": "lexiotable",
             "sub_entity_id": null,
             "root_entity_id": "559ee806-250e-46a7-a1d3-200b107a3cf0",
             "replaced_model_id": null
-          },
-          "modelId": "lexiotable",
-          "@components": [
-            {
-              "@type": "MOD.Core.TransformComponent",
-              "Rotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
-              },
-              "Position": {
-                "x": -4.0,
-                "y": 2.05,
-                "z": 0.0
-              },
-              "QuaternionRotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0,
-                "w": 1.0
-              },
-              "Scale": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
-              },
-              "ZRotation": 0.0,
-              "Enable": true
-            },
-            {
-              "@type": "MOD.Core.SpriteRendererComponent",
-              "ActionSheet": {},
-              "DrawMode": 0,
-              "EndFrameIndex": 2147483647,
-              "FlipX": false,
-              "FlipY": false,
-              "OrderInLayer": 0,
-              "PlayRate": 1.0,
-              "RenderSetting": 0,
-              "SortingLayer": "MapLayer0",
-              "SpriteRUID": "93fd3175c2d4474eb4976f3b7d9bc965",
-              "StartFrameIndex": 0,
-              "Color": {
-                "r": 1.0,
-                "g": 1.0,
-                "b": 1.0,
-                "a": 1.0
-              },
-              "Enable": true
-            }
-          ],
-          "@version": 1
+          }
         }
       },
       {
@@ -1673,64 +1641,56 @@
           "displayOrder": 11,
           "pathConstraints": "///",
           "revision": 1,
+          "modelId": "lexiotable",
+          "@components": [
+            {
+              "@type": "MOD.Core.TransformComponent",
+              "Position": {
+                "x": 0,
+                "y": 2.05,
+                "z": 0
+              },
+              "QuaternionRotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
+              },
+              "Scale": {
+                "x": 1,
+                "y": 1,
+                "z": 1
+              },
+              "Enable": true
+            },
+            {
+              "@type": "MOD.Core.SpriteRendererComponent",
+              "SpriteRUID": "ef89ea7b1e2b495498613d062b38c558",
+              "Color": {
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
+              },
+              "DrawMode": 0,
+              "FlipX": false,
+              "FlipY": false,
+              "PlayRate": 1,
+              "OrderInLayer": 0,
+              "StartFrameIndex": 0,
+              "EndFrameIndex": 2147483647,
+              "Enable": true,
+              "SortingLayer": "MapLayer0"
+            }
+          ],
+          "@version": 1,
           "origin": {
             "type": "Model",
             "entry_id": "lexiotable",
             "sub_entity_id": null,
             "root_entity_id": "853efa1a-dfa0-4505-a7cb-c5f52672a268",
             "replaced_model_id": null
-          },
-          "modelId": "lexiotable",
-          "@components": [
-            {
-              "@type": "MOD.Core.TransformComponent",
-              "Rotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
-              },
-              "Position": {
-                "x": 0.0,
-                "y": 2.05,
-                "z": 0.0
-              },
-              "QuaternionRotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0,
-                "w": 1.0
-              },
-              "Scale": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
-              },
-              "ZRotation": 0.0,
-              "Enable": true
-            },
-            {
-              "@type": "MOD.Core.SpriteRendererComponent",
-              "ActionSheet": {},
-              "DrawMode": 0,
-              "EndFrameIndex": 2147483647,
-              "FlipX": false,
-              "FlipY": false,
-              "OrderInLayer": 0,
-              "PlayRate": 1.0,
-              "RenderSetting": 0,
-              "SortingLayer": "MapLayer0",
-              "SpriteRUID": "93fd3175c2d4474eb4976f3b7d9bc965",
-              "StartFrameIndex": 0,
-              "Color": {
-                "r": 1.0,
-                "g": 1.0,
-                "b": 1.0,
-                "a": 1.0
-              },
-              "Enable": true
-            }
-          ],
-          "@version": 1
+          }
         }
       },
       {
@@ -1747,64 +1707,56 @@
           "displayOrder": 12,
           "pathConstraints": "///",
           "revision": 1,
-          "origin": {
-            "type": "Model",
-            "entry_id": "lexiochair",
-            "sub_entity_id": null,
-            "root_entity_id": "d72893b4-616b-44e1-a46e-408658ee3d61",
-            "replaced_model_id": null
-          },
-          "modelId": "lexiochair",
+          "modelId": "lexiobluechair",
           "@components": [
             {
               "@type": "MOD.Core.TransformComponent",
-              "Rotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
-              },
               "Position": {
                 "x": -0.9,
                 "y": 1.25,
-                "z": 0.0
+                "z": 0
               },
               "QuaternionRotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0,
-                "w": 1.0
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
               },
               "Scale": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
+                "x": 2.4,
+                "y": 2.4,
+                "z": 1
               },
-              "ZRotation": 0.0,
               "Enable": true
             },
             {
               "@type": "MOD.Core.SpriteRendererComponent",
-              "ActionSheet": {},
+              "SpriteRUID": "0f5c1ad9cdde4ee68b12ff557200b606",
+              "Color": {
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
+              },
               "DrawMode": 0,
-              "EndFrameIndex": 2147483647,
               "FlipX": false,
               "FlipY": false,
+              "PlayRate": 1,
               "OrderInLayer": 1,
-              "PlayRate": 1.0,
-              "RenderSetting": 0,
-              "SortingLayer": "MapLayer0",
-              "SpriteRUID": "89c877897e20474b993e677cb4eb0948",
               "StartFrameIndex": 0,
-              "Color": {
-                "r": 1.0,
-                "g": 1.0,
-                "b": 1.0,
-                "a": 1.0
-              },
-              "Enable": true
+              "EndFrameIndex": 2147483647,
+              "Enable": true,
+              "SortingLayer": "MapLayer0"
             }
           ],
-          "@version": 1
+          "@version": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "lexiobluechair",
+            "sub_entity_id": null,
+            "root_entity_id": "d72893b4-616b-44e1-a46e-408658ee3d61",
+            "replaced_model_id": null
+          }
         }
       },
       {
@@ -1821,64 +1773,56 @@
           "displayOrder": 13,
           "pathConstraints": "///",
           "revision": 1,
-          "origin": {
-            "type": "Model",
-            "entry_id": "lexiochair",
-            "sub_entity_id": null,
-            "root_entity_id": "07686591-cbb6-44a4-b1ae-4778143b34ae",
-            "replaced_model_id": null
-          },
-          "modelId": "lexiochair",
+          "modelId": "lexiobluechair",
           "@components": [
             {
               "@type": "MOD.Core.TransformComponent",
-              "Rotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
-              },
               "Position": {
-                "x": 0.0,
+                "x": 0,
                 "y": 0.9,
-                "z": 0.0
+                "z": 0
               },
               "QuaternionRotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0,
-                "w": 1.0
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
               },
               "Scale": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
+                "x": 2.4,
+                "y": 2.4,
+                "z": 1
               },
-              "ZRotation": 0.0,
               "Enable": true
             },
             {
               "@type": "MOD.Core.SpriteRendererComponent",
-              "ActionSheet": {},
+              "SpriteRUID": "0f5c1ad9cdde4ee68b12ff557200b606",
+              "Color": {
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
+              },
               "DrawMode": 0,
-              "EndFrameIndex": 2147483647,
               "FlipX": false,
               "FlipY": false,
+              "PlayRate": 1,
               "OrderInLayer": 1,
-              "PlayRate": 1.0,
-              "RenderSetting": 0,
-              "SortingLayer": "MapLayer0",
-              "SpriteRUID": "89c877897e20474b993e677cb4eb0948",
               "StartFrameIndex": 0,
-              "Color": {
-                "r": 1.0,
-                "g": 1.0,
-                "b": 1.0,
-                "a": 1.0
-              },
-              "Enable": true
+              "EndFrameIndex": 2147483647,
+              "Enable": true,
+              "SortingLayer": "MapLayer0"
             }
           ],
-          "@version": 1
+          "@version": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "lexiobluechair",
+            "sub_entity_id": null,
+            "root_entity_id": "07686591-cbb6-44a4-b1ae-4778143b34ae",
+            "replaced_model_id": null
+          }
         }
       },
       {
@@ -1895,64 +1839,56 @@
           "displayOrder": 14,
           "pathConstraints": "///",
           "revision": 1,
-          "origin": {
-            "type": "Model",
-            "entry_id": "lexiochair",
-            "sub_entity_id": null,
-            "root_entity_id": "e2bc6c57-4d0d-49ca-beae-3518d7a6fc16",
-            "replaced_model_id": null
-          },
-          "modelId": "lexiochair",
+          "modelId": "lexiobluechair",
           "@components": [
             {
               "@type": "MOD.Core.TransformComponent",
-              "Rotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
-              },
               "Position": {
                 "x": 0.9,
                 "y": 1.25,
-                "z": 0.0
+                "z": 0
               },
               "QuaternionRotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0,
-                "w": 1.0
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
               },
               "Scale": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
+                "x": 2.4,
+                "y": 2.4,
+                "z": 1
               },
-              "ZRotation": 0.0,
               "Enable": true
             },
             {
               "@type": "MOD.Core.SpriteRendererComponent",
-              "ActionSheet": {},
+              "SpriteRUID": "0f5c1ad9cdde4ee68b12ff557200b606",
+              "Color": {
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
+              },
               "DrawMode": 0,
-              "EndFrameIndex": 2147483647,
               "FlipX": false,
               "FlipY": false,
+              "PlayRate": 1,
               "OrderInLayer": 1,
-              "PlayRate": 1.0,
-              "RenderSetting": 0,
-              "SortingLayer": "MapLayer0",
-              "SpriteRUID": "89c877897e20474b993e677cb4eb0948",
               "StartFrameIndex": 0,
-              "Color": {
-                "r": 1.0,
-                "g": 1.0,
-                "b": 1.0,
-                "a": 1.0
-              },
-              "Enable": true
+              "EndFrameIndex": 2147483647,
+              "Enable": true,
+              "SortingLayer": "MapLayer0"
             }
           ],
-          "@version": 1
+          "@version": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "lexiobluechair",
+            "sub_entity_id": null,
+            "root_entity_id": "e2bc6c57-4d0d-49ca-beae-3518d7a6fc16",
+            "replaced_model_id": null
+          }
         }
       },
       {
@@ -1969,64 +1905,56 @@
           "displayOrder": 15,
           "pathConstraints": "///",
           "revision": 1,
+          "modelId": "lexiotable",
+          "@components": [
+            {
+              "@type": "MOD.Core.TransformComponent",
+              "Position": {
+                "x": 4,
+                "y": 2.8,
+                "z": 0
+              },
+              "QuaternionRotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
+              },
+              "Scale": {
+                "x": 1,
+                "y": 1,
+                "z": 1
+              },
+              "Enable": true
+            },
+            {
+              "@type": "MOD.Core.SpriteRendererComponent",
+              "SpriteRUID": "ef89ea7b1e2b495498613d062b38c558",
+              "Color": {
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
+              },
+              "DrawMode": 0,
+              "FlipX": false,
+              "FlipY": false,
+              "PlayRate": 1,
+              "OrderInLayer": 0,
+              "StartFrameIndex": 0,
+              "EndFrameIndex": 2147483647,
+              "Enable": true,
+              "SortingLayer": "MapLayer0"
+            }
+          ],
+          "@version": 1,
           "origin": {
             "type": "Model",
             "entry_id": "lexiotable",
             "sub_entity_id": null,
             "root_entity_id": "c0ce574f-cfb3-491e-b4fc-d7a777174d3d",
             "replaced_model_id": null
-          },
-          "modelId": "lexiotable",
-          "@components": [
-            {
-              "@type": "MOD.Core.TransformComponent",
-              "Rotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
-              },
-              "Position": {
-                "x": 4.0,
-                "y": 2.8,
-                "z": 0.0
-              },
-              "QuaternionRotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0,
-                "w": 1.0
-              },
-              "Scale": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
-              },
-              "ZRotation": 0.0,
-              "Enable": true
-            },
-            {
-              "@type": "MOD.Core.SpriteRendererComponent",
-              "ActionSheet": {},
-              "DrawMode": 0,
-              "EndFrameIndex": 2147483647,
-              "FlipX": false,
-              "FlipY": false,
-              "OrderInLayer": 0,
-              "PlayRate": 1.0,
-              "RenderSetting": 0,
-              "SortingLayer": "MapLayer0",
-              "SpriteRUID": "93fd3175c2d4474eb4976f3b7d9bc965",
-              "StartFrameIndex": 0,
-              "Color": {
-                "r": 1.0,
-                "g": 1.0,
-                "b": 1.0,
-                "a": 1.0
-              },
-              "Enable": true
-            }
-          ],
-          "@version": 1
+          }
         }
       },
       {
@@ -2043,64 +1971,56 @@
           "displayOrder": 16,
           "pathConstraints": "///",
           "revision": 1,
-          "origin": {
-            "type": "Model",
-            "entry_id": "lexiochair",
-            "sub_entity_id": null,
-            "root_entity_id": "8ccbba6a-f013-45bc-a21e-0e5493e99cea",
-            "replaced_model_id": null
-          },
-          "modelId": "lexiochair",
+          "modelId": "lexiorelaxchair",
           "@components": [
             {
               "@type": "MOD.Core.TransformComponent",
-              "Rotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
-              },
               "Position": {
                 "x": 3.1,
-                "y": 2.0,
-                "z": 0.0
+                "y": 2,
+                "z": 0
               },
               "QuaternionRotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0,
-                "w": 1.0
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
               },
               "Scale": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
+                "x": 2.4,
+                "y": 2.4,
+                "z": 1
               },
-              "ZRotation": 0.0,
               "Enable": true
             },
             {
               "@type": "MOD.Core.SpriteRendererComponent",
-              "ActionSheet": {},
+              "SpriteRUID": "1aabf8046c3047159f77bb44b6e8fcf9",
+              "Color": {
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
+              },
               "DrawMode": 0,
-              "EndFrameIndex": 2147483647,
               "FlipX": false,
               "FlipY": false,
+              "PlayRate": 1,
               "OrderInLayer": 1,
-              "PlayRate": 1.0,
-              "RenderSetting": 0,
-              "SortingLayer": "MapLayer0",
-              "SpriteRUID": "89c877897e20474b993e677cb4eb0948",
               "StartFrameIndex": 0,
-              "Color": {
-                "r": 1.0,
-                "g": 1.0,
-                "b": 1.0,
-                "a": 1.0
-              },
-              "Enable": true
+              "EndFrameIndex": 2147483647,
+              "Enable": true,
+              "SortingLayer": "MapLayer0"
             }
           ],
-          "@version": 1
+          "@version": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "lexiorelaxchair",
+            "sub_entity_id": null,
+            "root_entity_id": "8ccbba6a-f013-45bc-a21e-0e5493e99cea",
+            "replaced_model_id": null
+          }
         }
       },
       {
@@ -2117,64 +2037,56 @@
           "displayOrder": 17,
           "pathConstraints": "///",
           "revision": 1,
-          "origin": {
-            "type": "Model",
-            "entry_id": "lexiochair",
-            "sub_entity_id": null,
-            "root_entity_id": "e87be36f-ec73-46c6-8752-bf7f53017452",
-            "replaced_model_id": null
-          },
-          "modelId": "lexiochair",
+          "modelId": "lexiorelaxchair",
           "@components": [
             {
               "@type": "MOD.Core.TransformComponent",
-              "Rotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
-              },
               "Position": {
-                "x": 4.0,
+                "x": 4,
                 "y": 1.65,
-                "z": 0.0
+                "z": 0
               },
               "QuaternionRotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0,
-                "w": 1.0
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
               },
               "Scale": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
+                "x": 2.4,
+                "y": 2.4,
+                "z": 1
               },
-              "ZRotation": 0.0,
               "Enable": true
             },
             {
               "@type": "MOD.Core.SpriteRendererComponent",
-              "ActionSheet": {},
+              "SpriteRUID": "1aabf8046c3047159f77bb44b6e8fcf9",
+              "Color": {
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
+              },
               "DrawMode": 0,
-              "EndFrameIndex": 2147483647,
               "FlipX": false,
               "FlipY": false,
+              "PlayRate": 1,
               "OrderInLayer": 1,
-              "PlayRate": 1.0,
-              "RenderSetting": 0,
-              "SortingLayer": "MapLayer0",
-              "SpriteRUID": "89c877897e20474b993e677cb4eb0948",
               "StartFrameIndex": 0,
-              "Color": {
-                "r": 1.0,
-                "g": 1.0,
-                "b": 1.0,
-                "a": 1.0
-              },
-              "Enable": true
+              "EndFrameIndex": 2147483647,
+              "Enable": true,
+              "SortingLayer": "MapLayer0"
             }
           ],
-          "@version": 1
+          "@version": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "lexiorelaxchair",
+            "sub_entity_id": null,
+            "root_entity_id": "e87be36f-ec73-46c6-8752-bf7f53017452",
+            "replaced_model_id": null
+          }
         }
       },
       {
@@ -2191,64 +2103,56 @@
           "displayOrder": 18,
           "pathConstraints": "///",
           "revision": 1,
-          "origin": {
-            "type": "Model",
-            "entry_id": "lexiochair",
-            "sub_entity_id": null,
-            "root_entity_id": "e155bc73-d7ec-47f4-a86c-1579ec5f2fc7",
-            "replaced_model_id": null
-          },
-          "modelId": "lexiochair",
+          "modelId": "lexiorelaxchair",
           "@components": [
             {
               "@type": "MOD.Core.TransformComponent",
-              "Rotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
-              },
               "Position": {
                 "x": 4.9,
-                "y": 2.0,
-                "z": 0.0
+                "y": 2,
+                "z": 0
               },
               "QuaternionRotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0,
-                "w": 1.0
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
               },
               "Scale": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
+                "x": 2.4,
+                "y": 2.4,
+                "z": 1
               },
-              "ZRotation": 0.0,
               "Enable": true
             },
             {
               "@type": "MOD.Core.SpriteRendererComponent",
-              "ActionSheet": {},
+              "SpriteRUID": "1aabf8046c3047159f77bb44b6e8fcf9",
+              "Color": {
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
+              },
               "DrawMode": 0,
-              "EndFrameIndex": 2147483647,
               "FlipX": false,
               "FlipY": false,
+              "PlayRate": 1,
               "OrderInLayer": 1,
-              "PlayRate": 1.0,
-              "RenderSetting": 0,
-              "SortingLayer": "MapLayer0",
-              "SpriteRUID": "89c877897e20474b993e677cb4eb0948",
               "StartFrameIndex": 0,
-              "Color": {
-                "r": 1.0,
-                "g": 1.0,
-                "b": 1.0,
-                "a": 1.0
-              },
-              "Enable": true
+              "EndFrameIndex": 2147483647,
+              "Enable": true,
+              "SortingLayer": "MapLayer0"
             }
           ],
-          "@version": 1
+          "@version": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "lexiorelaxchair",
+            "sub_entity_id": null,
+            "root_entity_id": "e155bc73-d7ec-47f4-a86c-1579ec5f2fc7",
+            "replaced_model_id": null
+          }
         }
       }
     ]
