@@ -92,8 +92,8 @@ script LexioManualTestControls extends Component
 		        if self.Entity.PlayerComponent == nil or self.Entity.PlayerComponent.UserId ~= senderUserId then return end
 		        local host = _EntityService:GetEntityByPath("/maps/map01/LexioManualSessionHost")
 		        local registry = host ~= nil and host:GetComponent("script.LexioTableRegistry") or nil
-		        if registry ~= nil then registry:ReleasePlayer(senderUserId, reason) end
-		        self:ApplySeatStateResult(true, false, "")
+		        local accepted = registry ~= nil and registry:ReleasePlayer(senderUserId, reason)
+		        self:ApplySeatStateResult(accepted, false, "")
 	end
 
 	@ExecSpace("Client")

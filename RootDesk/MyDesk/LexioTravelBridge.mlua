@@ -73,11 +73,9 @@ script LexioTravelBridge extends Component
 		        if playerEntity == nil or not isvalid(playerEntity) or playerEntity.PlayerComponent == nil then return false end
 		        local userId = playerEntity.PlayerComponent.UserId
 		        if userId == nil or userId == "" or playerEntity.CurrentMapName ~= "map01" then return false end
-		        local host = _EntityService:GetEntityByPath("/maps/map01/LexioManualSessionHost")
-		        if host == nil or not isvalid(host) or host.CurrentMap ~= playerEntity.CurrentMap then return false end
-		        local coordinator = host:GetComponent("script.LexioSessionCoordinator")
-		        if coordinator == nil then return false end
-		        return coordinator:RegisterPlayerEntity(playerEntity)
+		        -- map01 uses physical table seats. Entering the map must never assign a game seat.
+		        log("[LexioTravelBridge] MAP ENTER unseated userId=" .. userId)
+		        return true
 	end
 
 	@ExecSpace("ServerOnly")
@@ -106,8 +104,8 @@ script LexioTravelBridge extends Component
 		        local playerEntity = self.Entity
 		        if playerEntity == nil or not isvalid(playerEntity) or playerEntity.PlayerComponent == nil then return end
 		        local host = _EntityService:GetEntityByPath("/maps/map01/LexioManualSessionHost")
-		        local coordinator = host ~= nil and host:GetComponent("script.LexioSessionCoordinator") or nil
-		        if coordinator ~= nil then coordinator:RemovePlayerEntity(playerEntity) end
+		        local registry = host ~= nil and host:GetComponent("script.LexioTableRegistry") or nil
+		        if registry ~= nil then registry:ReleasePlayer(userId, "map_leave") end
 	end
 
 	@ExecSpace("ServerOnly")

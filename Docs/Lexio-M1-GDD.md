@@ -2,7 +2,7 @@
 
 > AI implementation note: before implementation or checklist-state changes, read `msw-planning/references/build-management.md`, then load the implementation skills required by the active Phase.
 
-Stage: Active — Phase 1 user verification
+Stage: Active — Phase 2 implemented; real multiplayer isolation verification pending
 
 ## 1. One-line concept
 
@@ -65,18 +65,18 @@ A shared RectTile Lexio hall with three physical tables where players either sit
 
 ## 6. Implementation roadmap
 
-### Phase 1 — Table domain and physical layout (3/4 ✅)
+### Phase 1 — Table domain and physical layout (4/4 ✅)
 
 - ✅ Define authoritative table/seat state model and table lifecycle.
 - ✅ Add three table entities and nine table-specific chair entities to `map01`.
 - ✅ Convert chair interaction from global chair names to table ID + seat index.
-- 🟡 Preserve default no-match behavior and verify independent manual seat ownership.
+- ✅ Preserve default no-match behavior and verify independent manual seat ownership.
 
-### Phase 2 — Manual table matches (0/4 ✅)
+### Phase 2 — Manual table matches (3/4 ✅)
 
-- ⬜ Replace the single map-wide coordinator/session with table-scoped coordination.
-- ⬜ Start/cancel the three-second countdown independently per table.
-- ⬜ Route submit/pass/finish/replay requests and snapshots by assigned table.
+- ✅ Replace the single map-wide coordinator/session with table-scoped coordination.
+- ✅ Start/cancel the three-second countdown independently per table.
+- ✅ Route submit/pass/finish/replay requests and snapshots by assigned table.
 - ⬜ Verify two simultaneous table sessions cannot affect each other.
 
 ### Phase 3 — Automatic matchmaking (0/5 ✅)

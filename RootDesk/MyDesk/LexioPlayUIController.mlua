@@ -370,10 +370,23 @@ script LexioPlayUIController extends Logic
 		        local rankBottom = card:GetChildByName("RankBottom")
 		        local monsterName = card:GetChildByName("MonsterName")
 		        if aura ~= nil then aura.SpriteGUIRendererComponent.Color = self:SuitColor(tile.suit, selected) end
-		        if monster ~= nil then monster.SpriteGUIRendererComponent.ImageRUID = self:MonsterRUID(tile.suit) end
-		        if rankTop ~= nil then rankTop.TextGUIRendererComponent.Text = (selected and "✓" or "") .. tostring(tile.rank) end
-		        if rankBottom ~= nil then rankBottom.TextGUIRendererComponent.Text = tostring(tile.rank) end
-		        if monsterName ~= nil then monsterName.TextGUIRendererComponent.Text = self:MonsterName(tile.suit) end
+		        local textColor = Color(0.12, 0.16, 0.24, 1)
+		        if monster ~= nil then
+		            monster.SpriteGUIRendererComponent.ImageRUID = self:MonsterRUID(tile.suit)
+		            monster.SpriteGUIRendererComponent.Color = Color(1, 1, 1, 1)
+		        end
+		        if rankTop ~= nil then
+		            rankTop.TextGUIRendererComponent.FontColor = textColor
+		            rankTop.TextGUIRendererComponent.Text = (selected and "✓" or "") .. tostring(tile.rank)
+		        end
+		        if rankBottom ~= nil then
+		            rankBottom.TextGUIRendererComponent.FontColor = textColor
+		            rankBottom.TextGUIRendererComponent.Text = tostring(tile.rank)
+		        end
+		        if monsterName ~= nil then
+		            monsterName.TextGUIRendererComponent.FontColor = textColor
+		            monsterName.TextGUIRendererComponent.Text = self:MonsterName(tile.suit)
+		        end
 	end
 
 	method table SortedTiles(table source)

@@ -3,6 +3,8 @@ script LexioSessionCoordinator extends Component
 
 	property Entity SessionEntity = ""
 
+	property string TableId = ""
+
 	property table userIdBySeat = {}
 
 	property table seatByUserId = {}
@@ -76,8 +78,8 @@ script LexioSessionCoordinator extends Component
 		        self.winsBySeat = { 0, 0, 0 }
 		        self.finishReturnStarted = false
 		        self.finishDecisionActive = false
-		        self:RegisterCurrentMapPlayers()
-		        log("[LexioSessionCoordinator] READY map=" .. self.Entity.CurrentMap.Name)
+		        if self.TableId == "" then self:RegisterCurrentMapPlayers() end
+		        log("[LexioSessionCoordinator] READY map=" .. self.Entity.CurrentMap.Name .. " table=" .. self.TableId)
 	end
 
 	@ExecSpace("ServerOnly")
@@ -289,6 +291,44 @@ script LexioSessionCoordinator extends Component
 	end
 
 	@ExecSpace("ServerOnly")
+	method boolean RegisterTablePlayer(Entity playerEntity, string userId, string tableId, integer seatIndex, string chairName)
+		        if self.TableId == "" or self.TableId ~= tableId then return false end
+		        if seatIndex < 1 or seatIndex > 3 then return false end
+		        if playerEntity == nil or not isvalid(playerEntity) or playerEntity.PlayerComponent == nil then return false end
+		        if playerEntity.PlayerComponent.UserId ~= userId or playerEntity.CurrentMap ~= self.Entity.CurrentMap then return false end
+		        local session = self.SessionEntity:GetComponent("script.LexioGameSession")
+		        if session == nil or session.phase ~= "WaitingPlayers" or self.startRequested then return false end
+		        local currentSeat = self.seatByUserId[userId]
+		        if currentSeat ~= nil and currentSeat ~= seatIndex then return false end
+		        local owner = self.userIdBySeat[seatIndex]
+		        if owner ~= nil and owner ~= userId then return false end
+		        self.userIdBySeat[seatIndex] = userId
+		        self.seatByUserId[userId] = seatIndex
+		        self.playerEntityBySeat[seatIndex] = playerEntity
+		        self.readyBySeat[seatIndex] = false
+		        self.seatedBySeat[seatIndex] = true
+		        self.chairBySeat[seatIndex] = chairName
+		        self:AttachBridge(playerEntity, userId, seatIndex, "Player")
+		        log("[LexioSessionCoordinator] TABLE JOIN table=" .. tableId .. " userId=" .. userId .. " seat=" .. tostring(seatIndex))
+		        self:BroadcastSnapshots()
+		        self:TryStartGame()
+		        return true
+	end
+
+	@ExecSpace("ServerOnly")
+	method boolean ReleaseTablePlayer(string userId, Entity playerEntity, string tableId)
+		        if self.TableId ~= tableId then return false end
+		        local seat = self.seatByUserId[userId]
+		        if seat == nil then return true end
+		        if self.playerEntityBySeat[seat] ~= playerEntity then return false end
+		        local session = self.SessionEntity:GetComponent("script.LexioGameSession")
+		        if session ~= nil and (session.phase == "Playing" or session.phase == "LeadPending") then return false end
+		        self:RemovePlayer(userId)
+		        self:BroadcastSnapshots()
+		        return true
+	end
+
+	@ExecSpace("ServerOnly")
 	method void RemovePlayer(string userId)
 		        local seat = self.seatByUserId[userId]
 		        self.bridgeByUserId[userId] = nil
@@ -410,7 +450,7 @@ script LexioSessionCoordinator extends Component
 
 	@ExecSpace("ServerOnly")
 	method void TryStartGame()
-		        if self.Entity.CurrentMapName == "map01" then return end
+		        if self.Entity.CurrentMapName == "map01" and self.TableId == "" then return end
 		        if self.startCountdownActive or not self:CanStartFromSeats() then return end
 		        self.startCountdownActive = true
 		        self.startCountdown = 3
@@ -491,6 +531,7 @@ script LexioSessionCoordinator extends Component
 	@ExecSpace("ServerOnly")
 	@EventSender("Service", "UserService")
 	handler HandleUserEnterEvent(UserEnterEvent event)
+		        if self.TableId ~= "" then return end
 		        local playerEntity = _UserService:GetUserEntityByUserId(event.UserId)
 		        if self:RegisterPlayer(playerEntity, event.UserId) then return end
 		        self:StartRegistrationRetry(event.UserId)
@@ -499,6 +540,7 @@ script LexioSessionCoordinator extends Component
 	@ExecSpace("ServerOnly")
 	@EventSender("Service", "UserService")
 	handler HandleUserLeaveEvent(UserLeaveEvent event)
+		        if self.TableId ~= "" then return end
 		        self.registrationRetryByUserId[event.UserId] = nil
 		        self.registrationGenerationByUserId[event.UserId] = (self.registrationGenerationByUserId[event.UserId] or 0) + 1
 		        self:RemovePlayer(event.UserId)

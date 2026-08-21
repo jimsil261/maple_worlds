@@ -26,6 +26,22 @@ script LexioTableRegistry extends Component
 		return tableId .. ":" .. tostring(seatIndex)
 	end
 
+	method string GetSessionHostPath(string tableId)
+		if tableId == "table01" then return "/maps/map01/LexioTable01SessionHost" end
+		if tableId == "table02" then return "/maps/map01/LexioManualSessionHost" end
+		if tableId == "table03" then return "/maps/map01/LexioTable03SessionHost" end
+		return ""
+	end
+
+	@ExecSpace("ServerOnly")
+	method any GetTableCoordinator(string tableId)
+		local path = self:GetSessionHostPath(tableId)
+		if path == "" then return nil end
+		local host = _EntityService:GetEntityByPath(path)
+		if host == nil or not isvalid(host) then return nil end
+		return host:GetComponent("script.LexioSessionCoordinator")
+	end
+
 	@ExecSpace("ServerOnly")
 	method boolean TryReserveSeat(string userId, Entity playerEntity, string tableId, integer seatIndex, string chairName)
 		if userId == nil or userId == "" or playerEntity == nil or not isvalid(playerEntity) then return false end
@@ -55,6 +71,15 @@ script LexioTableRegistry extends Component
 			log("[LexioTableRegistry] REJECT reason=occupied key=" .. seatKey)
 			return false
 		end
+		local coordinator = self:GetTableCoordinator(tableId)
+		if coordinator == nil then
+			log("[LexioTableRegistry] REJECT reason=missing_coordinator table=" .. tableId)
+			return false
+		end
+		if not coordinator:RegisterTablePlayer(playerEntity, userId, tableId, seatIndex, chairName) then
+			log("[LexioTableRegistry] REJECT reason=session_rejected table=" .. tableId .. " userId=" .. userId)
+			return false
+		end
 		self.seatOwnerByKey[seatKey] = userId
 		self.seatByUserId[userId] = { key = seatKey, tableId = tableId, seatIndex = seatIndex, chairName = chairName }
 		self.playerByUserId[userId] = playerEntity
@@ -66,6 +91,12 @@ script LexioTableRegistry extends Component
 	method boolean ReleasePlayer(string userId, string reason)
 		local seat = self.seatByUserId[userId]
 		if seat == nil then return true end
+		local playerEntity = self.playerByUserId[userId]
+		local coordinator = self:GetTableCoordinator(seat.tableId)
+		if coordinator ~= nil and not coordinator:ReleaseTablePlayer(userId, playerEntity, seat.tableId) then
+			log("[LexioTableRegistry] RELEASE REJECTED userId=" .. userId .. " table=" .. seat.tableId .. " reason=" .. tostring(reason))
+			return false
+		end
 		if self.seatOwnerByKey[seat.key] == userId then self.seatOwnerByKey[seat.key] = nil end
 		self.seatByUserId[userId] = nil
 		self.playerByUserId[userId] = nil
