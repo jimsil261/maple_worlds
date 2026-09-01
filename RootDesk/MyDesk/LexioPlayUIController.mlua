@@ -369,15 +369,17 @@ script LexioPlayUIController extends Logic
 		        local rankTop = card:GetChildByName("RankTop")
 		        local rankBottom = card:GetChildByName("RankBottom")
 		        local monsterName = card:GetChildByName("MonsterName")
-		        if aura ~= nil then aura.SpriteGUIRendererComponent.Color = self:SuitColor(tile.suit, selected) end
-		        local textColor = Color(0.12, 0.16, 0.24, 1)
+		        local selectionMark = card:GetChildByName("SelectionMark")
+		        -- Keep the monster's magic-circle color visible even on the yellow selected card.
+		        if aura ~= nil then aura.SpriteGUIRendererComponent.Color = self:SuitColor(tile.suit, false) end
+		        local textColor = self:SuitColor(tile.suit, false)
 		        if monster ~= nil then
 		            monster.SpriteGUIRendererComponent.ImageRUID = self:MonsterRUID(tile.suit)
 		            monster.SpriteGUIRendererComponent.Color = Color(1, 1, 1, 1)
 		        end
 		        if rankTop ~= nil then
 		            rankTop.TextGUIRendererComponent.FontColor = textColor
-		            rankTop.TextGUIRendererComponent.Text = (selected and "✓" or "") .. tostring(tile.rank)
+		            rankTop.TextGUIRendererComponent.Text = tostring(tile.rank)
 		        end
 		        if rankBottom ~= nil then
 		            rankBottom.TextGUIRendererComponent.FontColor = textColor
@@ -386,6 +388,9 @@ script LexioPlayUIController extends Logic
 		        if monsterName ~= nil then
 		            monsterName.TextGUIRendererComponent.FontColor = textColor
 		            monsterName.TextGUIRendererComponent.Text = self:MonsterName(tile.suit)
+		        end
+		        if selectionMark ~= nil then
+		            selectionMark.TextGUIRendererComponent.Text = selected and "✓" or ""
 		        end
 	end
 

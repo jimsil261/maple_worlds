@@ -369,7 +369,8 @@ script LexioSessionCoordinator extends Component
 	@ExecSpace("ServerOnly")
 	method string GetExitRejectionReason(string userId, Entity playerEntity)
 		        local seat = self.seatByUserId[userId]
-		        if seat == nil then return "not_registered" end
+		        -- Players enter map01 unseated and must still be able to use the exit portal.
+		        if seat == nil then return "" end
 		        if self.playerEntityBySeat[seat] ~= playerEntity then return "player_mismatch" end
 		        if playerEntity.PlayerComponent == nil or playerEntity.PlayerComponent.UserId ~= userId then return "player_mismatch" end
 		        local session = self.SessionEntity:GetComponent("script.LexioGameSession")
@@ -383,6 +384,10 @@ script LexioSessionCoordinator extends Component
 	@ExecSpace("ServerOnly")
 	method boolean PreparePlayerExit(string userId, Entity playerEntity)
 		        if self:GetExitRejectionReason(userId, playerEntity) ~= "" then return false end
+		        if self.seatByUserId[userId] == nil then
+		            log("[LexioSessionCoordinator] EXIT unseated userId=" .. userId)
+		            return true
+		        end
 		        self:RemovePlayer(userId)
 		        self:BroadcastSnapshots()
 		        return true
