@@ -8,20 +8,21 @@
 |---|---|
 | Maps | `TileMapTemplate` lobby, `map01` play room, `lexio_session_tests` integration-test map |
 | Movement | `map01` is RectTile with `KinematicbodyComponent`; map01-only InputSpeed 1.2 |
-| Travel | Lobby entrance uses server-validated UpArrow travel; map01 has a lobby return path |
-| Seating | One physical table represented by three chairs; X toggles sit/stand near a chair |
-| Start rule | Three registered players seated on distinct chairs for 3 seconds starts one game |
-| Game session | One map-wide `LexioGameSession` coordinated by one `LexioSessionCoordinator` |
+| Travel | Lobby entrance and map01 return portal use server-validated UpArrow travel; an unseated player can return to the lobby |
+| Seating | Three physical tables with three chairs each; X toggles sit/stand near a table-specific chair |
+| Start rule | Three players seated at the same table for 3 seconds start that table's game; split-table occupancy does not start a match |
+| Game session | `LexioSessionCoordinator` manages independent table-scoped runtime/session state for `table01`–`table03` |
 | Rules | Three-player Lexio deck, play classification/comparison, turns, pass, finish, replay |
-| UI | Hidden until seated; monster-card hand/public-play rendering; finish/replay controls |
-| Tests | Rule and session tests plus Maker runtime checks exist |
+| UI | Hidden until seated; table-scoped status and monster-card rendering; card art, magic circle, faction-colored labels/numbers, external selection check, finish/replay controls |
+| Tests | Rule tests and deterministic two-session isolation tests pass; real multi-client table isolation remains pending |
 
 ## Standing issues
 
 | Issue | Count | Last seen | Status |
 |---|---:|---|---|
 | Runtime-attached travel bridge can retain a stale source map | 1 | 2026-08-16 | Entrance now uses independent server validation |
-| Real three-client multiplayer behavior needs human testing | 1 | 2026-08-16 | Open |
+| Real three-client manual match completion | 1 | 2026-09-04 | Passed; nickname turn labels and public-card layout follow-ups fixed |
+| Two simultaneous table sessions require six-client isolation testing | 1 | 2026-09-04 | Open |
 
 ## Log
 
@@ -30,4 +31,12 @@
 - Existing playable prototype supports a single three-seat table and one map-wide match.
 - The next milestone will replace map-wide ownership with table-scoped lobbies and sessions.
 - Existing card rules, card UI, chair interaction, finish flow, and tests should be reused.
+
+### M1 Phase 1–2 implementation snapshot — 2026-09-04
+
+- Three table clusters and nine table-specific chairs are present in map01.
+- Seat ownership, countdowns, requests, snapshots, and game sessions are routed by table ID.
+- The map01 return portal accepts UpArrow from an unseated player and returns them to the lobby.
+- Card presentation was aligned with the preview layout: centered monster/magic circle, faction-colored text and numbers, and a selection check above the card.
+- Maker runtime checks completed: rule tests 50/50 and game-session tests 63/63 passed, including deterministic two-session isolation; the real three-client match passed and concurrent-table verification remains open.
 

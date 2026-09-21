@@ -117,11 +117,20 @@ script LexioTravelBridge extends Component
 	end
 
 	method table GetRoute(string routeId)
-		        if routeId == "LEXIO_PLAY" then
+		        if routeId == "CAFE_ENTER" then
 		            return {
 		                sourceMap = "TileMapTemplate",
+		                objectKey = "CafeEntrance",
+		                objectPath = "/maps/TileMapTemplate/CafeEntrance",
+		                destinationMap = "boardgame_cafe",
+		                destinationPosition = Vector3(0, 0, 0)
+		            }
+		        end
+		        if routeId == "LEXIO_PLAY" then
+		            return {
+		                sourceMap = "boardgame_cafe",
 		                objectKey = "LexioEntrance",
-		                objectPath = "/maps/TileMapTemplate/LexioEntrance",
+		                objectPath = "/maps/boardgame_cafe/LexioEntrance",
 		                destinationMap = "map01",
 		                destinationPosition = Vector3(0, 0, 0)
 		            }
@@ -131,8 +140,8 @@ script LexioTravelBridge extends Component
 		                sourceMap = "map01",
 		                objectKey = "LexioExit",
 		                objectPath = "/maps/map01/LexioExit",
-		                destinationMap = "TileMapTemplate",
-		                destinationPosition = Vector3(-2, 0, 0)
+		                destinationMap = "boardgame_cafe",
+		                destinationPosition = Vector3(0, 0, 0)
 		            }
 		        end
 		        return nil
@@ -200,13 +209,13 @@ script LexioTravelBridge extends Component
 		        if self.Entity.PlayerComponent.UserId ~= callerUserId or self.Entity.CurrentMapName ~= "map01" then return false end
 		        if self.inFlight then return false end
 		        self.inFlight = true
-		        self.destinationMapName = "TileMapTemplate"
+		        self.destinationMapName = "boardgame_cafe"
 		        self.flightElapsed = 0
 		        self.cooldownRemaining = self.requestCooldown
 		        local controls = self.Entity:GetComponent("script.LexioManualTestControls")
 		        if controls ~= nil then controls:ForceStandForLobby(callerUserId) end
 		        log("[LexioTravel] FINISHED RETURN userId=" .. callerUserId .. " generation=" .. tostring(finishGeneration))
-		        _TeleportService:TeleportToMapPosition(self.Entity, Vector3(-2, 0, 0), "TileMapTemplate")
+		        _TeleportService:TeleportToMapPosition(self.Entity, Vector3(0, 0, 0), "boardgame_cafe")
 		        return true
 	end
 

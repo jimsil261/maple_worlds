@@ -1,6 +1,6 @@
 # Lexio — Milestone Roadmap
 
-Last updated: 2026-08-16
+Last updated: 2026-09-04
 
 ## Vision
 
@@ -17,7 +17,7 @@ Players enter a shared Lexio hall, choose a table manually or enter automatic ma
 
 | Milestone | Theme | Status |
 |---|---|---|
-| M1 | Three physical tables, manual seating, automatic queue, isolated table sessions | 🔨 active (Phase 0/4 done) |
+| M1 | Three physical tables, manual seating, automatic queue, isolated table sessions | 🔨 active (Phase 2 core implemented; multiplayer isolation verification pending) |
 | M2 | Capacity expansion, reconnect recovery, spectator/table browsing polish | ⬜ planned |
 
 ## Backlog
@@ -27,4 +27,9 @@ Players enter a shared Lexio hall, choose a table manually or enter automatic ma
 - Skill/rating-based matchmaking
 - Spectator mode and table browser
 - Cross-room/world matchmaking
+
+## Current next step
+
+1. Verify two simultaneous table sessions remain isolated (six clients when available).
+2. After Phase 2 verification passes, begin Phase 3 automatic matchmaking.
 

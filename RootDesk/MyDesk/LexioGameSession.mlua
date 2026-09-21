@@ -5,6 +5,8 @@ script LexioGameSession extends Component
 
 	property table userIds = {}
 
+	property integer playerCount = 3
+
 	property table userIndexById = {}
 
 	property table hands = {}
@@ -38,6 +40,7 @@ script LexioGameSession extends Component
 		        -- Restores the component to its only pre-game state without starting a game.
 		        self.phase = "WaitingPlayers"
 		        self.userIds = {}
+		        self.playerCount = 3
 		        self.userIndexById = {}
 		        self.hands = {}
 		        self.tilesById = {}
@@ -71,10 +74,10 @@ script LexioGameSession extends Component
 		        return true
 	end
 
-	method table BuildOrderedDeck()
+	method table BuildOrderedDeck(integer playerCount)
 		        -- Creates the complete three-player deck of 36 unique server-owned tile records.
 		        local deck = {}
-		        for rank = 1, 9 do
+		        for rank = 1, _LexioRules:GetMaxRank(playerCount) do
 		            for suit = 1, 4 do
 		                local id = ((rank - 1) * 4) + suit
 		                table.insert(deck, { id = id, rank = rank, suit = suit })
@@ -104,13 +107,14 @@ script LexioGameSession extends Component
 		        return deck
 	end
 
-	method boolean ValidateDeck(table deck)
+	method boolean ValidateDeck(table deck, integer playerCount)
 		        -- Requires exactly one copy of every rank-and-suit tile in the three-player set.
-		        if deck == nil or #deck ~= 36 then return false end
+		        local expectedCount = _LexioRules:GetMaxRank(playerCount) * 4
+		        if deck == nil or #deck ~= expectedCount then return false end
 		        local ids = {}
 		        local tiles = {}
 		        for _, tile in ipairs(deck) do
-		            if not _LexioRules:IsTileValid(tile, 3) then return false end
+		            if not _LexioRules:IsTileValid(tile, playerCount) then return false end
 		            if tile.id == nil or ids[tile.id] then return false end
 		            local key = tostring(tile.rank) .. ":" .. tostring(tile.suit)
 		            if tiles[key] then return false end
@@ -124,32 +128,35 @@ script LexioGameSession extends Component
 	method table StartGame(table registeredUserIds, table fixedDeck)
 		        -- Starts one three-player game using server RNG or an injected deterministic deck.
 		        if self.phase ~= "WaitingPlayers" then return self:Reject("phase") end
-		        if registeredUserIds == nil or #registeredUserIds ~= 3 then return self:Reject("player_count") end
+		        if registeredUserIds == nil or #registeredUserIds < 3 or #registeredUserIds > 5 then return self:Reject("player_count") end
+		        local playerCount = #registeredUserIds
 		        local seenUsers = {}
 		        for _, userId in ipairs(registeredUserIds) do
 		            if userId == nil or userId == "" or seenUsers[userId] then return self:Reject("invalid_user") end
 		            seenUsers[userId] = true
 		        end
 		        local deck = nil
-		        if fixedDeck ~= nil then deck = self:CopyDeck(fixedDeck) else deck = self:ShuffleDeck(self:BuildOrderedDeck()) end
-		        if not self:ValidateDeck(deck) then return self:Reject("invalid_deck") end
+		        if fixedDeck ~= nil then deck = self:CopyDeck(fixedDeck) else deck = self:ShuffleDeck(self:BuildOrderedDeck(playerCount)) end
+		        if not self:ValidateDeck(deck, playerCount) then return self:Reject("invalid_deck") end
 		
-		        local newHands = { {}, {}, {} }
+		        local newHands = {}
+		        for index = 1, playerCount do newHands[index] = {} end
 		        local newTilesById = {}
 		        for deckIndex, tile in ipairs(deck) do
-		            local playerIndex = ((deckIndex - 1) % 3) + 1
+		            local playerIndex = ((deckIndex - 1) % playerCount) + 1
 		            table.insert(newHands[playerIndex], tile)
 		            newTilesById[tile.id] = tile
 		        end
 		        local leaderIndex = _LexioRules:FindInitialLeader(newHands)
 		        if leaderIndex == 0 then return self:Reject("leader_not_found") end
 		
-		        self.userIds = { registeredUserIds[1], registeredUserIds[2], registeredUserIds[3] }
-		        self.userIndexById = {
-		            [registeredUserIds[1]] = 1,
-		            [registeredUserIds[2]] = 2,
-		            [registeredUserIds[3]] = 3
-		        }
+		        self.userIds = {}
+		        self.userIndexById = {}
+		        for index = 1, playerCount do
+		            self.userIds[index] = registeredUserIds[index]
+		            self.userIndexById[registeredUserIds[index]] = index
+		        end
+		        self.playerCount = playerCount
 		        self.hands = newHands
 		        self.tilesById = newTilesById
 		        self.initialLeaderIndex = leaderIndex
@@ -158,7 +165,8 @@ script LexioGameSession extends Component
 		        self.currentPlay = nil
 		        self.currentPlayTiles = {}
 		        self.lastPublicPlay = {}
-		        self.passed = { false, false, false }
+		        self.passed = {}
+		        for index = 1, playerCount do self.passed[index] = false end
 		        self.trickNumber = 1
 		        self.turnNumber = 1
 		        self.winnerIndex = 0
@@ -206,8 +214,8 @@ script LexioGameSession extends Component
 
 	method integer FindNextUnpassed(integer fromIndex)
 		        -- Finds the next unpassed seat in circular order, including the winner on wraparound.
-		        for offset = 1, 3 do
-		            local candidate = ((fromIndex + offset - 1) % 3) + 1
+		        for offset = 1, self.playerCount do
+		            local candidate = ((fromIndex + offset - 1) % self.playerCount) + 1
 		            if not self.passed[candidate] then return candidate end
 		        end
 		        return 0
@@ -248,8 +256,8 @@ script LexioGameSession extends Component
 		        if selected == nil then return self:Reject("tile_ownership") end
 		
 		        local previousPlay = self.phase == "Playing" and self.currentPlay or nil
-		        if not _LexioRules:CanSubmit(selected, 3, previousPlay, false) then return self:Reject("illegal_play") end
-		        local classified = _LexioRules:ClassifyPlay(selected, 3)
+		        if not _LexioRules:CanSubmit(selected, self.playerCount, previousPlay, false) then return self:Reject("illegal_play") end
+		        local classified = _LexioRules:ClassifyPlay(selected, self.playerCount)
 		        local willFinish = #self.hands[playerIndex] == #selected
 		        if self.phase == "LeadPending" and not self:IsTransitionAllowed("LeadPending", "Playing") then return self:Reject("transition") end
 		        if self.phase == "Playing" and willFinish and not self:IsTransitionAllowed("Playing", "Finished") then return self:Reject("transition") end
@@ -257,7 +265,8 @@ script LexioGameSession extends Component
 		        self:RemoveTilesFromHand(playerIndex, selected)
 		        if self.phase == "LeadPending" then
 		            self:SetPhase("Playing")
-		            self.passed = { false, false, false }
+		            self.passed = {}
+		            for index = 1, self.playerCount do self.passed[index] = false end
 		            self.trickNumber = self.trickNumber + 1
 		        end
 		        self.currentPlay = classified
@@ -314,6 +323,18 @@ script LexioGameSession extends Component
 		        return snapshot
 	end
 
+	method table BuildRemainingCounts()
+		        local result = {}
+		        for index = 1, self.playerCount do result[index] = #self.hands[index] end
+		        return result
+	end
+
+		method table BuildPassedSnapshot()
+		        local result = {}
+		        for index = 1, self.playerCount do result[index] = self.passed[index] or false end
+		        return result
+	end
+
 	@ExecSpace("ServerOnly")
 	method table BuildPublicSnapshot()
 		        -- Exposes turn state and remaining counts without leaking opponents' tile identities.
@@ -321,8 +342,9 @@ script LexioGameSession extends Component
 		            phase = self.phase,
 		            currentPlayerIndex = self.currentPlayerIndex,
 		            winningPlayerIndex = self.winningPlayerIndex,
-		            remainingCounts = { #self.hands[1], #self.hands[2], #self.hands[3] },
-		            passed = { self.passed[1], self.passed[2], self.passed[3] },
+		            remainingCounts = self:BuildRemainingCounts(),
+		            passed = self:BuildPassedSnapshot(),
+		            playerCount = self.playerCount,
 		            lastPlay = self.lastPublicPlay,
 		            trickNumber = self.trickNumber,
 		            turnNumber = self.turnNumber,

@@ -5,6 +5,8 @@ script LexioSessionCoordinator extends Component
 
 	property string TableId = ""
 
+	property integer RequiredPlayerCount = 3
+
 	property table userIdBySeat = {}
 
 	property table seatByUserId = {}
@@ -60,9 +62,14 @@ script LexioSessionCoordinator extends Component
 		        self.seatByUserId = {}
 		        self.playerEntityBySeat = {}
 		        self.bridgeByUserId = {}
-		        self.readyBySeat = { false, false, false }
-		        self.seatedBySeat = { false, false, false }
-		        self.chairBySeat = { "", "", "" }
+		        self.readyBySeat = {}
+		        self.seatedBySeat = {}
+		        self.chairBySeat = {}
+		        for seat = 1, self.RequiredPlayerCount do
+		            self.readyBySeat[seat] = false
+		            self.seatedBySeat[seat] = false
+		            self.chairBySeat[seat] = ""
+		        end
 		        self.startCountdownActive = false
 		        self.startCountdown = 0
 		        self.startCountdownSecond = -1
@@ -75,7 +82,8 @@ script LexioSessionCoordinator extends Component
 		        self.finishCountdown = 0
 		        self.finishCountdownSecond = -1
 		        self.finishDecisionByUserId = {}
-		        self.winsBySeat = { 0, 0, 0 }
+		        self.winsBySeat = {}
+		        for seat = 1, self.RequiredPlayerCount do self.winsBySeat[seat] = 0 end
 		        self.finishReturnStarted = false
 		        self.finishDecisionActive = false
 		        if self.TableId == "" then self:RegisterCurrentMapPlayers() end
@@ -138,7 +146,7 @@ script LexioSessionCoordinator extends Component
 		        self.finishDecisionByUserId = {}
 		        self.finishReturnStarted = false
 		        self.finishDecisionActive = true
-		        if session.winnerIndex >= 1 and session.winnerIndex <= 3 then
+		        if session.winnerIndex >= 1 and session.winnerIndex <= self.RequiredPlayerCount then
 		            self.winsBySeat[session.winnerIndex] = (self.winsBySeat[session.winnerIndex] or 0) + 1
 		        end
 		        log("[LexioSessionCoordinator] FINISHED generation=" .. tostring(self.finishGeneration) .. " winner=" .. tostring(session.winnerIndex))
@@ -158,7 +166,7 @@ script LexioSessionCoordinator extends Component
 		        log("[LexioSessionCoordinator] FINISH DECISION userId=" .. userId .. " decision=" .. decision .. " generation=" .. tostring(generation))
 		        if decision == "Exit" then
 		            self:ReturnAllFinishedPlayers("exit")
-		        elseif self.finishDecisionByUserId[self.userIdBySeat[1]] == "Replay" and self.finishDecisionByUserId[self.userIdBySeat[2]] == "Replay" and self.finishDecisionByUserId[self.userIdBySeat[3]] == "Replay" then
+		        elseif self:AreAllPlayersReplaying() then
 		            self:StartReplayRound()
 		        else
 		            self:BroadcastSnapshots()
@@ -170,8 +178,8 @@ script LexioSessionCoordinator extends Component
 	method void StartReplayRound()
 		        local session = self.SessionEntity:GetComponent("script.LexioGameSession")
 		        if session == nil or session.phase ~= "Finished" or self.finishReturnStarted then return end
-		        local users = { self.userIdBySeat[1], self.userIdBySeat[2], self.userIdBySeat[3] }
-		        if users[1] == nil or users[2] == nil or users[3] == nil then self:ReturnAllFinishedPlayers("missing_player") return end
+		        local users = self:BuildRequiredUsers()
+		        if #users ~= self.RequiredPlayerCount then self:ReturnAllFinishedPlayers("missing_player") return end
 		        session:ResetSession()
 		        self.startRequested = true
 		        self.finishedResultsPublished = false
@@ -190,10 +198,10 @@ script LexioSessionCoordinator extends Component
 		        self.finishReturnStarted = true
 		        self.finishDecisionActive = false
 		        local generation = self.finishGeneration
-		        local users = { self.userIdBySeat[1], self.userIdBySeat[2], self.userIdBySeat[3] }
-		        local players = { self.playerEntityBySeat[1], self.playerEntityBySeat[2], self.playerEntityBySeat[3] }
+		        local users = self:BuildRequiredUsers()
+		        local players = self:BuildRequiredPlayers()
 		        log("[LexioSessionCoordinator] RETURN ALL reason=" .. reason .. " generation=" .. tostring(generation))
-		        for seat = 1, 3 do
+		        for seat = 1, self.RequiredPlayerCount do
 		            local player = players[seat]
 		            local userId = users[seat]
 		            if player ~= nil and isvalid(player) and userId ~= nil and player.PlayerComponent ~= nil and player.PlayerComponent.UserId == userId then
@@ -223,8 +231,37 @@ script LexioSessionCoordinator extends Component
 		        end
 	end
 
+	method table BuildRequiredUsers()
+		        local users = {}
+		        for seat = 1, self.RequiredPlayerCount do
+		            if self.userIdBySeat[seat] == nil then return {} end
+		            users[seat] = self.userIdBySeat[seat]
+		        end
+		        return users
+	end
+
+		method table BuildRequiredPlayers()
+		        local players = {}
+		        for seat = 1, self.RequiredPlayerCount do players[seat] = self.playerEntityBySeat[seat] end
+		        return players
+	end
+
+		method boolean AreAllPlayersReplaying()
+		        for seat = 1, self.RequiredPlayerCount do
+		            local userId = self.userIdBySeat[seat]
+		            if userId == nil or self.finishDecisionByUserId[userId] ~= "Replay" then return false end
+		        end
+		        return true
+	end
+
+		method table BuildWinsSnapshot()
+		        local wins = {}
+		        for seat = 1, self.RequiredPlayerCount do wins[seat] = self.winsBySeat[seat] or 0 end
+		        return wins
+	end
+
 	method integer FindOpenSeat()
-		        for seat = 1, 3 do
+		        for seat = 1, self.RequiredPlayerCount do
 		            if self.userIdBySeat[seat] == nil then return seat end
 		        end
 		        return 0
@@ -293,7 +330,7 @@ script LexioSessionCoordinator extends Component
 	@ExecSpace("ServerOnly")
 	method boolean RegisterTablePlayer(Entity playerEntity, string userId, string tableId, integer seatIndex, string chairName)
 		        if self.TableId == "" or self.TableId ~= tableId then return false end
-		        if seatIndex < 1 or seatIndex > 3 then return false end
+		        if seatIndex < 1 or seatIndex > self.RequiredPlayerCount then return false end
 		        if playerEntity == nil or not isvalid(playerEntity) or playerEntity.PlayerComponent == nil then return false end
 		        if playerEntity.PlayerComponent.UserId ~= userId or playerEntity.CurrentMap ~= self.Entity.CurrentMap then return false end
 		        local session = self.SessionEntity:GetComponent("script.LexioGameSession")
@@ -411,7 +448,7 @@ script LexioSessionCoordinator extends Component
 	method boolean CanStartFromSeats()
 		        local session = self.SessionEntity:GetComponent("script.LexioGameSession")
 		        if session == nil or session.phase ~= "WaitingPlayers" or self.startRequested then return false end
-		        for seat = 1, 3 do
+		        for seat = 1, self.RequiredPlayerCount do
 		            if self.userIdBySeat[seat] == nil or not self.readyBySeat[seat] or not self.seatedBySeat[seat] then return false end
 		            if self.chairBySeat[seat] == nil or self.chairBySeat[seat] == "" then return false end
 		        end
@@ -436,7 +473,7 @@ script LexioSessionCoordinator extends Component
 		        if playerEntity.PlayerComponent.UserId ~= userId or playerEntity.CurrentMap ~= self.Entity.CurrentMap then return false end
 		        if seated then
 		            if chairName ~= "LexioChair1" and chairName ~= "LexioChair2" and chairName ~= "LexioChair3" then return false end
-		            for otherSeat = 1, 3 do
+		            for otherSeat = 1, self.RequiredPlayerCount do
 		                if otherSeat ~= seat and self.seatedBySeat[otherSeat] and self.chairBySeat[otherSeat] == chairName then return false end
 		            end
 		            self.seatedBySeat[seat] = true
@@ -474,7 +511,8 @@ script LexioSessionCoordinator extends Component
 		        self.startCountdownSecond = -1
 		        -- Lock before invoking StartGame so the countdown cannot complete twice.
 		        self.startRequested = true
-		        local result = session:StartGame({ self.userIdBySeat[1], self.userIdBySeat[2], self.userIdBySeat[3] }, nil)
+		        local users = self:BuildRequiredUsers()
+		        local result = session:StartGame(users, nil)
 		        log("[LexioSessionCoordinator] START invoked ok=" .. tostring(result.ok) .. " reason=" .. result.reason)
 		        if result.ok then self:BroadcastSnapshots() end
 	end
@@ -512,8 +550,8 @@ script LexioSessionCoordinator extends Component
 		        else
 		            snapshot = session:BuildPublicSnapshot()
 		        end
-		        local seatNames = { "", "", "" }
-		        for seat = 1, 3 do
+		        local seatNames = {}
+		        for seat = 1, self.RequiredPlayerCount do
 		            local player = self.playerEntityBySeat[seat]
 		            if player ~= nil and isvalid(player) then
 		                local nickname = player.Name
@@ -529,7 +567,8 @@ script LexioSessionCoordinator extends Component
 		        snapshot.finishCountdown = math.ceil(self.finishCountdown)
 		        snapshot.finishReplayCount = 0
 		        for _, decision in pairs(self.finishDecisionByUserId) do if decision == "Replay" then snapshot.finishReplayCount = snapshot.finishReplayCount + 1 end end
-		        snapshot.winsBySeat = { self.winsBySeat[1] or 0, self.winsBySeat[2] or 0, self.winsBySeat[3] or 0 }
+		        snapshot.winsBySeat = self:BuildWinsSnapshot()
+		        snapshot.playerCount = self.RequiredPlayerCount
 		        return snapshot
 	end
 

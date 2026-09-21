@@ -11,7 +11,47 @@ script LexioTravelMapController extends Component
 	method void OnBeginPlay()
 		        log("[LexioTravelMapController] READY map=" .. self.ManagedMapName)
 		        self.scanElapsed = 0
+		        if self.ManagedMapName == "map01" then self:SpawnFloorPortals() end
+		        self:ConfigureExistingPortalKeys()
 		        self:AttachCurrentPlayers()
+	end
+
+	@ExecSpace("ServerOnly")
+	method void ConfigureExistingPortalKeys()
+		        local portalNames = {"CafeEntrance", "LexioEntrance", "LexioExit"}
+		        for _, portalName in ipairs(portalNames) do
+		            local portal = self.Entity.CurrentMap:GetChildByName(portalName)
+		            if portal ~= nil and portal.InteractionComponent ~= nil then
+		                portal.InteractionComponent.ActionKey = KeyboardKey.UpArrow
+		                portal.InteractionComponent.BoxSize = Vector2(0.9, 1.2)
+		                log("[LexioTravelMapController] PORTAL_KEY name=" .. portalName .. " key=UpArrow")
+		            end
+		        end
+	end
+
+	@ExecSpace("ServerOnly")
+	method void SpawnFloorPortals()
+		        self:SpawnFloorPortal("Floor1UpPortal", Vector3(6.8, -12.15, 0), "2층으로 올라가기", "FLOOR_UP")
+		        self:SpawnFloorPortal("Floor2DownPortal", Vector3(-6.8, -6.15, 0), "1층으로 내려가기", "FLOOR_DOWN")
+		        self:SpawnFloorPortal("Floor2UpPortal", Vector3(6.8, -6.15, 0), "3층으로 올라가기", "FLOOR_UP")
+		        self:SpawnFloorPortal("Floor3DownPortal", Vector3(-6.8, -0.15, 0), "2층으로 내려가기", "FLOOR_DOWN")
+	end
+
+	@ExecSpace("ServerOnly")
+	method void SpawnFloorPortal(string entityName, Vector3 position, string actionName, string routeId)
+		        local path = "/maps/map01/" .. entityName
+		        local existing = _EntityService:GetEntityByPath(path)
+		        if existing ~= nil and isvalid(existing) then return end
+		        local portal = _SpawnService:SpawnByModelId("lexioexit", entityName, position, self.Entity.CurrentMap)
+		        if portal == nil then log("[LexioTravelMapController] FLOOR_PORTAL_FAILED name=" .. entityName); return end
+		        if portal.InteractionComponent ~= nil then
+		            portal.InteractionComponent.ActionName = actionName
+		            portal.InteractionComponent.ActionKey = KeyboardKey.UpArrow
+		                portal.InteractionComponent.BoxSize = Vector2(0.9, 1.2)
+		        end
+		        local travel = portal:GetComponent("script.LexioTravelInteractable")
+		        if travel ~= nil then travel.RouteId = routeId; travel.ObjectKey = entityName end
+		        log("[LexioTravelMapController] FLOOR_PORTAL name=" .. entityName .. " route=" .. routeId)
 	end
 
 	@ExecSpace("ServerOnly")
@@ -36,7 +76,7 @@ script LexioTravelMapController extends Component
 		        local bridge = playerEntity:GetComponent("script.LexioTravelBridge")
 		        if bridge == nil then bridge = playerEntity:AddComponent("script.LexioTravelBridge") end
 		        if bridge == nil then return end
-		        if self.EnableManualTestHooks and (self.ManagedMapName == "TileMapTemplate" or self.ManagedMapName == "map01") then
+		        if self.EnableManualTestHooks and (self.ManagedMapName == "TileMapTemplate" or self.ManagedMapName == "boardgame_cafe" or self.ManagedMapName == "map01") then
 		            local controls = playerEntity:GetComponent("script.LexioManualTestControls")
 		            if controls == nil then controls = playerEntity:AddComponent("script.LexioManualTestControls") end
 		            if controls ~= nil then controls:BindTestUser(playerEntity.PlayerComponent.UserId) end

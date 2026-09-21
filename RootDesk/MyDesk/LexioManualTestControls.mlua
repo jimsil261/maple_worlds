@@ -55,7 +55,8 @@ script LexioManualTestControls extends Component
 		        local playerPosition = self.Entity.TransformComponent.WorldPosition
 		        for tableIndex = 1, 3 do
 		            local tableNumber = "0" .. tostring(tableIndex)
-		            for seatIndex = 1, 3 do
+		            local requiredPlayerCount = tableIndex + 2
+		            for seatIndex = 1, requiredPlayerCount do
 		                local chair = _EntityService:GetEntityByPath("/maps/map01/LexioTable" .. tableNumber .. "Chair" .. tostring(seatIndex))
 		                if chair ~= nil and isvalid(chair) then
 		                    local chairPosition = chair.TransformComponent.WorldPosition

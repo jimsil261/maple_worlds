@@ -11,6 +11,7 @@ script LexioTravelInteractable extends Component
 	@EventSender("Self")
 	handler HandleInteractionEvent(InteractionEvent event)
 		        local player = _UserService.LocalPlayer
+		        if self.RouteId ~= "LEXIO_EXIT" then return end
 		        if player == nil or event.InteractionEntity ~= player then return end
 		        local bridge = player:GetComponent("script.LexioTravelBridge")
 		        if bridge == nil then

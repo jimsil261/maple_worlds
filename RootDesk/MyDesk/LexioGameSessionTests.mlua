@@ -24,7 +24,7 @@ script LexioGameSessionTests extends Component
 	method table BuildFixedDeckForLeader(integer leaderIndex)
 		        -- Builds a deterministic valid deck placing cloud 3 in the requested round-robin seat.
 		        local session = self:GetSession()
-		        local deck = session:BuildOrderedDeck()
+		        local deck = session:BuildOrderedDeck(3)
 		        local cloudThreeIndex = 0
 		        for index, tile in ipairs(deck) do
 		            if tile.rank == 3 and tile.suit == 1 then cloudThreeIndex = index break end
@@ -34,10 +34,106 @@ script LexioGameSessionTests extends Component
 		        return deck
 	end
 
+	method table BuildFixedDeckForPlayers(integer playerCount, integer leaderIndex)
+		        local session = self:GetSession()
+		        local deck = session:BuildOrderedDeck(playerCount)
+		        local cloudThreeIndex = 0
+		        for index, tile in ipairs(deck) do
+		            if tile.rank == 3 and tile.suit == 1 then cloudThreeIndex = index break end
+		        end
+		        deck[cloudThreeIndex], deck[leaderIndex] = deck[leaderIndex], deck[cloudThreeIndex]
+		        return deck
+	end
+
+	@ExecSpace("ServerOnly")
+	method void RunVariablePlayerCountTests()
+		        local session = self:GetSession()
+		        for playerCount = 4, 5 do
+		            session:ResetSession()
+		            local users = {}
+		            for seat = 1, playerCount do users[seat] = "count" .. tostring(playerCount) .. "User" .. tostring(seat) end
+		            local start = session:StartGame(users, self:BuildFixedDeckForPlayers(playerCount, playerCount))
+		            local prefix = tostring(playerCount) .. "p_"
+		            self:AssertTrue(start.ok, prefix .. "start_game")
+		            self:AssertEqual(playerCount, session.playerCount, prefix .. "session_player_count")
+		            self:AssertEqual(playerCount, session.initialLeaderIndex, prefix .. "cloud_three_owner_leads")
+		            local expectedHandCount = 12
+		            if playerCount == 4 then expectedHandCount = 13 end
+		            for seat = 1, playerCount do self:AssertEqual(expectedHandCount, #session.hands[seat], prefix .. "hand_count_seat_" .. tostring(seat)) end
+		            local snapshot = session:BuildPublicSnapshot()
+		            self:AssertEqual(playerCount, snapshot.playerCount, prefix .. "public_player_count")
+		            self:AssertEqual(expectedHandCount, snapshot.remainingCounts[playerCount], prefix .. "public_remaining_last_seat")
+		            local lead = session:SubmitForUser(users[playerCount], { session.hands[playerCount][1].id }, session.stateVersion)
+		            self:AssertTrue(lead.ok, prefix .. "leader_submit")
+		            self:AssertEqual(1, session.currentPlayerIndex, prefix .. "turn_wraps_to_one")
+		            for seat = 1, playerCount - 1 do self:AssertTrue(session:PassForUser(users[seat], session.stateVersion).ok, prefix .. "pass_seat_" .. tostring(seat)) end
+		            self:AssertEqual("LeadPending", session.phase, prefix .. "all_others_pass")
+		            self:AssertEqual(playerCount, session.currentPlayerIndex, prefix .. "winner_receives_lead")
+		        end
+		        session:ResetSession()
+	end
+
 	method any GetSession()
 		        -- Resolves the co-located test session component without modifying a production player model.
 		        local session = self.Entity:GetComponent("script.LexioGameSession")
 		        return session
+	end
+
+
+	method any GetSecondarySession()
+		        -- Resolves a second independent session hosted by the dedicated integration-test map.
+		        local entity = _EntityService:GetEntityByPath("/maps/lexio_session_tests/LexioIsolationSessionB")
+		        if entity == nil or not isvalid(entity) then return nil end
+		        return entity:GetComponent("script.LexioGameSession")
+	end
+
+	@ExecSpace("ServerOnly")
+	method void RunIsolationTests()
+		        local sessionA = self:GetSession()
+		        local sessionB = self:GetSecondarySession()
+		        self:AssertTrue(sessionB ~= nil, "isolation_secondary_session_exists")
+		        if sessionB == nil then return end
+
+		        sessionA:ResetSession()
+		        sessionB:ResetSession()
+		        local startA = sessionA:StartGame({ "table01A", "table01B", "table01C" }, self:BuildFixedDeckForLeader(2))
+		        local startB = sessionB:StartGame({ "table02A", "table02B", "table02C" }, self:BuildFixedDeckForLeader(3))
+		        self:AssertTrue(startA.ok and startB.ok, "isolation_sessions_start_independently")
+		        self:AssertEqual(2, sessionA.currentPlayerIndex, "isolation_table01_leader")
+		        self:AssertEqual(3, sessionB.currentPlayerIndex, "isolation_table02_leader")
+
+		        local versionBBeforeA = sessionB.stateVersion
+		        local turnBBeforeA = sessionB.turnNumber
+		        local handB1BeforeA = #sessionB.hands[1]
+		        local submitA = sessionA:SubmitForUser("table01B", { sessionA.hands[2][1].id }, sessionA.stateVersion)
+		        self:AssertTrue(submitA.ok, "isolation_table01_submit_succeeds")
+		        self:AssertEqual(versionBBeforeA, sessionB.stateVersion, "isolation_table01_submit_preserves_table02_version")
+		        self:AssertEqual(turnBBeforeA, sessionB.turnNumber, "isolation_table01_submit_preserves_table02_turn")
+		        self:AssertEqual(handB1BeforeA, #sessionB.hands[1], "isolation_table01_submit_preserves_table02_hand")
+
+		        local versionABeforeB = sessionA.stateVersion
+		        local turnABeforeB = sessionA.turnNumber
+		        local handA1BeforeB = #sessionA.hands[1]
+		        local submitB = sessionB:SubmitForUser("table02C", { sessionB.hands[3][1].id }, sessionB.stateVersion)
+		        self:AssertTrue(submitB.ok, "isolation_table02_submit_succeeds")
+		        self:AssertEqual(versionABeforeB, sessionA.stateVersion, "isolation_table02_submit_preserves_table01_version")
+		        self:AssertEqual(turnABeforeB, sessionA.turnNumber, "isolation_table02_submit_preserves_table01_turn")
+		        self:AssertEqual(handA1BeforeB, #sessionA.hands[1], "isolation_table02_submit_preserves_table01_hand")
+
+		        local phaseBBeforeFinishA = sessionB.phase
+		        local versionBBeforeFinishA = sessionB.stateVersion
+		        sessionA.hands[3] = { sessionA.hands[3][1] }
+		        local finishA = sessionA:SubmitForUser("table01C", { sessionA.hands[3][1].id }, sessionA.stateVersion)
+		        self:AssertTrue(finishA.ok, "isolation_table01_finish_succeeds")
+		        self:AssertEqual("Finished", sessionA.phase, "isolation_table01_reaches_finished")
+		        self:AssertEqual(phaseBBeforeFinishA, sessionB.phase, "isolation_table01_finish_preserves_table02_phase")
+		        self:AssertEqual(versionBBeforeFinishA, sessionB.stateVersion, "isolation_table01_finish_preserves_table02_version")
+
+		        local versionBBeforeResetA = sessionB.stateVersion
+		        sessionA:ResetSession()
+		        self:AssertEqual("WaitingPlayers", sessionA.phase, "isolation_table01_reset")
+		        self:AssertEqual(versionBBeforeResetA, sessionB.stateVersion, "isolation_table01_cleanup_preserves_table02")
+		        sessionB:ResetSession()
 	end
 
 	@ExecSpace("ServerOnly")
@@ -133,6 +229,8 @@ script LexioGameSessionTests extends Component
 		        self:AssertTrue(not session:PassForUser("userA", afterFinishVersion).ok, "finished_rejects_pass")
 		        self:AssertEqual(afterFinishVersion, session.stateVersion, "finished_rejection_is_atomic")
 		
+		        self:RunVariablePlayerCountTests()
+		        self:RunIsolationTests()
 		        log("[LexioGameSessionTests] COMPLETE passed=" .. tostring(self.passedCount) .. " failed=" .. tostring(self.failedCount))
 		        if self.failedCount == 0 then log("[LexioGameSessionTests] SUITE PASSED") else log_error("[LexioGameSessionTests] SUITE FAILED") end
 	end

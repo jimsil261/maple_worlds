@@ -4,10 +4,17 @@ script LexioPlayUIController extends Logic
 	property Entity ContentRoot = "3a63e340-f873-4d50-9a59-42d93ed3b015"
 
 	property Entity Seat1Text = "f6ea12ea-9bc2-4960-b816-3110130c6fdf"
+	property Entity Seat1Panel = nil
 
 	property Entity Seat2Text = "6d8ba7d5-359e-4ee3-bc4c-220bdb8383a1"
+	property Entity Seat2Panel = nil
 
 	property Entity Seat3Text = "4452cf8a-c13e-4176-889b-b84ac0d7fbeb"
+	property Entity Seat3Panel = nil
+	property Entity Seat4Text = nil
+	property Entity Seat4Panel = nil
+	property Entity Seat5Text = nil
+	property Entity Seat5Panel = nil
 
 	property Entity PhaseText = "8c2f48e7-b914-42bb-a1cd-b9d72be69a3c"
 
@@ -55,6 +62,8 @@ script LexioPlayUIController extends Logic
 
 	property Entity ExitButton = "58fbe913-3815-4ca9-b329-c84496e2a636"
 
+	property Entity MapNameText = "56c955e4-0d70-4e2a-8353-6c7b5343af66"
+
 	@ExecSpace("ClientOnly")
 	method void OnBeginPlay()
 		        self._T.UIReady = false
@@ -78,6 +87,7 @@ script LexioPlayUIController extends Logic
 		        self._T.SnapshotCooldown = 0
 		        self._T.HiddenDefaultUI = {}
 		        self._T.EventConnections = {}
+		        self._T.LastMapDisplay = ""
 		        self:ResolveUI()
 		        log("[LexioPlayUI] BEGIN")
 	end
@@ -88,6 +98,7 @@ script LexioPlayUIController extends Logic
 		            if self._T.ResolveAttempts < 30 then self:ResolveUI() end
 		            return
 		        end
+		        self:UpdateMapName()
 		        self:UpdateMapActivation()
 		        if not self._T.Active then return end
 		        local bridge = self:GetLocalBridge()
@@ -143,7 +154,7 @@ script LexioPlayUIController extends Logic
 	method void ResolveUI()
 		        self._T.ResolveAttempts = (self._T.ResolveAttempts or 0) + 1
 		        local paths = {
-		            ContentRoot="/ui/LexioPlayHUD/ContentRoot", Seat1Text="/ui/LexioPlayHUD/ContentRoot/Seat1Panel/Text", Seat2Text="/ui/LexioPlayHUD/ContentRoot/Seat2Panel/Text", Seat3Text="/ui/LexioPlayHUD/ContentRoot/Seat3Panel/Text",
+		            MapNameText="/ui/LexioPlayHUD/MapNamePanel", ContentRoot="/ui/LexioPlayHUD/ContentRoot", Seat1Panel="/ui/LexioPlayHUD/ContentRoot/Seat1Panel", Seat1Text="/ui/LexioPlayHUD/ContentRoot/Seat1Panel/Text", Seat2Panel="/ui/LexioPlayHUD/ContentRoot/Seat2Panel", Seat2Text="/ui/LexioPlayHUD/ContentRoot/Seat2Panel/Text", Seat3Panel="/ui/LexioPlayHUD/ContentRoot/Seat3Panel", Seat3Text="/ui/LexioPlayHUD/ContentRoot/Seat3Panel/Text", Seat4Panel="/ui/LexioPlayHUD/ContentRoot/Seat4Panel", Seat4Text="/ui/LexioPlayHUD/ContentRoot/Seat4Panel/Text", Seat5Panel="/ui/LexioPlayHUD/ContentRoot/Seat5Panel", Seat5Text="/ui/LexioPlayHUD/ContentRoot/Seat5Panel/Text",
 		            PhaseText="/ui/LexioPlayHUD/ContentRoot/PhaseText", TurnText="/ui/LexioPlayHUD/ContentRoot/TurnText", PublicPlayText="/ui/LexioPlayHUD/ContentRoot/PublicPlayPanel/Text",
 		            PublicCard1="/ui/LexioPlayHUD/ContentRoot/PublicPlayPanel/Card1", PublicCard2="/ui/LexioPlayHUD/ContentRoot/PublicPlayPanel/Card2", PublicCard3="/ui/LexioPlayHUD/ContentRoot/PublicPlayPanel/Card3", PublicCard4="/ui/LexioPlayHUD/ContentRoot/PublicPlayPanel/Card4", PublicCard5="/ui/LexioPlayHUD/ContentRoot/PublicPlayPanel/Card5",
 		            ErrorText="/ui/LexioPlayHUD/ContentRoot/ErrorText", HandPanelPC="/ui/LexioPlayHUD/ContentRoot/HandPanelPC", HandPanelMobile="/ui/LexioPlayHUD/ContentRoot/HandPanelMobile",
@@ -151,7 +162,7 @@ script LexioPlayUIController extends Logic
 		            MobileRankSortButton="/ui/LexioPlayHUD/ContentRoot/MobileSortPanel/RankSortButton", MobileSuitSortButton="/ui/LexioPlayHUD/ContentRoot/MobileSortPanel/SuitSortButton", MobileSubmitButton="/ui/LexioPlayHUD/ContentRoot/MobileActionPanel/SubmitButton", MobilePassButton="/ui/LexioPlayHUD/ContentRoot/MobileActionPanel/PassButton",
 		            FinishPanel="/ui/LexioPlayHUD/ContentRoot/FinishPanel", FinishCountdownText="/ui/LexioPlayHUD/ContentRoot/FinishPanel/CountdownText", ReplayButton="/ui/LexioPlayHUD/ContentRoot/FinishPanel/ReplayButton", ExitButton="/ui/LexioPlayHUD/ContentRoot/FinishPanel/ExitButton"
 		        }
-		        local required = {"ContentRoot","Seat1Text","Seat2Text","Seat3Text","PhaseText","TurnText","PublicPlayText","ErrorText","HandPanelPC","HandPanelMobile","SubmitButton","PassButton","RankSortButton","SuitSortButton","MobileRankSortButton","MobileSuitSortButton","MobileSubmitButton","MobilePassButton","FinishPanel","FinishCountdownText","ReplayButton","ExitButton","PublicCard1","PublicCard2","PublicCard3","PublicCard4","PublicCard5"}
+		        local required = {"MapNameText","ContentRoot","Seat1Panel","Seat1Text","Seat2Panel","Seat2Text","Seat3Panel","Seat3Text","Seat4Panel","Seat4Text","Seat5Panel","Seat5Text","PhaseText","TurnText","PublicPlayText","ErrorText","HandPanelPC","HandPanelMobile","SubmitButton","PassButton","RankSortButton","SuitSortButton","MobileRankSortButton","MobileSuitSortButton","MobileSubmitButton","MobilePassButton","FinishPanel","FinishCountdownText","ReplayButton","ExitButton","PublicCard1","PublicCard2","PublicCard3","PublicCard4","PublicCard5"}
 		        for _, key in ipairs(required) do
 		            local entity = _EntityService:GetEntityByPath(paths[key])
 		            if entity == nil then log("[LexioPlayUI] RESOLVE_MISSING path=" .. paths[key]); self._T.UIReady = false; return end
@@ -161,6 +172,7 @@ script LexioPlayUIController extends Logic
 		        self:DisconnectButtons()
 		        self:ConnectButtons()
 		        self.ContentRoot.Enable = false
+		        self:UpdateMapName()
 		        self:UpdateMapActivation()
 		        log("[LexioPlayUI] RESOLVED generation=" .. tostring(self._T.HandlerGeneration))
 	end
@@ -185,6 +197,34 @@ script LexioPlayUIController extends Logic
 		        local id = "ui-" .. action .. "-" .. tostring(self._T.RequestSequence) .. "-" .. tostring(self._T.RenderedVersion)
 		        if #id > 64 then return string.sub(id, 1, 64) end
 		        return id
+	end
+
+	@ExecSpace("ClientOnly")
+	method void UpdateMapName()
+		        local player = _UserService.LocalPlayer
+		        if player == nil or self.MapNameText == nil then return end
+		        local mapName = player.CurrentMapName or ""
+		        local displayName = mapName
+		        if mapName == "TileMapTemplate" then
+		            displayName = "시작 광장"
+		        elseif mapName == "boardgame_cafe" then
+		            displayName = "메이플 보드게임 카페"
+		        elseif mapName == "map01" then
+		            local floor = 3
+		            local position = player.TransformComponent.WorldPosition
+		            if position.y < -9.0 then
+		                floor = 1
+		            elseif position.y < -3.0 then
+		                floor = 2
+		            end
+		            displayName = "렉시오 게임룸 · " .. tostring(floor) .. "층"
+		        elseif displayName == "" then
+		            displayName = "현재 위치"
+		        end
+		        if self._T.LastMapDisplay == displayName then return end
+		        self._T.LastMapDisplay = displayName
+		        self.MapNameText.TextGUIRendererComponent.Text = displayName
+		        log("[LexioPlayUI] MAP_NAME " .. displayName)
 	end
 
 	@ExecSpace("ClientOnly")
@@ -455,32 +495,73 @@ script LexioPlayUIController extends Logic
 		        end
 	end
 
+	method string SeatDisplayName(table snapshot, integer seat)
+		        if snapshot ~= nil and snapshot.seatNames ~= nil then
+		            local nickname = snapshot.seatNames[seat]
+		            if nickname ~= nil and nickname ~= "" then return nickname end
+		        end
+		        return "플레이어 " .. tostring(seat)
+	end
+
 	@ExecSpace("ClientOnly")
 	method void RenderSeats(table snapshot)
-		        local targets = { self.Seat1Text, self.Seat2Text, self.Seat3Text }
-		        for seat = 1, 3 do
-		            local name = snapshot.seatNames ~= nil and snapshot.seatNames[seat] or ("좌석 " .. tostring(seat))
-		            local remaining = snapshot.remainingCounts[seat]
-		            local status = snapshot.passed[seat] and "PASS" or "대기"
-		            if snapshot.currentPlayerIndex == seat then status = "현재 차례" end
-		            targets[seat].TextGUIRendererComponent.Text = "좌석 " .. tostring(seat) .. "  " .. name .. "\n남은 타일 " .. tostring(remaining) .. "장  |  " .. status
+		        local panels = { self.Seat1Panel, self.Seat2Panel, self.Seat3Panel, self.Seat4Panel, self.Seat5Panel }
+		        local targets = { self.Seat1Text, self.Seat2Text, self.Seat3Text, self.Seat4Text, self.Seat5Text }
+		        local playerCount = snapshot.playerCount or 3
+		        if playerCount < 3 then playerCount = 3 end
+		        if playerCount > 5 then playerCount = 5 end
+
+		        local positions = {-620, 0, 620}
+		        local panelWidth = 540
+		        local fontSize = 27
+		        if playerCount == 4 then
+		            positions = {-720, -240, 240, 720}
+		            panelWidth = 430
+		            fontSize = 24
+		        elseif playerCount == 5 then
+		            positions = {-760, -380, 0, 380, 760}
+		            panelWidth = 340
+		            fontSize = 22
+		        end
+
+		        for seat = 1, 5 do
+		            local active = seat <= playerCount
+		            panels[seat].Enable = active
+		            if active then
+		                local position = panels[seat].UITransformComponent.anchoredPosition
+		                position.x = positions[seat]
+		                panels[seat].UITransformComponent.anchoredPosition = position
+		                local size = panels[seat].UITransformComponent.RectSize
+		                size.x = panelWidth
+		                panels[seat].UITransformComponent.RectSize = size
+		                targets[seat].TextGUIRendererComponent.FontSize = fontSize
+
+		                local name = self:SeatDisplayName(snapshot, seat)
+		                local remaining = 0
+		                if snapshot.remainingCounts ~= nil and snapshot.remainingCounts[seat] ~= nil then remaining = snapshot.remainingCounts[seat] end
+		                local passed = snapshot.passed ~= nil and snapshot.passed[seat] == true
+		                local status = passed and "PASS" or "대기"
+		                if snapshot.currentPlayerIndex == seat then status = "현재 차례" end
+		                targets[seat].TextGUIRendererComponent.Text = name .. "\n남은 타일 " .. tostring(remaining) .. "장  |  " .. status
+		            end
 		        end
 	end
 
 	@ExecSpace("ClientOnly")
 	method void RenderPhase(table snapshot)
 		        if snapshot.phase == "WaitingPlayers" then
-		            self.PhaseText.TextGUIRendererComponent.Text = "3명이 준비되기를 기다리는 중"
+		            local playerCount = snapshot.playerCount or 3
+		            self.PhaseText.TextGUIRendererComponent.Text = tostring(playerCount) .. "명이 준비되기를 기다리는 중"
 		            self.TurnText.TextGUIRendererComponent.Text = "좌석이 모두 준비되면 게임이 시작됩니다."
 		        elseif snapshot.phase == "LeadPending" then
 		            self.PhaseText.TextGUIRendererComponent.Text = "새 트릭"
-		            self.TurnText.TextGUIRendererComponent.Text = "좌석 " .. tostring(snapshot.currentPlayerIndex) .. "이(가) 새 선입니다."
+		            self.TurnText.TextGUIRendererComponent.Text = self:SeatDisplayName(snapshot, snapshot.currentPlayerIndex) .. " 님이 새 선입니다."
 		        elseif snapshot.phase == "Finished" then
 		            self.PhaseText.TextGUIRendererComponent.Text = "게임 종료"
-		            self.TurnText.TextGUIRendererComponent.Text = "승자: 좌석 " .. tostring(snapshot.winnerIndex)
+		            self.TurnText.TextGUIRendererComponent.Text = "승자: " .. self:SeatDisplayName(snapshot, snapshot.winnerIndex)
 		        else
 		            self.PhaseText.TextGUIRendererComponent.Text = "진행 중"
-		            self.TurnText.TextGUIRendererComponent.Text = "현재 차례: 좌석 " .. tostring(snapshot.currentPlayerIndex)
+		            self.TurnText.TextGUIRendererComponent.Text = "현재 차례: " .. self:SeatDisplayName(snapshot, snapshot.currentPlayerIndex)
 		        end
 	end
 

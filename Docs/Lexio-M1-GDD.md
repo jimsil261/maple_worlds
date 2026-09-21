@@ -87,10 +87,10 @@ A shared RectTile Lexio hall with three physical tables where players either sit
 - ⬜ Move and seat the matched trio at the reserved table, then use the normal countdown/start path.
 - ⬜ Handle queue churn, map leave, disconnect, and reservation rollback.
 
-### Phase 4 — Multiplayer verification and polish (0/4 ✅)
+### Phase 4 — Multiplayer verification and polish (1/4 ✅)
 
 - ⬜ Add deterministic tests for table isolation, queue grouping, rollback, and cleanup.
-- ⬜ Verify three-client manual matching and one full game.
+- ✅ Verify three-client manual matching and one full game.
 - ⬜ Verify three-client automatic matching and one full game.
 - ⬜ Verify concurrent games plus finish/exit/requeue cleanup.
 
