@@ -197,6 +197,33 @@ script LexioPlayerBridge extends Component
 		        self:ReceiveFinishDecisionResult(requestId, result.ok, result.reason, self.boundUserId)
 	end
 
+	@ExecSpace("Server")
+	method void RequestShopSnapshot(string requestId)
+		        if not self:IsAuthenticatedCaller(senderUserId) or not self:IsRequestIdValid(requestId) then return end
+		        self:ReceiveShopResult(requestId, true, "snapshot", _LexioRewardService:GetShopSnapshot(senderUserId), self.boundUserId)
+	end
+
+	@ExecSpace("Server")
+	method void RequestShopPurchase(string requestId, string itemId)
+		        if not self:IsAuthenticatedCaller(senderUserId) or not self:IsRequestIdValid(requestId) then return end
+		        local result = _LexioRewardService:PurchaseItem(senderUserId, itemId)
+		        self:ReceiveShopResult(requestId, result.ok, result.reason, result.snapshot or _LexioRewardService:GetShopSnapshot(senderUserId), self.boundUserId)
+	end
+
+	@ExecSpace("Server")
+	method void RequestShopEquip(string requestId, string itemId)
+		        if not self:IsAuthenticatedCaller(senderUserId) or not self:IsRequestIdValid(requestId) then return end
+		        local result = _LexioRewardService:EquipItem(senderUserId, self.ownerPlayerEntity, itemId)
+		        self:ReceiveShopResult(requestId, result.ok, result.reason, result.snapshot or _LexioRewardService:GetShopSnapshot(senderUserId), self.boundUserId)
+	end
+
+	@ExecSpace("Server")
+	method void RequestShopUnequip(string requestId, string slot)
+		        if not self:IsAuthenticatedCaller(senderUserId) or not self:IsRequestIdValid(requestId) then return end
+		        local result = _LexioRewardService:UnequipSlot(senderUserId, self.ownerPlayerEntity, slot)
+		        self:ReceiveShopResult(requestId, result.ok, result.reason, result.snapshot or _LexioRewardService:GetShopSnapshot(senderUserId), self.boundUserId)
+	end
+
 	@ExecSpace("ServerOnly")
 	method void PushCurrentSnapshot()
 		        local session = self:GetSession()
@@ -205,6 +232,9 @@ script LexioPlayerBridge extends Component
 		        if self.role == "Player" and session:IsRegisteredUser(self.boundUserId) then
 		            privateHand = { stateVersion = session.stateVersion, tiles = session:BuildPrivateHandSnapshot(self.boundUserId) }
 		        elseif self.role == "Player" and session.phase == "WaitingPlayers" then
+		            privateHand = { stateVersion = session.stateVersion, tiles = {} }
+		        elseif self.role == "Spectator" then
+		            -- Version-only envelope: spectators never receive private tile identities.
 		            privateHand = { stateVersion = session.stateVersion, tiles = {} }
 		        end
 		        local coordinator = self:GetCoordinator()
@@ -271,6 +301,14 @@ script LexioPlayerBridge extends Component
 		        self._T.LastFinishDecisionResult = { requestId = requestId, ok = ok, reason = reason }
 		        self._T.FinishDecisionSequence = (self._T.FinishDecisionSequence or 0) + 1
 		        log("[LexioPlayerBridge] FINISH RESULT requestId=" .. requestId .. " ok=" .. tostring(ok) .. " reason=" .. reason)
+	end
+
+	@ExecSpace("Client")
+	method void ReceiveShopResult(string requestId, boolean ok, string reason, table snapshot)
+		        self._T.ShopSnapshot = snapshot
+		        self._T.LastShopResult = { requestId = requestId, ok = ok, reason = reason }
+		        self._T.ShopSequence = (self._T.ShopSequence or 0) + 1
+		        log("[VRF] SHOP RESULT requestId=" .. requestId .. " ok=" .. tostring(ok) .. " reason=" .. reason .. " points=" .. tostring(snapshot.points))
 	end
 
 end

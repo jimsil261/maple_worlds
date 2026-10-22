@@ -7,7 +7,7 @@
   "Usage": 0,
   "UsePublish": 1,
   "UseService": 0,
-  "CoreVersion": "26.7.0.0",
+  "CoreVersion": "26.10.0.0",
   "StudioVersion": "0.1.0.0",
   "DynamicLoading": 0,
   "ContentProto": {
@@ -47,7 +47,7 @@
               "FootholdsByLayer": {
                 "1": [
                   {
-                    "Length": 1.28000069,
+                    "Length": 1.27999973,
                     "NextFootholdId": 2,
                     "PreviousFootholdId": 27,
                     "groupID": 1,
@@ -69,7 +69,7 @@
                       "y": -0.04000002
                     },
                     "EndPoint": {
-                      "x": -7.64999962,
+                      "x": -7.65000057,
                       "y": -0.04000002
                     },
                     "Variance": {
@@ -264,7 +264,7 @@
                     }
                   },
                   {
-                    "Length": 0.9,
+                    "Length": 0.899999738,
                     "NextFootholdId": 9,
                     "PreviousFootholdId": 7,
                     "groupID": 1,
@@ -286,7 +286,7 @@
                       "y": -0.04000002
                     },
                     "EndPoint": {
-                      "x": -1.34999979,
+                      "x": -1.35,
                       "y": -0.04000002
                     },
                     "Variance": {
@@ -437,11 +437,11 @@
                     "OwnerId": "92d64bda-dc70-4ec4-869f-ca153eebcd89",
                     "Id": 13,
                     "StartPoint": {
-                      "x": 2.24999976,
+                      "x": 2.25,
                       "y": -0.04000002
                     },
                     "EndPoint": {
-                      "x": 3.14999986,
+                      "x": 3.15,
                       "y": -0.04000002
                     },
                     "Variance": {
@@ -530,11 +530,11 @@
                     "OwnerId": "92d64bda-dc70-4ec4-869f-ca153eebcd89",
                     "Id": 16,
                     "StartPoint": {
-                      "x": 4.95,
+                      "x": 4.95000029,
                       "y": -0.04000002
                     },
                     "EndPoint": {
-                      "x": 5.84999943,
+                      "x": 5.85,
                       "y": -0.04000002
                     },
                     "Variance": {
@@ -574,7 +574,7 @@
                     }
                   },
                   {
-                    "Length": 1.27999878,
+                    "Length": 1.27999973,
                     "NextFootholdId": 19,
                     "PreviousFootholdId": 17,
                     "groupID": 1,
@@ -596,7 +596,7 @@
                       "y": -0.04000002
                     },
                     "EndPoint": {
-                      "x": 8.029999,
+                      "x": 8.03,
                       "y": -0.04000002
                     },
                     "Variance": {
@@ -623,11 +623,11 @@
                     "OwnerId": "92d64bda-dc70-4ec4-869f-ca153eebcd89",
                     "Id": 19,
                     "StartPoint": {
-                      "x": 8.029999,
+                      "x": 8.03,
                       "y": -0.04000002
                     },
                     "EndPoint": {
-                      "x": 8.029999,
+                      "x": 8.03,
                       "y": -0.9
                     },
                     "Variance": {
@@ -654,11 +654,11 @@
                     "OwnerId": "92d64bda-dc70-4ec4-869f-ca153eebcd89",
                     "Id": 20,
                     "StartPoint": {
-                      "x": 8.029999,
+                      "x": 8.03,
                       "y": -0.9000001
                     },
                     "EndPoint": {
-                      "x": 8.029999,
+                      "x": 8.03,
                       "y": -1.50000012
                     },
                     "Variance": {
@@ -685,11 +685,11 @@
                     "OwnerId": "92d64bda-dc70-4ec4-869f-ca153eebcd89",
                     "Id": 21,
                     "StartPoint": {
-                      "x": 8.029999,
+                      "x": 8.03,
                       "y": -1.50000012
                     },
                     "EndPoint": {
-                      "x": 8.029999,
+                      "x": 8.03,
                       "y": -2.10000014
                     },
                     "Variance": {
@@ -716,11 +716,11 @@
                     "OwnerId": "92d64bda-dc70-4ec4-869f-ca153eebcd89",
                     "Id": 22,
                     "StartPoint": {
-                      "x": 8.029999,
+                      "x": 8.03,
                       "y": -2.10000014
                     },
                     "EndPoint": {
-                      "x": 8.029999,
+                      "x": 8.03,
                       "y": -2.7
                     },
                     "Variance": {
@@ -747,12 +747,12 @@
                     "OwnerId": "92d64bda-dc70-4ec4-869f-ca153eebcd89",
                     "Id": 23,
                     "StartPoint": {
-                      "x": 8.029999,
-                      "y": -2.7
+                      "x": 8.03,
+                      "y": -2.70000029
                     },
                     "EndPoint": {
-                      "x": 8.029999,
-                      "y": -3.3
+                      "x": 8.03,
+                      "y": -3.30000019
                     },
                     "Variance": {
                       "x": 0.0,
@@ -778,11 +778,11 @@
                     "OwnerId": "92d64bda-dc70-4ec4-869f-ca153eebcd89",
                     "Id": 24,
                     "StartPoint": {
-                      "x": 8.029999,
+                      "x": 8.03,
                       "y": -3.30000019
                     },
                     "EndPoint": {
-                      "x": 8.029999,
+                      "x": 8.03,
                       "y": -3.9
                     },
                     "Variance": {
@@ -809,11 +809,11 @@
                     "OwnerId": "92d64bda-dc70-4ec4-869f-ca153eebcd89",
                     "Id": 25,
                     "StartPoint": {
-                      "x": 8.029999,
+                      "x": 8.03,
                       "y": -3.90000033
                     },
                     "EndPoint": {
-                      "x": 8.029999,
+                      "x": 8.03,
                       "y": -4.50000048
                     },
                     "Variance": {
@@ -840,11 +840,11 @@
                     "OwnerId": "92d64bda-dc70-4ec4-869f-ca153eebcd89",
                     "Id": 26,
                     "StartPoint": {
-                      "x": 8.029999,
+                      "x": 8.03,
                       "y": -4.5
                     },
                     "EndPoint": {
-                      "x": 8.029999,
+                      "x": 8.03,
                       "y": -5.10000038
                     },
                     "Variance": {
@@ -996,11 +996,11 @@
                     "Id": 31,
                     "StartPoint": {
                       "x": -8.93,
-                      "y": -3.3
+                      "y": -3.30000019
                     },
                     "EndPoint": {
                       "x": -8.93,
-                      "y": -2.7
+                      "y": -2.70000029
                     },
                     "Variance": {
                       "x": 0.0,
@@ -6506,6 +6506,532 @@
               "@type": "script.LexioTravelMapController",
               "Enable": true,
               "ManagedMapName": "boardgame_cafe"
+            }
+          ],
+          "@version": 1
+        }
+      },
+      {
+        "id": "1439b2e4-4530-42dc-ab1b-697074a4ad90",
+        "path": "/maps/boardgame_cafe/LexioGuideNeinheart",
+        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent,MOD.Core.InteractionComponent,script.LexioGuideNpc,MOD.Core.NameTagComponent,MOD.Core.TouchReceiveComponent",
+        "jsonString": {
+          "name": "LexioGuideNeinheart",
+          "path": "/maps/boardgame_cafe/LexioGuideNeinheart",
+          "nameEditable": true,
+          "enable": true,
+          "visible": true,
+          "localize": false,
+          "displayOrder": 6,
+          "pathConstraints": "///",
+          "revision": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "mapobject",
+            "sub_entity_id": null,
+            "root_entity_id": "1439b2e4-4530-42dc-ab1b-697074a4ad90",
+            "replaced_model_id": null
+          },
+          "modelId": "mapobject",
+          "@components": [
+            {
+              "@type": "MOD.Core.TransformComponent",
+              "Rotation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Position": {
+                "x": -2.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "QuaternionRotation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0,
+                "w": 1.0
+              },
+              "Scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+              },
+              "ZRotation": 0.0,
+              "Enable": true
+            },
+            {
+              "@type": "MOD.Core.SpriteRendererComponent",
+              "ActionSheet": {},
+              "DrawMode": 0,
+              "EndFrameIndex": 2147483647,
+              "FlipX": false,
+              "FlipY": false,
+              "OrderInLayer": 5,
+              "PlayRate": 1.0,
+              "RenderSetting": 0,
+              "SpriteRUID": "c2919dc57fac457c9ce94fe32f8b69d2",
+              "StartFrameIndex": 0,
+              "Color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+              },
+              "Enable": true
+            },
+            {
+              "@type": "MOD.Core.InteractionComponent",
+              "ActionKey": 32,
+              "ActionName": "렉시오 규칙 듣기",
+              "BoxSize": {
+                "x": 2.2,
+                "y": 2.0
+              },
+              "IsLegacy": false,
+              "ShowActionInfo": true,
+              "Enable": true
+            },
+            {
+              "@type": "script.LexioGuideNpc",
+              "Enable": true,
+              "DialogId": "LEXIO_GUIDE",
+              "PortraitRUID": "13b30e6f8eff4bca9ff2308bed1cd3db",
+              "dialogRegistered": false
+            },
+            {
+              "@type": "MOD.Core.NameTagComponent",
+              "Bold": true,
+              "FontColor": {
+                "r": 1.0,
+                "g": 0.88,
+                "b": 0.52,
+                "a": 1.0
+              },
+              "FontOffset": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "FontSize": 1.08,
+              "Name": "나인하트\n렉시오 담당",
+              "OffsetY": 0.0,
+              "Enable": true
+            },
+            {
+              "@type": "MOD.Core.TouchReceiveComponent",
+              "AutoFitOnce": false,
+              "AutoFitToSize": true,
+              "Offset": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "RelayEventToBehind": false,
+              "TouchArea": {
+                "x": 2.4,
+                "y": 2.8
+              },
+              "Enable": true
+            }
+          ],
+          "@version": 1
+        }
+      },
+      {
+        "id": "e3a5d3b5-c738-46ca-8833-9986fae8ecae",
+        "path": "/maps/boardgame_cafe/CafeCounter",
+        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent,MOD.Core.InteractionComponent,MOD.Core.TouchReceiveComponent,script.LexioShopNpc",
+        "jsonString": {
+          "name": "CafeCounter",
+          "path": "/maps/boardgame_cafe/CafeCounter",
+          "nameEditable": true,
+          "enable": true,
+          "visible": true,
+          "localize": false,
+          "displayOrder": 7,
+          "pathConstraints": "///",
+          "revision": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "mapobject",
+            "sub_entity_id": null,
+            "root_entity_id": "e3a5d3b5-c738-46ca-8833-9986fae8ecae",
+            "replaced_model_id": null
+          },
+          "modelId": "mapobject",
+          "@components": [
+            {
+              "@type": "MOD.Core.TransformComponent",
+              "Rotation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Position": {
+                "x": 5.050456,
+                "y": 1.6500001,
+                "z": 0.0
+              },
+              "QuaternionRotation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0,
+                "w": 1.0
+              },
+              "Scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+              },
+              "ZRotation": 0.0,
+              "Enable": true
+            },
+            {
+              "@type": "MOD.Core.SpriteRendererComponent",
+              "ActionSheet": {},
+              "DrawMode": 0,
+              "EndFrameIndex": 2147483647,
+              "FlipX": false,
+              "FlipY": false,
+              "IgnoreMapLayerCheck": true,
+              "OrderInLayer": 4,
+              "PlayRate": 1.0,
+              "RenderSetting": 0,
+              "SortingLayer": "MapLayer0",
+              "SpriteRUID": "f51c39ef7193423ca5235691a256b91c",
+              "StartFrameIndex": 0,
+              "Color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+              },
+              "Enable": true
+            },
+            {
+              "@type": "MOD.Core.InteractionComponent",
+              "ActionKey": 32,
+              "ActionName": "상점 이용하기",
+              "BoxSize": {
+                "x": 3.2,
+                "y": 3.6
+              },
+              "IsLegacy": false,
+              "ShowActionInfo": true,
+              "Enable": true
+            },
+            {
+              "@type": "MOD.Core.TouchReceiveComponent",
+              "AutoFitOnce": false,
+              "AutoFitToSize": true,
+              "Offset": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "RelayEventToBehind": false,
+              "TouchArea": {
+                "x": 3.2,
+                "y": 3.6
+              },
+              "Enable": true
+            },
+            {
+              "@type": "script.LexioShopNpc",
+              "Enable": true,
+              "InteractionDistance": 3.5
+            }
+          ],
+          "@version": 1
+        }
+      },
+      {
+        "id": "b897227e-f85b-4080-875a-363663368214",
+        "path": "/maps/boardgame_cafe/PrizeShelfLeft",
+        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent",
+        "jsonString": {
+          "name": "PrizeShelfLeft",
+          "path": "/maps/boardgame_cafe/PrizeShelfLeft",
+          "nameEditable": true,
+          "enable": true,
+          "visible": true,
+          "localize": false,
+          "displayOrder": 8,
+          "pathConstraints": "///",
+          "revision": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "mapobject",
+            "sub_entity_id": null,
+            "root_entity_id": "b897227e-f85b-4080-875a-363663368214",
+            "replaced_model_id": null
+          },
+          "modelId": "mapobject",
+          "@components": [
+            {
+              "@type": "MOD.Core.TransformComponent",
+              "Rotation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Position": {
+                "x": -4.35,
+                "y": 0.72,
+                "z": 0.0
+              },
+              "QuaternionRotation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0,
+                "w": 1.0
+              },
+              "Scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+              },
+              "ZRotation": 0.0,
+              "Enable": true
+            },
+            {
+              "@type": "MOD.Core.SpriteRendererComponent",
+              "ActionSheet": {},
+              "DrawMode": 0,
+              "EndFrameIndex": 2147483647,
+              "FlipX": false,
+              "FlipY": false,
+              "IgnoreMapLayerCheck": true,
+              "OrderInLayer": 3,
+              "PlayRate": 1.0,
+              "RenderSetting": 0,
+              "SortingLayer": "MapLayer0",
+              "SpriteRUID": "8909367c33814a50b82fb66af30f121f",
+              "StartFrameIndex": 0,
+              "Color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+              },
+              "Enable": true
+            }
+          ],
+          "@version": 1
+        }
+      },
+      {
+        "id": "9fe5422e-1866-43a9-a093-8781de478589",
+        "path": "/maps/boardgame_cafe/CafeSign",
+        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent",
+        "jsonString": {
+          "name": "CafeSign",
+          "path": "/maps/boardgame_cafe/CafeSign",
+          "nameEditable": true,
+          "enable": true,
+          "visible": true,
+          "localize": false,
+          "displayOrder": 9,
+          "pathConstraints": "///",
+          "revision": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "mapobject",
+            "sub_entity_id": null,
+            "root_entity_id": "9fe5422e-1866-43a9-a093-8781de478589",
+            "replaced_model_id": null
+          },
+          "modelId": "mapobject",
+          "@components": [
+            {
+              "@type": "MOD.Core.TransformComponent",
+              "Rotation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Position": {
+                "x": 0.0,
+                "y": 2.55,
+                "z": 0.0
+              },
+              "QuaternionRotation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0,
+                "w": 1.0
+              },
+              "Scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+              },
+              "ZRotation": 0.0,
+              "Enable": true
+            },
+            {
+              "@type": "MOD.Core.SpriteRendererComponent",
+              "ActionSheet": {},
+              "DrawMode": 0,
+              "EndFrameIndex": 2147483647,
+              "FlipX": false,
+              "FlipY": false,
+              "OrderInLayer": 0,
+              "PlayRate": 1.0,
+              "RenderSetting": 0,
+              "SpriteRUID": "7fe61036786d49bd914fcc1cd2dacb78",
+              "StartFrameIndex": 0,
+              "Color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+              },
+              "Enable": true
+            }
+          ],
+          "@version": 1
+        }
+      },
+      {
+        "id": "92d69b02-8c00-4c8d-95e1-96a4c605de45",
+        "path": "/maps/boardgame_cafe/WarmLampLeft",
+        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent",
+        "jsonString": {
+          "name": "WarmLampLeft",
+          "path": "/maps/boardgame_cafe/WarmLampLeft",
+          "nameEditable": true,
+          "enable": true,
+          "visible": true,
+          "localize": false,
+          "displayOrder": 10,
+          "pathConstraints": "///",
+          "revision": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "mapobject",
+            "sub_entity_id": null,
+            "root_entity_id": "92d69b02-8c00-4c8d-95e1-96a4c605de45",
+            "replaced_model_id": null
+          },
+          "modelId": "mapobject",
+          "@components": [
+            {
+              "@type": "MOD.Core.TransformComponent",
+              "Rotation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Position": {
+                "x": -3.5,
+                "y": 2.25,
+                "z": 0.0
+              },
+              "QuaternionRotation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0,
+                "w": 1.0
+              },
+              "Scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+              },
+              "ZRotation": 0.0,
+              "Enable": true
+            },
+            {
+              "@type": "MOD.Core.SpriteRendererComponent",
+              "ActionSheet": {},
+              "DrawMode": 0,
+              "EndFrameIndex": 2147483647,
+              "FlipX": false,
+              "FlipY": false,
+              "OrderInLayer": 0,
+              "PlayRate": 1.0,
+              "RenderSetting": 0,
+              "SpriteRUID": "5ce1222b5bd94b5a929779ff4a048c38",
+              "StartFrameIndex": 0,
+              "Color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+              },
+              "Enable": true
+            }
+          ],
+          "@version": 1
+        }
+      },
+      {
+        "id": "533db438-6166-4518-b57a-1ae74498a124",
+        "path": "/maps/boardgame_cafe/WarmLampRight",
+        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent",
+        "jsonString": {
+          "name": "WarmLampRight",
+          "path": "/maps/boardgame_cafe/WarmLampRight",
+          "nameEditable": true,
+          "enable": true,
+          "visible": true,
+          "localize": false,
+          "displayOrder": 11,
+          "pathConstraints": "///",
+          "revision": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "mapobject",
+            "sub_entity_id": null,
+            "root_entity_id": "533db438-6166-4518-b57a-1ae74498a124",
+            "replaced_model_id": null
+          },
+          "modelId": "mapobject",
+          "@components": [
+            {
+              "@type": "MOD.Core.TransformComponent",
+              "Rotation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "Position": {
+                "x": 3.5,
+                "y": 2.25,
+                "z": 0.0
+              },
+              "QuaternionRotation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0,
+                "w": 1.0
+              },
+              "Scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+              },
+              "ZRotation": 0.0,
+              "Enable": true
+            },
+            {
+              "@type": "MOD.Core.SpriteRendererComponent",
+              "ActionSheet": {},
+              "DrawMode": 0,
+              "EndFrameIndex": 2147483647,
+              "FlipX": false,
+              "FlipY": false,
+              "OrderInLayer": 0,
+              "PlayRate": 1.0,
+              "RenderSetting": 0,
+              "SpriteRUID": "5ce1222b5bd94b5a929779ff4a048c38",
+              "StartFrameIndex": 0,
+              "Color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+              },
+              "Enable": true
             }
           ],
           "@version": 1

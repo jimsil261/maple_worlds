@@ -23,6 +23,7 @@
 | Runtime-attached travel bridge can retain a stale source map | 1 | 2026-08-16 | Entrance now uses independent server validation |
 | Real three-client manual match completion | 1 | 2026-09-04 | Passed; nickname turn labels and public-card layout follow-ups fixed |
 | Two simultaneous table sessions require six-client isolation testing | 1 | 2026-09-04 | Open |
+| Real three-client automatic matchmaking and concurrent-table cleanup | 1 | 2026-10-20 | User-test pending; no multi-client environment available |
 
 ## Log
 

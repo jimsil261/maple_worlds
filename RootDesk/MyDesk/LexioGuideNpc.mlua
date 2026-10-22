@@ -1,0 +1,116 @@
+@Component
+script LexioGuideNpc extends Component
+
+	property string DialogId = "LEXIO_GUIDE"
+
+	property string PortraitRUID = "13b30e6f8eff4bca9ff2308bed1cd3db"
+
+	property boolean dialogRegistered = false
+
+	property boolean layoutAdjusted = false
+
+	@ExecSpace("ServerOnly")
+	method void OnBeginPlay()
+		local interaction = self.Entity.InteractionComponent
+		if interaction ~= nil then
+			interaction.ActionKey = KeyboardKey.Space
+			interaction.ActionName = "렉시오 규칙 듣기"
+			interaction.BoxSize = Vector2(2.2, 2.0)
+		end
+		log("[VRF] LEXIO GUIDE NPC READY name=" .. self.Entity.Name .. " key=Space")
+	end
+
+	@ExecSpace("ClientOnly")
+	method DialogScriptData MakeLine(string id, string text, string nextId)
+		local data = DialogScriptData()
+		data.ScriptId = id
+		data.CharacterName = "나인하트"
+		data.CharacterScript = text
+		data.PortraitRUID = self.PortraitRUID
+		data.SelectionScripts = {}
+		data.SelectionScriptIds = { nextId }
+		return data
+	end
+
+	@ExecSpace("ClientOnly")
+	method void RegisterDialog()
+		if self.dialogRegistered then return end
+		if _DialogDataLogic == nil then
+			log_error("[LexioGuideNpc] Dialog package is unavailable")
+			return
+		end
+
+		local ids = {
+			"LEXIO_GUIDE_01", "LEXIO_GUIDE_02", "LEXIO_GUIDE_03",
+			"LEXIO_GUIDE_04", "LEXIO_GUIDE_05", "LEXIO_GUIDE_06"
+		}
+		local lines = {
+			"어서 오십시오, @Nick 님. 저는 광장의 안내 담당 *나인하트*입니다. 지금부터 렉시오의 핵심만 설명해 드리죠.",
+			"렉시오는 손의 카드를 먼저 모두 내는 게임입니다. 한 장부터 다섯 장까지 낼 수 있으며, 같은 장수의 조합끼리 힘을 겨룹니다.",
+			"다섯 장 조합은 *스트레이트 < 플러시 < 풀하우스 < 포카드 < 스트레이트 플러시* 순입니다. 같은 조합이라면 더 높은 숫자와 무늬가 우선합니다.",
+			"첫 판은 *구름 3*을 가진 사람이 시작합니다. 낼 수 없거나 전략적으로 쉬고 싶으면 패스하세요. 모두 패스하면 마지막 승자가 새 조합을 냅니다.",
+			"게임 결과는 렉시오 전용 *1점·5점·10점 칩*으로 계산합니다. 동·은·금 메소 모양이지만 실제 메이플 메소와는 별도의 게임 점수입니다.",
+			"게임룸에서는 Q로 자동 매칭을 신청하고, 관전 버튼으로 진행 중인 테이블을 볼 수 있습니다. 카드를 선택한 뒤 내기 또는 패스를 누르세요. 설명은 여기까지입니다."
+		}
+
+		for index, id in ipairs(ids) do
+			local nextId = "LEXIO_GUIDE_END"
+			if index < #ids then nextId = ids[index + 1] end
+			_DialogDataLogic.ScriptDataByScriptId[id] = self:MakeLine(id, lines[index], nextId)
+		end
+		_DialogDataLogic.ScriptIdsByDialogId[self.DialogId] = ids
+		self.dialogRegistered = true
+		log("[VRF] LEXIO GUIDE DIALOG REGISTERED lines=" .. tostring(#ids))
+	end
+
+	@ExecSpace("ClientOnly")
+	method void ApplyDialogLayout()
+		if self.layoutAdjusted or _DialogLogic == nil or _DialogLogic.DialogPanel == nil then return end
+		local panel = _DialogLogic.DialogPanel
+		local textEntity = panel.CharacterScript
+		local nameEntity = panel.CharacterName
+		if textEntity == nil or textEntity.Parent == nil or nameEntity == nil or nameEntity.Parent == nil then return end
+		local textTransform = textEntity.Parent.UITransformComponent
+		local nameTransform = nameEntity.Parent.UITransformComponent
+		if textTransform == nil or nameTransform == nil then return end
+		local textPosition = textTransform.anchoredPosition
+		local textSize = textTransform.RectSize
+		textTransform.anchoredPosition = Vector2(textPosition.x + 200, textPosition.y)
+		textTransform.RectSize = Vector2(math.max(700, textSize.x - 400), textSize.y)
+		local namePosition = nameTransform.anchoredPosition
+		nameTransform.anchoredPosition = Vector2(namePosition.x + 200, namePosition.y)
+		self.layoutAdjusted = true
+		log("[VRF] LEXIO GUIDE DIALOG LAYOUT safe_left_margin=true")
+	end
+
+	@ExecSpace("ClientOnly")
+	method void OpenDialogForLocalPlayer(string source)
+		local player = _UserService.LocalPlayer
+		if player == nil or player.TransformComponent == nil or self.Entity.TransformComponent == nil then return end
+		local playerPosition = player.TransformComponent.WorldPosition
+		local npcPosition = self.Entity.TransformComponent.WorldPosition
+		local dx = playerPosition.x - npcPosition.x
+		local dy = playerPosition.y - npcPosition.y
+		if math.sqrt(dx * dx + dy * dy) > 2.5 then return end
+		local controllerEntity = _EntityService:GetEntityByPath("/ui/LexioPlayHUD/NpcDialogController")
+		if controllerEntity == nil then return end
+		local controller = controllerEntity:GetComponent("script.LexioNpcDialogUIController")
+		if controller == nil then return end
+		log("[VRF] LEXIO GUIDE OPEN source=" .. source .. " user=" .. tostring(player.PlayerComponent.Nickname))
+		controller:OpenNeinheartDialog()
+	end
+
+	@ExecSpace("ClientOnly")
+	@EventSender("Self")
+	handler HandleInteractionEvent(InteractionEvent event)
+		if event.InteractionEntity ~= _UserService.LocalPlayer then return end
+		self:OpenDialogForLocalPlayer("space")
+	end
+
+	@ExecSpace("ClientOnly")
+	@EventSender("Self")
+	handler HandleTouchEvent(TouchEvent event)
+		self:OpenDialogForLocalPlayer("mouse")
+	end
+
+end

@@ -7,12 +7,185 @@ script LexioTableRegistry extends Component
 
 	property table playerByUserId = {}
 
+	property table queueUserIds = {}
+
+	property table queuedByUserId = {}
+
+	property table spectatorTableByUserId = {}
+
 	@ExecSpace("ServerOnly")
 	method void OnBeginPlay()
 		self.seatOwnerByKey = {}
 		self.seatByUserId = {}
 		self.playerByUserId = {}
+		self.queueUserIds = {}
+		self.queuedByUserId = {}
+		self.spectatorTableByUserId = {}
 		log("[LexioTableRegistry] READY tables=3 seats=12")
+	end
+
+	@ExecSpace("ServerOnly")
+	method boolean SetSpectatorTable(string userId, Entity playerEntity, string tableId)
+		if userId == nil or userId == "" or playerEntity == nil or not isvalid(playerEntity) then return false end
+		if playerEntity.PlayerComponent == nil or playerEntity.PlayerComponent.UserId ~= userId then return false end
+		if playerEntity.CurrentMap ~= self.Entity.CurrentMap or playerEntity.CurrentMapName ~= "map01" then return false end
+		if self.seatByUserId[userId] ~= nil or self.queuedByUserId[userId] then return false end
+		local previous = self.spectatorTableByUserId[userId]
+		if previous ~= nil then
+			local previousCoordinator = self:GetTableCoordinator(previous)
+			if previousCoordinator ~= nil then previousCoordinator:ReleaseTableSpectator(userId) end
+			self.spectatorTableByUserId[userId] = nil
+		end
+		if tableId == "" then
+			local lobbyCoordinator = self.Entity:GetComponent("script.LexioSessionCoordinator")
+			if lobbyCoordinator ~= nil then lobbyCoordinator:AttachBridge(playerEntity, userId, 0, "Spectator") end
+			return true
+		end
+		local coordinator = self:GetTableCoordinator(tableId)
+		if coordinator == nil or not coordinator:RegisterTableSpectator(playerEntity, userId, tableId) then return false end
+		self.spectatorTableByUserId[userId] = tableId
+		return true
+	end
+
+	@ExecSpace("ServerOnly")
+	method boolean IsTableEmpty(string tableId)
+		for seatIndex = 1, self:GetRequiredPlayerCount(tableId) do
+			if self.seatOwnerByKey[self:MakeSeatKey(tableId, seatIndex)] ~= nil then return false end
+		end
+		local coordinator = self:GetTableCoordinator(tableId)
+		if coordinator == nil then return false end
+		local session = coordinator.SessionEntity:GetComponent("script.LexioGameSession")
+		return session ~= nil and session.phase == "WaitingPlayers" and not coordinator.startRequested
+	end
+
+	@ExecSpace("ServerOnly")
+	method boolean ReserveQueuedSeat(string userId, Entity playerEntity, string tableId, integer seatIndex)
+		local tableNumber = string.sub(tableId, 6, 7)
+		local chairName = "LexioTable" .. tableNumber .. "Chair" .. tostring(seatIndex)
+		local seatKey = self:MakeSeatKey(tableId, seatIndex)
+		if self.seatOwnerByKey[seatKey] ~= nil then return false end
+		local coordinator = self:GetTableCoordinator(tableId)
+		if coordinator == nil or not coordinator:RegisterTablePlayer(playerEntity, userId, tableId, seatIndex, chairName) then return false end
+		self.seatOwnerByKey[seatKey] = userId
+		self.seatByUserId[userId] = { key = seatKey, tableId = tableId, seatIndex = seatIndex, chairName = chairName }
+		self.playerByUserId[userId] = playerEntity
+		log("[VRF] MATCH ASSIGNED userId=" .. userId .. " table=" .. tableId .. " seat=" .. tostring(seatIndex))
+		return true
+	end
+
+	@ExecSpace("ServerOnly")
+	method boolean CanReserveQueuedSeat(string userId, Entity playerEntity, string tableId, integer seatIndex)
+		if userId == nil or userId == "" or playerEntity == nil or not isvalid(playerEntity) then return false end
+		if playerEntity.PlayerComponent == nil or playerEntity.PlayerComponent.UserId ~= userId then return false end
+		if playerEntity.CurrentMap ~= self.Entity.CurrentMap or playerEntity.CurrentMapName ~= "map01" then return false end
+		if self.seatByUserId[userId] ~= nil or self.spectatorTableByUserId[userId] ~= nil then return false end
+		local chairName = "LexioTable" .. string.sub(tableId, 6, 7) .. "Chair" .. tostring(seatIndex)
+		if not self:IsValidTableSeat(tableId, seatIndex, chairName) then return false end
+		if self.seatOwnerByKey[self:MakeSeatKey(tableId, seatIndex)] ~= nil then return false end
+		local chair = _EntityService:GetEntityByPath("/maps/map01/" .. chairName)
+		local coordinator = self:GetTableCoordinator(tableId)
+		if chair == nil or not isvalid(chair) or coordinator == nil then return false end
+		local session = coordinator.SessionEntity:GetComponent("script.LexioGameSession")
+		return session ~= nil and session.phase == "WaitingPlayers" and not coordinator.startRequested
+	end
+
+	@ExecSpace("ServerOnly")
+	method void RestoreMatchToQueue(table matched, integer assignedCount, string reason)
+		for index = assignedCount, 1, -1 do
+			local entry = matched[index]
+			self:ReleasePlayer(entry.userId, "auto_rollback")
+		end
+		for index = #matched, 1, -1 do
+			local entry = matched[index]
+			self.queuedByUserId[entry.userId] = nil
+			if entry.playerEntity ~= nil and isvalid(entry.playerEntity) and entry.playerEntity.CurrentMapName == "map01" then
+				self.queuedByUserId[entry.userId] = true
+				self.playerByUserId[entry.userId] = entry.playerEntity
+				table.insert(self.queueUserIds, 1, entry.userId)
+			end
+		end
+		self:BroadcastQueueStates()
+		log("[VRF] MATCH ROLLBACK reason=" .. tostring(reason) .. " restored=" .. tostring(#matched))
+	end
+
+	@ExecSpace("ServerOnly")
+	method void BroadcastQueueStates()
+		for position, userId in ipairs(self.queueUserIds) do
+			local playerEntity = self.playerByUserId[userId]
+			local controls = playerEntity ~= nil and isvalid(playerEntity) and playerEntity:GetComponent("script.LexioManualTestControls") or nil
+			if controls ~= nil then controls:ApplyQueueState(true, position, 3) end
+		end
+	end
+
+	@ExecSpace("ServerOnly")
+	method void TryMatchQueue()
+		local required = self:GetRequiredPlayerCount("table01")
+		if #self.queueUserIds < required or not self:IsTableEmpty("table01") then return end
+		local matched = {}
+		for seatIndex = 1, required do
+			local userId = table.remove(self.queueUserIds, 1)
+			local playerEntity = self.playerByUserId[userId]
+			if userId == nil or playerEntity == nil or not isvalid(playerEntity) or playerEntity.CurrentMapName ~= "map01" then
+				if userId ~= nil then self.queuedByUserId[userId] = nil end
+				self:TryMatchQueue()
+				return
+			end
+			table.insert(matched, { userId = userId, playerEntity = playerEntity, seatIndex = seatIndex })
+		end
+		for _, entry in ipairs(matched) do
+			if not self:CanReserveQueuedSeat(entry.userId, entry.playerEntity, "table01", entry.seatIndex) then
+				self:RestoreMatchToQueue(matched, 0, "preflight")
+				return
+			end
+		end
+		local assignedCount = 0
+		for _, entry in ipairs(matched) do
+			self.queuedByUserId[entry.userId] = nil
+			if not self:ReserveQueuedSeat(entry.userId, entry.playerEntity, "table01", entry.seatIndex) then
+				self:RestoreMatchToQueue(matched, assignedCount, "assignment_failed")
+				return
+			end
+			assignedCount = assignedCount + 1
+		end
+		for _, entry in ipairs(matched) do
+			local seat = self.seatByUserId[entry.userId]
+			local controls = entry.playerEntity:GetComponent("script.LexioManualTestControls")
+			if controls ~= nil and seat ~= nil then controls:ApplyAutoMatchResult(true, seat.chairName, 0) end
+		end
+		self:BroadcastQueueStates()
+		log("[VRF] MATCH COMPLETE table=table01 players=" .. tostring(#matched))
+	end
+
+	@ExecSpace("ServerOnly")
+	method boolean JoinQueue(string userId, Entity playerEntity)
+		if userId == nil or userId == "" or playerEntity == nil or not isvalid(playerEntity) then return false end
+		if playerEntity.PlayerComponent == nil or playerEntity.PlayerComponent.UserId ~= userId then return false end
+		if playerEntity.CurrentMap ~= self.Entity.CurrentMap or playerEntity.CurrentMapName ~= "map01" then return false end
+		if self.seatByUserId[userId] ~= nil or self.spectatorTableByUserId[userId] ~= nil then return false end
+		if self.queuedByUserId[userId] then
+			self:BroadcastQueueStates()
+			return true
+		end
+		self.queuedByUserId[userId] = true
+		self.playerByUserId[userId] = playerEntity
+		table.insert(self.queueUserIds, userId)
+		self:BroadcastQueueStates()
+		log("[VRF] QUEUE JOIN userId=" .. userId .. " position=" .. tostring(#self.queueUserIds))
+		self:TryMatchQueue()
+		return true
+	end
+
+	@ExecSpace("ServerOnly")
+	method boolean CancelQueue(string userId)
+		if not self.queuedByUserId[userId] then return true end
+		self.queuedByUserId[userId] = nil
+		for index = #self.queueUserIds, 1, -1 do
+			if self.queueUserIds[index] == userId then table.remove(self.queueUserIds, index) end
+		end
+		if self.seatByUserId[userId] == nil then self.playerByUserId[userId] = nil end
+		self:BroadcastQueueStates()
+		log("[VRF] QUEUE CANCEL userId=" .. userId)
+		return true
 	end
 
 	method integer GetRequiredPlayerCount(string tableId)
@@ -55,6 +228,8 @@ script LexioTableRegistry extends Component
 		if userId == nil or userId == "" or playerEntity == nil or not isvalid(playerEntity) then return false end
 		if playerEntity.PlayerComponent == nil or playerEntity.PlayerComponent.UserId ~= userId then return false end
 		if playerEntity.CurrentMap ~= self.Entity.CurrentMap or playerEntity.CurrentMapName ~= "map01" then return false end
+		self:CancelQueue(userId)
+		self:SetSpectatorTable(userId, playerEntity, "")
 		if not self:IsValidTableSeat(tableId, seatIndex, chairName) then
 			log("[LexioTableRegistry] REJECT reason=invalid_seat userId=" .. userId)
 			return false
@@ -129,6 +304,13 @@ script LexioTableRegistry extends Component
 	@ExecSpace("ServerOnly")
 	@EventSender("Service", "UserService")
 	handler HandleUserLeaveEvent(UserLeaveEvent event)
+		self:CancelQueue(event.UserId)
+		local spectatorTable = self.spectatorTableByUserId[event.UserId]
+		if spectatorTable ~= nil then
+			local coordinator = self:GetTableCoordinator(spectatorTable)
+			if coordinator ~= nil then coordinator:ReleaseTableSpectator(event.UserId) end
+			self.spectatorTableByUserId[event.UserId] = nil
+		end
 		self:ReleasePlayer(event.UserId, "user_leave")
 	end
 

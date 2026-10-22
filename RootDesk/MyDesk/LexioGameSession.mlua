@@ -35,6 +35,10 @@ script LexioGameSession extends Component
 
 	property integer winnerIndex = 0
 
+	property table scoreLedger = {}
+
+	property table scoreDeltas = {}
+
 	@ExecSpace("ServerOnly")
 	method void ResetSession()
 		        -- Restores the component to its only pre-game state without starting a game.
@@ -55,6 +59,32 @@ script LexioGameSession extends Component
 		        self.turnNumber = 0
 		        self.stateVersion = 0
 		        self.winnerIndex = 0
+		        self.scoreLedger = {}
+		        self.scoreDeltas = {}
+	end
+
+	method void CalculateFinishedScores()
+		        local standings = {}
+		        for seat = 1, self.playerCount do
+		            local hand = self.hands[seat] or {}
+		            local twos = 0
+		            for _, tile in ipairs(hand) do if tile.rank == 2 then twos = twos + 1 end end
+		            table.insert(standings, { seat = seat, remaining = #hand, twos = twos, effective = _LexioRules:GetEffectiveRemaining(#hand, twos) })
+		        end
+		        table.sort(standings, function(a, b)
+		            if a.effective ~= b.effective then return a.effective < b.effective end
+		            return a.seat < b.seat
+		        end)
+		        local orderedDeltas = _LexioRules:CalculateScoreDeltas(standings)
+		        self.scoreLedger = _LexioRules:CreateScoreLedger(self.playerCount)
+		        self.scoreDeltas = {}
+		        if orderedDeltas == nil then return end
+		        for index, entry in ipairs(standings) do self.scoreDeltas[entry.seat] = orderedDeltas[index] end
+		        _LexioRules:ApplyScoreDeltas(self.scoreLedger, self.scoreDeltas)
+		        local total = 0
+		        for seat = 1, self.playerCount do total = total + (self.scoreDeltas[seat] or 0) end
+		        log("[VRF] SCORE SETTLED winner=" .. tostring(self.winnerIndex) .. " delta_sum=" .. tostring(total))
+		        _LexioRewardService:GrantMatchRewards(self.userIds, self.winnerIndex)
 	end
 
 	method boolean IsTransitionAllowed(string fromPhase, string toPhase)
@@ -170,6 +200,8 @@ script LexioGameSession extends Component
 		        self.trickNumber = 1
 		        self.turnNumber = 1
 		        self.winnerIndex = 0
+		        self.scoreLedger = _LexioRules:CreateScoreLedger(playerCount)
+		        self.scoreDeltas = {}
 		        if not self:SetPhase("Playing") then return self:Reject("transition") end
 		        self.stateVersion = self.stateVersion + 1
 		        return self:Accept()
@@ -278,6 +310,7 @@ script LexioGameSession extends Component
 		        if #self.hands[playerIndex] == 0 then
 		            self:SetPhase("Finished")
 		            self.winnerIndex = playerIndex
+		            self:CalculateFinishedScores()
 		        else
 		            local nextIndex = self:FindNextUnpassed(playerIndex)
 		            if nextIndex == self.winningPlayerIndex then self:EnterLeadPending() else self.currentPlayerIndex = nextIndex end
@@ -329,7 +362,7 @@ script LexioGameSession extends Component
 		        return result
 	end
 
-		method table BuildPassedSnapshot()
+	method table BuildPassedSnapshot()
 		        local result = {}
 		        for index = 1, self.playerCount do result[index] = self.passed[index] or false end
 		        return result
@@ -349,7 +382,9 @@ script LexioGameSession extends Component
 		            trickNumber = self.trickNumber,
 		            turnNumber = self.turnNumber,
 		            stateVersion = self.stateVersion,
-		            winnerIndex = self.winnerIndex
+		            winnerIndex = self.winnerIndex,
+		            scoreLedger = self.scoreLedger,
+		            scoreDeltas = self.scoreDeltas
 		        }
 	end
 

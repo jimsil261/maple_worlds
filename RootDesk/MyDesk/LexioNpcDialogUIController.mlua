@@ -1,0 +1,72 @@
+@Component
+script LexioNpcDialogUIController extends Component
+
+	property Entity DialogPanel = "3db736ab-4b49-402f-96df-af29030da877"
+	property Entity Portrait = "345db230-97af-484d-b025-6a2724c19d2e"
+	property Entity SpeakerText = "1d965df7-fd3f-4ef3-a562-ca78a91f6135"
+	property Entity BodyText = "13c16da8-2d57-47dc-8dd5-8251f4c0045f"
+	property Entity NextButton = "677fd26d-50a6-4526-ae66-d0b75f6c000c"
+	property Entity CloseButton = "d3c7aba6-0cf6-43c4-8c42-bdc8beba4364"
+
+	@ExecSpace("ClientOnly")
+	method void RenderLine()
+		local lines = {
+			"어서 오십시오. 저는 보드게임 카페의 렉시오 담당 나인하트입니다.",
+			"렉시오는 손의 카드를 먼저 모두 내는 게임입니다. 한 장부터 다섯 장까지 같은 장수의 조합으로 겨룹니다.",
+			"다섯 장 조합은 스트레이트, 플러시, 풀하우스, 포카드, 스트레이트 플러시 순으로 강해집니다.",
+			"첫 판은 구름 3을 가진 사람이 시작합니다. 낼 수 없거나 쉬고 싶다면 패스하세요.",
+			"점수는 동·은·금 메소 모양의 1점·5점·10점 칩으로 표시되며 실제 메소와는 별개입니다.",
+			"카드를 선택한 뒤 내기 또는 패스를 누르십시오. 규칙 설명은 언제든 제게 다시 물어보시면 됩니다."
+		}
+		self.SpeakerText.TextGUIRendererComponent.Text = "나인하트"
+		self.BodyText.TextGUIRendererComponent.Text = lines[self._T.LineIndex]
+		if self._T.LineIndex >= #lines then
+			self.NextButton.TextGUIRendererComponent.Text = "확인"
+		else
+			self.NextButton.TextGUIRendererComponent.Text = "다음  ▶"
+		end
+	end
+
+	@ExecSpace("ClientOnly")
+	method void CloseDialog()
+		self.DialogPanel.Enable = false
+		self.Portrait.Enable = false
+		log("[VRF] CUSTOM DIALOG CLOSE")
+	end
+
+	@ExecSpace("ClientOnly")
+	method void AdvanceDialog()
+		if not self.DialogPanel.Enable then return end
+		if self._T.LineIndex >= 6 then
+			self:CloseDialog()
+			return
+		end
+		self._T.LineIndex = self._T.LineIndex + 1
+		self:RenderLine()
+		log("[VRF] CUSTOM DIALOG NEXT line=" .. tostring(self._T.LineIndex))
+	end
+
+	@ExecSpace("ClientOnly")
+	method void OpenNeinheartDialog()
+		if self.DialogPanel.Enable then
+			self:AdvanceDialog()
+			return
+		end
+		self._T.LineIndex = 1
+		self.Portrait.Enable = true
+		self.DialogPanel.Enable = true
+		self:RenderLine()
+		log("[VRF] CUSTOM DIALOG OPEN line=1")
+	end
+
+	@ExecSpace("ClientOnly")
+	method void OnBeginPlay()
+		self._T.LineIndex = 1
+		self.DialogPanel.Enable = false
+		self.Portrait.Enable = false
+		self.NextButton:ConnectEvent(ButtonClickEvent, function() self:AdvanceDialog() end)
+		self.CloseButton:ConnectEvent(ButtonClickEvent, function() self:CloseDialog() end)
+		log("[VRF] CUSTOM DIALOG READY")
+	end
+
+end

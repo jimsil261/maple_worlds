@@ -1,0 +1,48 @@
+@Component
+script LexioShopNpc extends Component
+
+	property number InteractionDistance = 3.5
+
+	@ExecSpace("ServerOnly")
+	method void OnBeginPlay()
+		local interaction = self.Entity.InteractionComponent
+		if interaction ~= nil then
+			interaction.ActionKey = KeyboardKey.Space
+			interaction.ActionName = "상점 이용하기"
+			interaction.BoxSize = Vector2(3.2, 3.6)
+		end
+		log("[VRF] CAFE SHOP NPC READY name=" .. self.Entity.Name .. " key=Space")
+	end
+
+	@ExecSpace("ClientOnly")
+	method void OpenShopForLocalPlayer(string source)
+		local player = _UserService.LocalPlayer
+		if player == nil or player.TransformComponent == nil or self.Entity.TransformComponent == nil then return end
+		local playerPosition = player.TransformComponent.WorldPosition
+		local shopPosition = self.Entity.TransformComponent.WorldPosition
+		local dx = playerPosition.x - shopPosition.x
+		local dy = playerPosition.y - shopPosition.y
+		if math.sqrt(dx * dx + dy * dy) > self.InteractionDistance then return end
+
+		local controllerEntity = _EntityService:GetEntityByPath("/ui/LexioPlayHUD/ShopController")
+		if controllerEntity == nil then return end
+		local controller = controllerEntity:GetComponent("script.LexioShopUIController")
+		if controller == nil then return end
+		controller:SetPanelOpen(true)
+		log("[VRF] CAFE SHOP OPEN source=" .. source)
+	end
+
+	@ExecSpace("ClientOnly")
+	@EventSender("Self")
+	handler HandleInteractionEvent(InteractionEvent event)
+		if event.InteractionEntity ~= _UserService.LocalPlayer then return end
+		self:OpenShopForLocalPlayer("space")
+	end
+
+	@ExecSpace("ClientOnly")
+	@EventSender("Self")
+	handler HandleTouchEvent(TouchEvent event)
+		self:OpenShopForLocalPlayer("mouse")
+	end
+
+end

@@ -1,0 +1,33 @@
+{
+  "Id": "",
+  "GameId": "",
+  "EntryKey": "codeblock://aace89fc-7f0f-47c1-87eb-472991a9e4ef",
+  "ContentType": "x-mod/codeblock",
+  "Content": "",
+  "Usage": 0,
+  "UsePublish": 1,
+  "UseService": 0,
+  "CoreVersion": "26.10.0.0",
+  "StudioVersion": "",
+  "DynamicLoading": 0,
+  "ContentProto": {
+    "Use": "Json",
+    "Json": {
+      "CoreVersion": {
+        "Major": 0,
+        "Minor": 2
+      },
+      "ScriptVersion": {
+        "Major": 1,
+        "Minor": 1
+      },
+      "Description": "",
+      "Id": "aace89fc-7f0f-47c1-87eb-472991a9e4ef",
+      "Language": 1,
+      "Name": "LexioNpcDialogUIController",
+      "Type": 1,
+      "Source": 0,
+      "Target": null
+    }
+  }
+}

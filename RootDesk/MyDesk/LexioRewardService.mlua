@@ -1,0 +1,228 @@
+@Logic
+script LexioRewardService
+
+	property integer ParticipationReward = 3
+
+	property integer WinnerBonus = 10
+
+	property string StorageKey = "lexio_reward_v1"
+
+	property table profilesByUserId = {}
+
+	property table loadingByUserId = {}
+
+	method table CreateDefaultProfile()
+		return {
+			version = 2,
+			points = 0,
+			ownedNameTags = {},
+			ownedChatBalloons = {},
+			equippedNameTag = "",
+			equippedChatBalloon = "",
+			ownedItems = {
+				cafe_default_nametag = true,
+				cafe_default_chat = true
+			},
+			equippedBySlot = {
+				NameTag = "cafe_default_nametag",
+				ChatBalloon = "cafe_default_chat",
+				Cape = "",
+				FaceAccessory = "",
+				OneHandedWeapon = ""
+			}
+		}
+	end
+
+	method table GetCatalog()
+		return {
+			cafe_default_nametag = { id = "cafe_default_nametag", name = "카페 기본 명찰", group = "Special", slot = "NameTag", price = 0, ruid = "", order = 1 },
+			cafe_default_chat = { id = "cafe_default_chat", name = "카페 기본 말풍선", group = "Special", slot = "ChatBalloon", price = 0, ruid = "", order = 2 },
+			heart_balloon = { id = "heart_balloon", name = "하트 풍선", group = "Avatar", slot = "Cape", price = 30, ruid = "0340efc8c97949e1ac6e6ff89044bb10", order = 10 },
+			pinkbean_balloon = { id = "pinkbean_balloon", name = "핑크빈 풍선", group = "Avatar", slot = "Cape", price = 60, ruid = "d516e51740594acfaa3e6f974a17d986", order = 11 },
+			ghost_balloon = { id = "ghost_balloon", name = "유령 풍선", group = "Avatar", slot = "Cape", price = 90, ruid = "f2f369573fb24fb38f05a58b18e0ac3a", order = 12 },
+			maple_leaf = { id = "maple_leaf", name = "메이플 리프", group = "Avatar", slot = "FaceAccessory", price = 45, ruid = "be5dd547fc13462c9342f9eec9eba0b6", order = 20 },
+			heart_mark = { id = "heart_mark", name = "하트마크", group = "Avatar", slot = "FaceAccessory", price = 70, ruid = "e518b72565824c8fa4797a0aa0fe19ea", order = 21 },
+			ice_snowflake_ring = { id = "ice_snowflake_ring", name = "얼음 눈꽃반지", group = "Avatar", slot = "OneHandedWeapon", price = 120, ruid = "ccd4f38a22aa4565ab470fcf4b52421a", order = 30 }
+		}
+	end
+
+	method table SanitizeProfile(table source)
+		local profile = self:CreateDefaultProfile()
+		if source == nil then return profile end
+		local points = math.floor(tonumber(source.points) or 0)
+		profile.points = math.max(0, points)
+		if type(source.ownedNameTags) == "table" then profile.ownedNameTags = source.ownedNameTags end
+		if type(source.ownedChatBalloons) == "table" then profile.ownedChatBalloons = source.ownedChatBalloons end
+		if type(source.equippedNameTag) == "string" then profile.equippedNameTag = source.equippedNameTag end
+		if type(source.equippedChatBalloon) == "string" then profile.equippedChatBalloon = source.equippedChatBalloon end
+		if type(source.ownedItems) == "table" then
+			for itemId, owned in pairs(source.ownedItems) do if owned == true then profile.ownedItems[itemId] = true end end
+		end
+		if type(source.equippedBySlot) == "table" then
+			for slot, itemId in pairs(source.equippedBySlot) do if type(itemId) == "string" then profile.equippedBySlot[slot] = itemId end end
+		end
+		profile.version = 2
+		return profile
+	end
+
+	method table BuildShopSnapshot(table profile)
+		local items = {}
+		for _, item in pairs(self:GetCatalog()) do
+			table.insert(items, {
+				id = item.id,
+				name = item.name,
+				group = item.group,
+				slot = item.slot,
+				price = item.price,
+				ruid = item.ruid,
+				order = item.order,
+				owned = profile.ownedItems[item.id] == true,
+				equipped = profile.equippedBySlot[item.slot] == item.id
+			})
+		end
+		table.sort(items, function(a, b) return a.order < b.order end)
+		return { points = profile.points, items = items, equippedBySlot = profile.equippedBySlot }
+	end
+
+	@ExecSpace("ServerOnly")
+	method table GetShopSnapshot(string userId)
+		local profile = self:LoadProfile(userId)
+		if profile == nil then return { points = 0, items = {}, equippedBySlot = {} } end
+		return self:BuildShopSnapshot(profile)
+	end
+
+	@ExecSpace("ServerOnly")
+	method table PurchaseItem(string userId, string itemId)
+		local item = self:GetCatalog()[itemId]
+		if item == nil then return { ok = false, reason = "unknown_item" } end
+		local profile = self:LoadProfile(userId)
+		if profile == nil then return { ok = false, reason = "profile_unavailable" } end
+		if profile.ownedItems[itemId] == true then return { ok = false, reason = "already_owned", snapshot = self:BuildShopSnapshot(profile) } end
+		if profile.points < item.price then return { ok = false, reason = "not_enough_points", snapshot = self:BuildShopSnapshot(profile) } end
+		profile.points = profile.points - item.price
+		profile.ownedItems[itemId] = true
+		if not self:SaveProfile(userId) then
+			profile.points = profile.points + item.price
+			profile.ownedItems[itemId] = nil
+			return { ok = false, reason = "save_failed", snapshot = self:BuildShopSnapshot(profile) }
+		end
+		log("[VRF] SHOP PURCHASE user=" .. userId .. " item=" .. itemId .. " balance=" .. tostring(profile.points))
+		return { ok = true, reason = "purchased", snapshot = self:BuildShopSnapshot(profile) }
+	end
+
+	@ExecSpace("ServerOnly")
+	method boolean ApplyItem(Entity playerEntity, table item)
+		if playerEntity == nil or not isvalid(playerEntity) then return false end
+		if item.slot == "NameTag" then
+			if playerEntity.NameTagComponent == nil then return false end
+			playerEntity.NameTagComponent.NameTagRUID = item.ruid
+			return true
+		elseif item.slot == "ChatBalloon" then
+			if playerEntity.ChatBalloonComponent == nil then return false end
+			playerEntity.ChatBalloonComponent.ChatBalloonRUID = item.ruid
+			return true
+		end
+		local costume = playerEntity.CostumeManagerComponent
+		if costume == nil then return false end
+		if item.slot == "Cape" then costume:SetEquip(MapleAvatarItemCategory.Cape, item.ruid)
+		elseif item.slot == "FaceAccessory" then costume:SetEquip(MapleAvatarItemCategory.FaceAccessory, item.ruid)
+		elseif item.slot == "OneHandedWeapon" then costume:SetEquip(MapleAvatarItemCategory.OneHandedWeapon, item.ruid)
+		else return false end
+		return true
+	end
+
+	@ExecSpace("ServerOnly")
+	method table EquipItem(string userId, Entity playerEntity, string itemId)
+		local item = self:GetCatalog()[itemId]
+		if item == nil then return { ok = false, reason = "unknown_item" } end
+		local profile = self:LoadProfile(userId)
+		if profile == nil then return { ok = false, reason = "profile_unavailable" } end
+		if profile.ownedItems[itemId] ~= true then return { ok = false, reason = "not_owned", snapshot = self:BuildShopSnapshot(profile) } end
+		if not self:ApplyItem(playerEntity, item) then return { ok = false, reason = "apply_failed", snapshot = self:BuildShopSnapshot(profile) } end
+		profile.equippedBySlot[item.slot] = itemId
+		if not self:SaveProfile(userId) then return { ok = false, reason = "save_failed", snapshot = self:BuildShopSnapshot(profile) } end
+		log("[VRF] SHOP EQUIP user=" .. userId .. " item=" .. itemId .. " slot=" .. item.slot)
+		return { ok = true, reason = "equipped", snapshot = self:BuildShopSnapshot(profile) }
+	end
+
+	@ExecSpace("ServerOnly")
+	method table UnequipSlot(string userId, Entity playerEntity, string slot)
+		local supported = { Cape = true, FaceAccessory = true, OneHandedWeapon = true }
+		if supported[slot] ~= true then return { ok = false, reason = "slot_not_clearable" } end
+		local profile = self:LoadProfile(userId)
+		if profile == nil then return { ok = false, reason = "profile_unavailable" } end
+		local costume = playerEntity ~= nil and playerEntity.CostumeManagerComponent or nil
+		if costume == nil then return { ok = false, reason = "apply_failed", snapshot = self:BuildShopSnapshot(profile) } end
+		if slot == "Cape" then costume:SetEquip(MapleAvatarItemCategory.Cape, "")
+		elseif slot == "FaceAccessory" then costume:SetEquip(MapleAvatarItemCategory.FaceAccessory, "")
+		elseif slot == "OneHandedWeapon" then costume:SetEquip(MapleAvatarItemCategory.OneHandedWeapon, "") end
+		profile.equippedBySlot[slot] = ""
+		if not self:SaveProfile(userId) then return { ok = false, reason = "save_failed", snapshot = self:BuildShopSnapshot(profile) } end
+		log("[VRF] SHOP UNEQUIP user=" .. userId .. " slot=" .. slot)
+		return { ok = true, reason = "unequipped", snapshot = self:BuildShopSnapshot(profile) }
+	end
+
+	@ExecSpace("ServerOnly")
+	method table LoadProfile(string userId)
+		if userId == nil or userId == "" then return nil end
+		if self.profilesByUserId[userId] ~= nil then return self.profilesByUserId[userId] end
+		local storage = _DataStorageService:GetUserDataStorage(userId)
+		local errorCode, encoded = storage:GetAndWait(self.StorageKey)
+		local profile = self:CreateDefaultProfile()
+		if errorCode == 0 and encoded ~= nil and encoded ~= "" then
+			local decoded = _HttpService:JSONDecode(encoded)
+			profile = self:SanitizeProfile(decoded)
+		end
+		self.profilesByUserId[userId] = profile
+		log("[VRF] REWARD PROFILE LOAD user=" .. userId .. " points=" .. tostring(profile.points) .. " code=" .. tostring(errorCode))
+		return profile
+	end
+
+	@ExecSpace("ServerOnly")
+	method boolean SaveProfile(string userId)
+		local profile = self.profilesByUserId[userId]
+		if profile == nil then return false end
+		local storage = _DataStorageService:GetUserDataStorage(userId)
+		local errorCode = storage:SetAndWait(self.StorageKey, _HttpService:JSONEncode(profile))
+		local ok = errorCode == 0
+		log("[VRF] REWARD PROFILE SAVE user=" .. userId .. " points=" .. tostring(profile.points) .. " ok=" .. tostring(ok) .. " code=" .. tostring(errorCode))
+		return ok
+	end
+
+	@ExecSpace("ServerOnly")
+	method integer GetPoints(string userId)
+		local profile = self:LoadProfile(userId)
+		if profile == nil then return 0 end
+		return profile.points
+	end
+
+	@ExecSpace("ServerOnly")
+	method boolean GrantPoints(string userId, integer amount, string reason)
+		if amount <= 0 then return false end
+		local profile = self:LoadProfile(userId)
+		if profile == nil then return false end
+		profile.points = profile.points + amount
+		local saved = self:SaveProfile(userId)
+		log("[VRF] REWARD GRANT user=" .. userId .. " amount=" .. tostring(amount) .. " reason=" .. reason .. " balance=" .. tostring(profile.points) .. " saved=" .. tostring(saved))
+		return saved
+	end
+
+	@ExecSpace("ServerOnly")
+	method void GrantMatchRewards(table userIds, integer winnerIndex)
+		if userIds == nil or #userIds < 2 then return end
+		for index, userId in ipairs(userIds) do
+			local amount = self.ParticipationReward
+			if index == winnerIndex then amount = amount + self.WinnerBonus end
+			self:GrantPoints(userId, amount, index == winnerIndex and "match_win" or "match_complete")
+		end
+		log("[VRF] REWARD MATCH SETTLED players=" .. tostring(#userIds) .. " winner=" .. tostring(winnerIndex))
+	end
+
+	@ExecSpace("ServerOnly")
+	@EventSender("Service", "UserService")
+	handler HandleUserLeaveEvent(UserLeaveEvent event)
+		self.profilesByUserId[event.UserId] = nil
+		self.loadingByUserId[event.UserId] = nil
+	end
+
+end

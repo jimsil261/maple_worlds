@@ -1,0 +1,109 @@
+@Component
+script LexioShopUIController extends Component
+
+	property Entity OpenButton = "2fb2f361-5783-4bea-be6d-19ee35db0f0a"
+	property Entity ShopPanel = "2a83248f-0dbe-4e85-a687-8bed11b0dab2"
+	property Entity CloseButton = "3e98284b-03f4-4932-a1de-8f13e2fcab89"
+	property Entity PointsText = "d31ae175-fa94-4e61-a6cc-ea475be3cce2"
+	property Entity Item1Button = "b0491cab-cdf7-46e4-8c5e-cb776e20409b"
+	property Entity Item2Button = "48020159-11e8-44a0-95ad-e4dcb572863f"
+	property Entity Item3Button = "b349e6eb-62a9-453e-8611-217000203c17"
+	property Entity Item4Button = "d5790266-c8f4-46dd-9760-c96fa175b68e"
+	property Entity Item5Button = "c153d4b6-2a49-4abf-8c5a-8144f7836f9f"
+	property Entity Item6Button = "08d6411d-0089-4b1e-b27c-6b983b6fc781"
+
+	@ExecSpace("ClientOnly")
+	method any GetBridge()
+		local player = _UserService.LocalPlayer
+		if player == nil then return nil end
+		return player:GetComponent("script.LexioPlayerBridge")
+	end
+
+	@ExecSpace("ClientOnly")
+	method string NextRequestId(string action)
+		self._T.RequestSequence = (self._T.RequestSequence or 0) + 1
+		return "shop:" .. action .. ":" .. tostring(self._T.RequestSequence)
+	end
+
+	@ExecSpace("ClientOnly")
+	method void SetPanelOpen(boolean open)
+		self.ShopPanel.Enable = open
+		if open then
+			local bridge = self:GetBridge()
+			if bridge ~= nil then bridge:RequestShopSnapshot(self:NextRequestId("snapshot")) end
+		end
+	end
+
+	@ExecSpace("ClientOnly")
+	method table GetVisibleItems(table snapshot)
+		local wanted = { "heart_balloon", "pinkbean_balloon", "ghost_balloon", "maple_leaf", "heart_mark", "ice_snowflake_ring" }
+		local byId = {}
+		for _, item in ipairs(snapshot.items or {}) do byId[item.id] = item end
+		local result = {}
+		for _, itemId in ipairs(wanted) do table.insert(result, byId[itemId]) end
+		return result
+	end
+
+	@ExecSpace("ClientOnly")
+	method void RenderSnapshot(table snapshot)
+		if snapshot == nil then return end
+		self.PointsText.TextGUIRendererComponent.Text = "렉시오 포인트  " .. tostring(snapshot.points or 0) .. " P"
+		local buttons = { self.Item1Button, self.Item2Button, self.Item3Button, self.Item4Button, self.Item5Button, self.Item6Button }
+		local items = self:GetVisibleItems(snapshot)
+		for index, button in ipairs(buttons) do
+			local item = items[index]
+			if item ~= nil then
+				local state = "구매 " .. tostring(item.price) .. "P"
+				if item.equipped then state = "장착 중 · 해제"
+				elseif item.owned then state = "장착하기" end
+				button.TextGUIRendererComponent.Text = state
+				button.ButtonComponent.Enable = true
+			else
+				button.TextGUIRendererComponent.Text = "준비 중"
+				button.ButtonComponent.Enable = false
+			end
+		end
+	end
+
+	@ExecSpace("ClientOnly")
+	method void ActivateItem(integer index)
+		local bridge = self:GetBridge()
+		if bridge == nil or bridge._T.ShopSnapshot == nil then return end
+		local item = self:GetVisibleItems(bridge._T.ShopSnapshot)[index]
+		if item == nil then return end
+		if not item.owned then bridge:RequestShopPurchase(self:NextRequestId("buy"), item.id)
+		elseif item.equipped then bridge:RequestShopUnequip(self:NextRequestId("unequip"), item.slot)
+		else bridge:RequestShopEquip(self:NextRequestId("equip"), item.id) end
+	end
+
+	@ExecSpace("ClientOnly")
+	method void OnBeginPlay()
+		self._T.RequestSequence = 0
+		self._T.LastShopSequence = -1
+		self:SetPanelOpen(false)
+		self.OpenButton:ConnectEvent(ButtonClickEvent, function() self:SetPanelOpen(true) end)
+		self.CloseButton:ConnectEvent(ButtonClickEvent, function() self:SetPanelOpen(false) end)
+		local buttons = { self.Item1Button, self.Item2Button, self.Item3Button, self.Item4Button, self.Item5Button, self.Item6Button }
+		for index, button in ipairs(buttons) do
+			local captured = index
+			button:ConnectEvent(ButtonClickEvent, function() self:ActivateItem(captured) end)
+		end
+		log("[VRF] SHOP UI READY items=6")
+	end
+
+	@ExecSpace("ClientOnly")
+	method void OnUpdate(number delta)
+		local player = _UserService.LocalPlayer
+		local inCafe = player ~= nil and player.CurrentMapName == "boardgame_cafe"
+		self.OpenButton.Enable = inCafe
+		if not inCafe and self.ShopPanel.Enable then self:SetPanelOpen(false) end
+		local bridge = self:GetBridge()
+		if bridge == nil then return end
+		local sequence = bridge._T.ShopSequence or 0
+		if sequence ~= self._T.LastShopSequence then
+			self._T.LastShopSequence = sequence
+			self:RenderSnapshot(bridge._T.ShopSnapshot)
+		end
+	end
+
+end

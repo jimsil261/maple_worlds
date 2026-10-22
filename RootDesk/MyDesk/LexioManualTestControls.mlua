@@ -13,8 +13,77 @@ script LexioManualTestControls extends Component
 
 	@ExecSpace("ClientOnly")
 	method void OnBeginPlay()
+	local controller = self.Entity.PlayerControllerComponent
+	if controller ~= nil then
+		controller:RemoveActionKey(KeyboardKey.Space)
+		controller:RemoveAllActionKeyByActionName("Jump")
+		controller:SetActionKey(KeyboardKey.LeftAlt, "Jump")
+		controller:SetActionKey(KeyboardKey.RightAlt, "Jump")
+		controller:SetActionKey(KeyboardKey.Space, "Interaction")
+		log("[VRF] INPUT REMAP jump=LeftAlt|RightAlt interact=Space")
+	end
+
 		        self._T.IsSeated = false
 		        self._T.SeatChairName = ""
+		        self._T.IsQueued = false
+		        self._T.QueuePosition = 0
+	end
+
+	@ExecSpace("ClientOnly")
+	method void ToggleAutoQueue()
+		        if self.Entity.CurrentMapName ~= "map01" or self:IsSeated() then return end
+		        self:RequestAutoQueue(not self._T.IsQueued)
+	end
+
+	@ExecSpace("ClientOnly")
+	method void RequestSpectate(integer tableNumber)
+		        if self.Entity.CurrentMapName ~= "map01" or self:IsSeated() then return end
+		        local tableId = tableNumber == 0 and "" or ("table0" .. tostring(tableNumber))
+		        self:RequestSpectatorTable(tableId)
+	end
+
+	@ExecSpace("Server")
+	method void RequestSpectatorTable(string tableId)
+		        if self.Entity.PlayerComponent == nil or self.Entity.PlayerComponent.UserId ~= senderUserId then return end
+		        if tableId ~= "" and tableId ~= "table01" and tableId ~= "table02" and tableId ~= "table03" then return end
+		        local host = self.Entity.CurrentMap:GetChildByName("LexioManualSessionHost")
+		        local registry = host ~= nil and host:GetComponent("script.LexioTableRegistry") or nil
+		        if registry == nil then return end
+		        local accepted = registry:SetSpectatorTable(senderUserId, self.Entity, tableId)
+		        if accepted then self:ApplySpectatorState(tableId) end
+	end
+
+	@ExecSpace("Client")
+	method void ApplySpectatorState(string tableId)
+		        self._T.SpectatorTableId = tableId
+		        log("[LexioSpectator] table=" .. (tableId == "" and "none" or tableId))
+	end
+
+	@ExecSpace("Server")
+	method void RequestAutoQueue(boolean join)
+		        if self.Entity.PlayerComponent == nil or self.Entity.PlayerComponent.UserId ~= senderUserId then return end
+		        local host = self.Entity.CurrentMap:GetChildByName("LexioManualSessionHost")
+		        local registry = host ~= nil and host:GetComponent("script.LexioTableRegistry") or nil
+		        if registry == nil then return end
+		        local accepted = join and registry:JoinQueue(senderUserId, self.Entity) or registry:CancelQueue(senderUserId)
+		        if accepted and not join then self:ApplyQueueState(false, 0, 3) end
+	end
+
+	@ExecSpace("Client")
+	method void ApplyQueueState(boolean queued, integer position, integer required)
+		        self._T.IsQueued = queued
+		        self._T.QueuePosition = position
+		        if queued then
+		            log("[LexioMatch] QUEUED position=" .. tostring(position) .. "/" .. tostring(required) .. " cancel=Q")
+		        else
+		            log("[LexioMatch] QUEUE CLEARED")
+		        end
+	end
+
+	@ExecSpace("Client")
+	method void ApplyAutoMatchResult(boolean accepted, string chairName, integer queuePosition)
+		        self:ApplyQueueState(false, queuePosition, 3)
+		        if accepted then self:ApplySeatStateResult(true, true, chairName) end
 	end
 
 	@ExecSpace("ClientOnly")
@@ -331,8 +400,8 @@ script LexioManualTestControls extends Component
 	@ExecSpace("ClientOnly")
 	@EventSender("Service", "InputService")
 	handler HandleSeatKeyDown(KeyDownEvent event)
-		        if event.key ~= KeyboardKey.X then return end
-		        self:ToggleSeat()
+		        if event.key == KeyboardKey.X then self:ToggleSeat() return end
+		        if event.key == KeyboardKey.Q then self:ToggleAutoQueue() end
 	end
 
 end

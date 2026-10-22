@@ -240,13 +240,13 @@ script LexioSessionCoordinator extends Component
 		        return users
 	end
 
-		method table BuildRequiredPlayers()
+	method table BuildRequiredPlayers()
 		        local players = {}
 		        for seat = 1, self.RequiredPlayerCount do players[seat] = self.playerEntityBySeat[seat] end
 		        return players
 	end
 
-		method boolean AreAllPlayersReplaying()
+	method boolean AreAllPlayersReplaying()
 		        for seat = 1, self.RequiredPlayerCount do
 		            local userId = self.userIdBySeat[seat]
 		            if userId == nil or self.finishDecisionByUserId[userId] ~= "Replay" then return false end
@@ -254,7 +254,7 @@ script LexioSessionCoordinator extends Component
 		        return true
 	end
 
-		method table BuildWinsSnapshot()
+	method table BuildWinsSnapshot()
 		        local wins = {}
 		        for seat = 1, self.RequiredPlayerCount do wins[seat] = self.winsBySeat[seat] or 0 end
 		        return wins
@@ -363,6 +363,28 @@ script LexioSessionCoordinator extends Component
 		        self:RemovePlayer(userId)
 		        self:BroadcastSnapshots()
 		        return true
+	end
+
+	@ExecSpace("ServerOnly")
+	method boolean RegisterTableSpectator(Entity playerEntity, string userId, string tableId)
+		        if self.TableId == "" or self.TableId ~= tableId then return false end
+		        if playerEntity == nil or not isvalid(playerEntity) or playerEntity.PlayerComponent == nil then return false end
+		        if playerEntity.PlayerComponent.UserId ~= userId or playerEntity.CurrentMap ~= self.Entity.CurrentMap then return false end
+		        if self.seatByUserId[userId] ~= nil then return false end
+		        self.spectatorByUserId[userId] = true
+		        self:AttachBridge(playerEntity, userId, 0, "Spectator")
+		        local bridge = self.bridgeByUserId[userId]
+		        if bridge ~= nil then bridge:PushCurrentSnapshot() end
+		        log("[VRF] SPECTATOR JOIN table=" .. tableId .. " userId=" .. userId)
+		        return true
+	end
+
+	@ExecSpace("ServerOnly")
+	method void ReleaseTableSpectator(string userId)
+		        if not self.spectatorByUserId[userId] then return end
+		        self.spectatorByUserId[userId] = nil
+		        self.bridgeByUserId[userId] = nil
+		        log("[VRF] SPECTATOR LEAVE table=" .. self.TableId .. " userId=" .. userId)
 	end
 
 	@ExecSpace("ServerOnly")

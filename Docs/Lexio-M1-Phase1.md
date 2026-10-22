@@ -1,6 +1,7 @@
 # Lexio M1 — Phase 1 상세 계획
 
-> `Lexio-M1-GDD.md`의 Phase 1을 구현 가능한 작업 단위로 구체화한다. 이 단계에서는 여러 테이블의 물리 배치와 좌석 상태 격리까지만 완성하고, 실제 게임 시작과 자동 매칭은 후속 단계에서 연결한다.
+> 🔖 **AI note — resuming?** 새 세션에서 이어갈 때는 `msw-planning` 스킬의 재개 흐름으로 `Archive/As-built.md`, `Lexio-Roadmap.md`, GDD와 모든 Phase 문서를 먼저 읽는다. **구현 또는 `⬜/🟡/✅` 상태 변경 전에는 `references/build-management.md`를 반드시 전체 읽는다.**
+> Parent doc: `Lexio-M1-GDD.md` · 이 단계에서는 여러 테이블의 물리 배치와 좌석 상태 격리까지만 완성하고, 실제 게임 시작과 자동 매칭은 후속 단계에서 연결한다.
 
 상태: 구현 준비 완료
 

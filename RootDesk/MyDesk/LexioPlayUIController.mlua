@@ -4,16 +4,23 @@ script LexioPlayUIController extends Logic
 	property Entity ContentRoot = "3a63e340-f873-4d50-9a59-42d93ed3b015"
 
 	property Entity Seat1Text = "f6ea12ea-9bc2-4960-b816-3110130c6fdf"
+
 	property Entity Seat1Panel = nil
 
 	property Entity Seat2Text = "6d8ba7d5-359e-4ee3-bc4c-220bdb8383a1"
+
 	property Entity Seat2Panel = nil
 
 	property Entity Seat3Text = "4452cf8a-c13e-4176-889b-b84ac0d7fbeb"
+
 	property Entity Seat3Panel = nil
+
 	property Entity Seat4Text = nil
+
 	property Entity Seat4Panel = nil
+
 	property Entity Seat5Text = nil
+
 	property Entity Seat5Panel = nil
 
 	property Entity PhaseText = "8c2f48e7-b914-42bb-a1cd-b9d72be69a3c"
@@ -64,6 +71,30 @@ script LexioPlayUIController extends Logic
 
 	property Entity MapNameText = "56c955e4-0d70-4e2a-8353-6c7b5343af66"
 
+	property Entity MatchPanel = nil
+
+	property Entity QueueButton = nil
+
+	property Entity QueueStatusText = nil
+
+	property Entity FinishScoreText = nil
+
+	property Entity Watch1Button = nil
+
+	property Entity Watch2Button = nil
+
+	property Entity Watch3Button = nil
+
+	property Entity StopWatchButton = nil
+
+	property Entity ActionPanel = nil
+
+	property Entity SortPanel = nil
+
+	property Entity MobileActionPanel = nil
+
+	property Entity MobileSortPanel = nil
+
 	@ExecSpace("ClientOnly")
 	method void OnBeginPlay()
 		        self._T.UIReady = false
@@ -99,6 +130,7 @@ script LexioPlayUIController extends Logic
 		            return
 		        end
 		        self:UpdateMapName()
+		        self:UpdateMatchPanel()
 		        self:UpdateMapActivation()
 		        if not self._T.Active then return end
 		        local bridge = self:GetLocalBridge()
@@ -160,9 +192,12 @@ script LexioPlayUIController extends Logic
 		            ErrorText="/ui/LexioPlayHUD/ContentRoot/ErrorText", HandPanelPC="/ui/LexioPlayHUD/ContentRoot/HandPanelPC", HandPanelMobile="/ui/LexioPlayHUD/ContentRoot/HandPanelMobile",
 		            SubmitButton="/ui/LexioPlayHUD/ContentRoot/ActionPanel/SubmitButton", PassButton="/ui/LexioPlayHUD/ContentRoot/ActionPanel/PassButton", RankSortButton="/ui/LexioPlayHUD/ContentRoot/SortPanel/RankSortButton", SuitSortButton="/ui/LexioPlayHUD/ContentRoot/SortPanel/SuitSortButton",
 		            MobileRankSortButton="/ui/LexioPlayHUD/ContentRoot/MobileSortPanel/RankSortButton", MobileSuitSortButton="/ui/LexioPlayHUD/ContentRoot/MobileSortPanel/SuitSortButton", MobileSubmitButton="/ui/LexioPlayHUD/ContentRoot/MobileActionPanel/SubmitButton", MobilePassButton="/ui/LexioPlayHUD/ContentRoot/MobileActionPanel/PassButton",
-		            FinishPanel="/ui/LexioPlayHUD/ContentRoot/FinishPanel", FinishCountdownText="/ui/LexioPlayHUD/ContentRoot/FinishPanel/CountdownText", ReplayButton="/ui/LexioPlayHUD/ContentRoot/FinishPanel/ReplayButton", ExitButton="/ui/LexioPlayHUD/ContentRoot/FinishPanel/ExitButton"
+		            FinishPanel="/ui/LexioPlayHUD/ContentRoot/FinishPanel", FinishCountdownText="/ui/LexioPlayHUD/ContentRoot/FinishPanel/CountdownText", ReplayButton="/ui/LexioPlayHUD/ContentRoot/FinishPanel/ReplayButton", ExitButton="/ui/LexioPlayHUD/ContentRoot/FinishPanel/ExitButton", FinishScoreText="/ui/LexioPlayHUD/ContentRoot/FinishPanel/ScoreText",
+		            MatchPanel="/ui/LexioPlayHUD/MatchPanel", QueueButton="/ui/LexioPlayHUD/MatchPanel/QueueButton", QueueStatusText="/ui/LexioPlayHUD/MatchPanel/StatusText",
+		            Watch1Button="/ui/LexioPlayHUD/MatchPanel/Watch1Button", Watch2Button="/ui/LexioPlayHUD/MatchPanel/Watch2Button", Watch3Button="/ui/LexioPlayHUD/MatchPanel/Watch3Button", StopWatchButton="/ui/LexioPlayHUD/MatchPanel/StopWatchButton"
+		            ,ActionPanel="/ui/LexioPlayHUD/ContentRoot/ActionPanel", SortPanel="/ui/LexioPlayHUD/ContentRoot/SortPanel", MobileActionPanel="/ui/LexioPlayHUD/ContentRoot/MobileActionPanel", MobileSortPanel="/ui/LexioPlayHUD/ContentRoot/MobileSortPanel"
 		        }
-		        local required = {"MapNameText","ContentRoot","Seat1Panel","Seat1Text","Seat2Panel","Seat2Text","Seat3Panel","Seat3Text","Seat4Panel","Seat4Text","Seat5Panel","Seat5Text","PhaseText","TurnText","PublicPlayText","ErrorText","HandPanelPC","HandPanelMobile","SubmitButton","PassButton","RankSortButton","SuitSortButton","MobileRankSortButton","MobileSuitSortButton","MobileSubmitButton","MobilePassButton","FinishPanel","FinishCountdownText","ReplayButton","ExitButton","PublicCard1","PublicCard2","PublicCard3","PublicCard4","PublicCard5"}
+		        local required = {"MapNameText","ContentRoot","Seat1Panel","Seat1Text","Seat2Panel","Seat2Text","Seat3Panel","Seat3Text","Seat4Panel","Seat4Text","Seat5Panel","Seat5Text","PhaseText","TurnText","PublicPlayText","ErrorText","HandPanelPC","HandPanelMobile","ActionPanel","SortPanel","MobileActionPanel","MobileSortPanel","SubmitButton","PassButton","RankSortButton","SuitSortButton","MobileRankSortButton","MobileSuitSortButton","MobileSubmitButton","MobilePassButton","FinishPanel","FinishCountdownText","ReplayButton","ExitButton","FinishScoreText","MatchPanel","QueueButton","QueueStatusText","Watch1Button","Watch2Button","Watch3Button","StopWatchButton","PublicCard1","PublicCard2","PublicCard3","PublicCard4","PublicCard5"}
 		        for _, key in ipairs(required) do
 		            local entity = _EntityService:GetEntityByPath(paths[key])
 		            if entity == nil then log("[LexioPlayUI] RESOLVE_MISSING path=" .. paths[key]); self._T.UIReady = false; return end
@@ -172,6 +207,7 @@ script LexioPlayUIController extends Logic
 		        self:DisconnectButtons()
 		        self:ConnectButtons()
 		        self.ContentRoot.Enable = false
+		        self.MatchPanel.Enable = false
 		        self:UpdateMapName()
 		        self:UpdateMapActivation()
 		        log("[LexioPlayUI] RESOLVED generation=" .. tostring(self._T.HandlerGeneration))
@@ -190,6 +226,35 @@ script LexioPlayUIController extends Logic
 		        if player == nil then return false end
 		        local controls = player:GetComponent("script.LexioManualTestControls")
 		        return controls ~= nil and controls:IsSeated()
+	end
+
+	@ExecSpace("ClientOnly")
+	method void UpdateMatchPanel()
+		        local player = _UserService.LocalPlayer
+		        if player == nil or self.MatchPanel == nil then return end
+		        local controls = player:GetComponent("script.LexioManualTestControls")
+		        local watching = controls ~= nil and controls._T.SpectatorTableId ~= nil and controls._T.SpectatorTableId ~= ""
+		        local visible = player.CurrentMapName == "map01" and controls ~= nil and not controls:IsSeated()
+		        self.MatchPanel.Enable = visible
+		        if not visible then return end
+		        local queued = controls._T.IsQueued == true
+		        self.QueueButton.TextGUIRendererComponent.Text = queued and "매칭 취소 (Q)" or "자동 매칭 (Q)"
+		        self.QueueButton.ButtonComponent.Enable = not watching
+		        self.QueueStatusText.TextGUIRendererComponent.Text = watching and ("관전 중: " .. tostring(controls._T.SpectatorTableId)) or (queued and ("대기 순번 " .. tostring(controls._T.QueuePosition or 0) .. "/3") or "3인 매칭 대기 없음")
+	end
+
+	@ExecSpace("ClientOnly")
+	method void ToggleQueue()
+		        local player = _UserService.LocalPlayer
+		        local controls = player ~= nil and player:GetComponent("script.LexioManualTestControls") or nil
+		        if controls ~= nil then controls:ToggleAutoQueue() end
+	end
+
+	@ExecSpace("ClientOnly")
+	method void SelectSpectatorTable(integer tableNumber)
+		        local player = _UserService.LocalPlayer
+		        local controls = player ~= nil and player:GetComponent("script.LexioManualTestControls") or nil
+		        if controls ~= nil then controls:RequestSpectate(tableNumber) end
 	end
 
 	method string NextRequestId(string action)
@@ -232,7 +297,9 @@ script LexioPlayUIController extends Logic
 		        local player = _UserService.LocalPlayer
 		        local isMap01 = player ~= nil and player.CurrentMapName == "map01"
 		        local isSeated = isMap01 and self:IsLocalPlayerSeated()
-		        if not isMap01 or not isSeated then
+		        local bridge = self:GetLocalBridge()
+		        local isSpectator = isMap01 and bridge ~= nil and bridge._T.Role == "Spectator" and bridge._T.MatchedPublicSnapshot ~= nil
+		        if not isMap01 or (not isSeated and not isSpectator) then
 		            if self._T.Active == false then return end
 		            self._T.Active = false
 		            self.ContentRoot.Enable = false
@@ -257,7 +324,7 @@ script LexioPlayUIController extends Logic
 		        self.PassButton.ButtonComponent.Enable = false
 		        self.MobileSubmitButton.ButtonComponent.Enable = false
 		        self.MobilePassButton.ButtonComponent.Enable = false
-		        local bridge = self:GetLocalBridge()
+		        bridge = self:GetLocalBridge()
 		        if bridge == nil then return end
 		        local privateHand = bridge:GetMatchedPrivateHand()
 		        local publicSnapshot = bridge:GetMatchedPublicSnapshot()
@@ -268,7 +335,7 @@ script LexioPlayUIController extends Logic
 		        self._T.Active = true
 		        self:HideDefaultUI()
 		        self.ContentRoot.Enable = true
-		        log("[LexioPlayUI] ACTIVE map=map01 seated=true version=" .. tostring(matchedVersion))
+		        log("[LexioPlayUI] ACTIVE map=map01 role=" .. tostring(bridge._T.Role) .. " version=" .. tostring(matchedVersion))
 	end
 
 	@ExecSpace("ClientOnly")
@@ -315,6 +382,11 @@ script LexioPlayUIController extends Logic
 		        local mobileSuitSortConnection = self.MobileSuitSortButton:ConnectEvent(ButtonClickEvent, function(event) if self._T.HandlerGeneration == generation then self:SetSortMode("Suit") end end)
 		        local replayConnection = self.ReplayButton:ConnectEvent(ButtonClickEvent, function(event) if self._T.HandlerGeneration == generation then self:ChooseFinish("Replay") end end)
 		        local exitConnection = self.ExitButton:ConnectEvent(ButtonClickEvent, function(event) if self._T.HandlerGeneration == generation then self:ChooseFinish("Exit") end end)
+		        local queueConnection = self.QueueButton:ConnectEvent(ButtonClickEvent, function(event) if self._T.HandlerGeneration == generation then self:ToggleQueue() end end)
+		        local watch1Connection = self.Watch1Button:ConnectEvent(ButtonClickEvent, function(event) if self._T.HandlerGeneration == generation then self:SelectSpectatorTable(1) end end)
+		        local watch2Connection = self.Watch2Button:ConnectEvent(ButtonClickEvent, function(event) if self._T.HandlerGeneration == generation then self:SelectSpectatorTable(2) end end)
+		        local watch3Connection = self.Watch3Button:ConnectEvent(ButtonClickEvent, function(event) if self._T.HandlerGeneration == generation then self:SelectSpectatorTable(3) end end)
+		        local stopWatchConnection = self.StopWatchButton:ConnectEvent(ButtonClickEvent, function(event) if self._T.HandlerGeneration == generation then self:SelectSpectatorTable(0) end end)
 		        table.insert(self._T.EventConnections, { entity = self.SubmitButton, connection = submitConnection })
 		        table.insert(self._T.EventConnections, { entity = self.PassButton, connection = passConnection })
 		        table.insert(self._T.EventConnections, { entity = self.RankSortButton, connection = rankSortConnection })
@@ -325,6 +397,11 @@ script LexioPlayUIController extends Logic
 		        table.insert(self._T.EventConnections, { entity = self.MobileSuitSortButton, connection = mobileSuitSortConnection })
 		        table.insert(self._T.EventConnections, { entity = self.ReplayButton, connection = replayConnection })
 		        table.insert(self._T.EventConnections, { entity = self.ExitButton, connection = exitConnection })
+		        table.insert(self._T.EventConnections, { entity = self.QueueButton, connection = queueConnection })
+		        table.insert(self._T.EventConnections, { entity = self.Watch1Button, connection = watch1Connection })
+		        table.insert(self._T.EventConnections, { entity = self.Watch2Button, connection = watch2Connection })
+		        table.insert(self._T.EventConnections, { entity = self.Watch3Button, connection = watch3Connection })
+		        table.insert(self._T.EventConnections, { entity = self.StopWatchButton, connection = stopWatchConnection })
 	end
 
 	@ExecSpace("ClientOnly")
@@ -459,6 +536,39 @@ script LexioPlayUIController extends Logic
 		        self:RenderPhase(publicSnapshot)
 		        self:RenderPublicPlay(publicSnapshot)
 		        self:RenderFinish(publicSnapshot)
+		        local bridge = self:GetLocalBridge()
+		        if bridge ~= nil and bridge._T.Role == "Spectator" then
+		            self.PhaseText.TextGUIRendererComponent.Text = "관전 중 · " .. self.PhaseText.TextGUIRendererComponent.Text
+		            self.HandPanelPC.Enable = false
+		            self.HandPanelMobile.Enable = false
+		            self.ActionPanel.Enable = false
+		            self.SortPanel.Enable = false
+		            self.MobileActionPanel.Enable = false
+		            self.MobileSortPanel.Enable = false
+		            self.SubmitButton.Enable = false
+		            self.PassButton.Enable = false
+		            self.RankSortButton.Enable = false
+		            self.SuitSortButton.Enable = false
+		            self.MobileSubmitButton.Enable = false
+		            self.MobilePassButton.Enable = false
+		            self.MobileRankSortButton.Enable = false
+		            self.MobileSuitSortButton.Enable = false
+		        else
+		            self.HandPanelPC.Enable = true
+		            self.HandPanelMobile.Enable = true
+		            self.ActionPanel.Enable = true
+		            self.SortPanel.Enable = true
+		            self.MobileActionPanel.Enable = true
+		            self.MobileSortPanel.Enable = true
+		            self.SubmitButton.Enable = true
+		            self.PassButton.Enable = true
+		            self.RankSortButton.Enable = true
+		            self.SuitSortButton.Enable = true
+		            self.MobileSubmitButton.Enable = true
+		            self.MobilePassButton.Enable = true
+		            self.MobileRankSortButton.Enable = true
+		            self.MobileSuitSortButton.Enable = true
+		        end
 		        self:UpdateActionButtons()
 	end
 
@@ -510,7 +620,7 @@ script LexioPlayUIController extends Logic
 		        local playerCount = snapshot.playerCount or 3
 		        if playerCount < 3 then playerCount = 3 end
 		        if playerCount > 5 then playerCount = 5 end
-
+		
 		        local positions = {-620, 0, 620}
 		        local panelWidth = 540
 		        local fontSize = 27
@@ -523,7 +633,7 @@ script LexioPlayUIController extends Logic
 		            panelWidth = 340
 		            fontSize = 22
 		        end
-
+		
 		        for seat = 1, 5 do
 		            local active = seat <= playerCount
 		            panels[seat].Enable = active
@@ -535,7 +645,7 @@ script LexioPlayUIController extends Logic
 		                size.x = panelWidth
 		                panels[seat].UITransformComponent.RectSize = size
 		                targets[seat].TextGUIRendererComponent.FontSize = fontSize
-
+		
 		                local name = self:SeatDisplayName(snapshot, seat)
 		                local remaining = 0
 		                if snapshot.remainingCounts ~= nil and snapshot.remainingCounts[seat] ~= nil then remaining = snapshot.remainingCounts[seat] end
@@ -601,6 +711,13 @@ script LexioPlayUIController extends Logic
 		        local seconds = snapshot.finishCountdown or 10
 		        local replayCount = snapshot.finishReplayCount or 0
 		        self.FinishCountdownText.TextGUIRendererComponent.Text = tostring(seconds) .. "초 후 로비로 이동  |  한 판 더 " .. tostring(replayCount) .. "/3"
+		        local bridge = self:GetLocalBridge()
+		        local seat = bridge ~= nil and bridge._T.Seat or 0
+		        local score = snapshot.scoreLedger ~= nil and snapshot.scoreLedger[seat] or 64
+		        local delta = snapshot.scoreDeltas ~= nil and snapshot.scoreDeltas[seat] or 0
+		        local prefix = score < 0 and "렉시오 칩 빚 " or "렉시오 칩 "
+		        local deltaText = delta >= 0 and ("+" .. tostring(delta)) or tostring(delta)
+		        self.FinishScoreText.TextGUIRendererComponent.Text = prefix .. tostring(math.abs(score)) .. "  (" .. deltaText .. ")"
 		        self:UpdateFinishButtons()
 	end
 
@@ -608,7 +725,7 @@ script LexioPlayUIController extends Logic
 	method void UpdateFinishButtons()
 		        local bridge = self:GetLocalBridge()
 		        local snapshot = bridge ~= nil and bridge:GetMatchedPublicSnapshot() or nil
-		        local enabled = snapshot ~= nil and snapshot.phase == "Finished" and self._T.PendingFinishId == ""
+		        local enabled = snapshot ~= nil and snapshot.phase == "Finished" and self._T.PendingFinishId == "" and bridge ~= nil and bridge._T.Role == "Player"
 		        self.ReplayButton.ButtonComponent.Enable = enabled
 		        self.ExitButton.ButtonComponent.Enable = enabled
 	end

@@ -1,0 +1,33 @@
+{
+  "Id": "",
+  "GameId": "",
+  "EntryKey": "codeblock://dd8b2a4d-fa6d-4a1a-bb7e-f7a4d92d5fdd",
+  "ContentType": "x-mod/codeblock",
+  "Content": "",
+  "Usage": 0,
+  "UsePublish": 1,
+  "UseService": 0,
+  "CoreVersion": "26.10.0.0",
+  "StudioVersion": "",
+  "DynamicLoading": 0,
+  "ContentProto": {
+    "Use": "Json",
+    "Json": {
+      "CoreVersion": {
+        "Major": 0,
+        "Minor": 2
+      },
+      "ScriptVersion": {
+        "Major": 1,
+        "Minor": 1
+      },
+      "Description": "",
+      "Id": "dd8b2a4d-fa6d-4a1a-bb7e-f7a4d92d5fdd",
+      "Language": 1,
+      "Name": "LexioRewardService",
+      "Type": 5,
+      "Source": 0,
+      "Target": null
+    }
+  }
+}
