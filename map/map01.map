@@ -31,15 +31,15 @@
           "@components": [
             {
               "@type": "MOD.Core.MapComponent",
-              "AirAccelerationXFactor": 1.0,
-              "AirDecelerationXFactor": 1.0,
-              "FallSpeedMaxXFactor": 1.0,
-              "FallSpeedMaxYFactor": 1.0,
-              "Gravity": 1.0,
+              "AirAccelerationXFactor": 1,
+              "AirDecelerationXFactor": 1,
+              "FallSpeedMaxXFactor": 1,
+              "FallSpeedMaxYFactor": 1,
+              "Gravity": 1,
               "IsInstanceMap": false,
               "TileMapMode": 0,
-              "WalkAccelerationFactor": 1.0,
-              "WalkDrag": 1.0,
+              "WalkAccelerationFactor": 1,
+              "WalkDrag": 1,
               "Enable": true
             },
             {
@@ -54,9 +54,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -73,8 +73,8 @@
                       "y": -0.04000002
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -85,9 +85,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -104,8 +104,8 @@
                       "y": -0.04000002
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -116,9 +116,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -135,8 +135,8 @@
                       "y": -0.04000002
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -147,9 +147,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -166,8 +166,8 @@
                       "y": -0.04000002
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -178,9 +178,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -197,8 +197,8 @@
                       "y": -0.04000002
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -209,9 +209,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -228,8 +228,8 @@
                       "y": -0.04000002
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -240,9 +240,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -259,8 +259,8 @@
                       "y": -0.04000002
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -271,9 +271,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -290,8 +290,8 @@
                       "y": -0.04000002
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -302,9 +302,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -321,8 +321,8 @@
                       "y": -0.04000002
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -333,9 +333,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -352,8 +352,8 @@
                       "y": -0.04000002
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -364,9 +364,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -383,8 +383,8 @@
                       "y": -0.04000002
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -395,9 +395,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -414,8 +414,8 @@
                       "y": -0.04000002
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -426,9 +426,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -445,8 +445,8 @@
                       "y": -0.04000002
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -457,9 +457,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -476,8 +476,8 @@
                       "y": -0.04000002
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -488,9 +488,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -507,8 +507,8 @@
                       "y": -0.04000002
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -519,9 +519,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -538,8 +538,8 @@
                       "y": -0.04000002
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -550,9 +550,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -569,8 +569,8 @@
                       "y": -0.04000002
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -581,9 +581,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -600,8 +600,8 @@
                       "y": -0.04000002
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -612,9 +612,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -631,8 +631,8 @@
                       "y": -6.04000044
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -643,9 +643,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -662,8 +662,8 @@
                       "y": -6.04000044
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -674,9 +674,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -693,8 +693,8 @@
                       "y": -6.04000044
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -705,9 +705,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -724,8 +724,8 @@
                       "y": -6.04000044
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -736,9 +736,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -755,8 +755,8 @@
                       "y": -6.04000044
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -767,9 +767,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -786,8 +786,8 @@
                       "y": -6.04000044
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -798,9 +798,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -817,8 +817,8 @@
                       "y": -6.04000044
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -829,9 +829,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -848,8 +848,8 @@
                       "y": -6.04000044
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -860,9 +860,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -879,8 +879,8 @@
                       "y": -6.04000044
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -891,9 +891,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -910,8 +910,8 @@
                       "y": -6.04000044
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -922,9 +922,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -941,8 +941,8 @@
                       "y": -6.04000044
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -953,9 +953,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -972,8 +972,8 @@
                       "y": -6.04000044
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -984,9 +984,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -1003,8 +1003,8 @@
                       "y": -6.04000044
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -1015,9 +1015,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -1034,8 +1034,8 @@
                       "y": -6.04000044
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -1046,9 +1046,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -1065,8 +1065,8 @@
                       "y": -6.04000044
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -1077,9 +1077,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -1096,8 +1096,8 @@
                       "y": -6.04000044
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -1108,9 +1108,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -1127,8 +1127,8 @@
                       "y": -6.04000044
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -1139,9 +1139,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -1158,8 +1158,8 @@
                       "y": -6.04000044
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -1170,9 +1170,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -1189,8 +1189,8 @@
                       "y": -12.04
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -1201,9 +1201,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -1220,8 +1220,8 @@
                       "y": -12.04
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -1232,9 +1232,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -1251,8 +1251,8 @@
                       "y": -12.04
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -1263,9 +1263,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -1282,8 +1282,8 @@
                       "y": -12.04
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -1294,9 +1294,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -1313,8 +1313,8 @@
                       "y": -12.04
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -1325,9 +1325,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -1344,8 +1344,8 @@
                       "y": -12.04
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -1356,9 +1356,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -1375,8 +1375,8 @@
                       "y": -12.04
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -1387,9 +1387,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -1406,8 +1406,8 @@
                       "y": -12.04
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -1418,9 +1418,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -1437,8 +1437,8 @@
                       "y": -12.04
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -1449,9 +1449,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -1468,8 +1468,8 @@
                       "y": -12.04
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -1480,9 +1480,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -1499,8 +1499,8 @@
                       "y": -12.04
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -1511,9 +1511,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -1530,8 +1530,8 @@
                       "y": -12.04
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -1542,9 +1542,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -1561,8 +1561,8 @@
                       "y": -12.04
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -1573,9 +1573,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -1592,8 +1592,8 @@
                       "y": -12.04
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -1604,9 +1604,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -1623,8 +1623,8 @@
                       "y": -12.04
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -1635,9 +1635,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -1654,8 +1654,8 @@
                       "y": -12.04
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -1666,9 +1666,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -1685,8 +1685,8 @@
                       "y": -12.04
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -1697,9 +1697,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -1716,8 +1716,8 @@
                       "y": -12.04
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -1728,9 +1728,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -1747,8 +1747,8 @@
                       "y": -0.9
                     },
                     "Variance": {
-                      "x": 0.0,
-                      "y": -1.0
+                      "x": 0,
+                      "y": -1
                     }
                   },
                   {
@@ -1759,9 +1759,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -1778,8 +1778,8 @@
                       "y": -0.04000002
                     },
                     "Variance": {
-                      "x": 0.0,
-                      "y": 1.0
+                      "x": 0,
+                      "y": 1
                     }
                   },
                   {
@@ -1790,9 +1790,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -1809,8 +1809,8 @@
                       "y": -6.90000057
                     },
                     "Variance": {
-                      "x": 0.0,
-                      "y": -1.0
+                      "x": 0,
+                      "y": -1
                     }
                   },
                   {
@@ -1821,9 +1821,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -1840,8 +1840,8 @@
                       "y": -6.04000044
                     },
                     "Variance": {
-                      "x": 0.0,
-                      "y": 1.0
+                      "x": 0,
+                      "y": 1
                     }
                   },
                   {
@@ -1852,9 +1852,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -1871,8 +1871,8 @@
                       "y": -12.9000006
                     },
                     "Variance": {
-                      "x": 0.0,
-                      "y": -1.0
+                      "x": 0,
+                      "y": -1
                     }
                   },
                   {
@@ -1883,9 +1883,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -1902,8 +1902,8 @@
                       "y": -12.04
                     },
                     "Variance": {
-                      "x": 0.0,
-                      "y": 1.0
+                      "x": 0,
+                      "y": 1
                     }
                   }
                 ]
@@ -2009,40 +2009,40 @@
             {
               "@type": "MOD.Core.TransformComponent",
               "Rotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
+                "x": 0,
+                "y": 0,
+                "z": 0
               },
               "Position": {
                 "x": -0.225,
                 "y": -0.15,
-                "z": 1000.0
+                "z": 1000
               },
               "QuaternionRotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0,
-                "w": 1.0
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
               },
               "Scale": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
+                "x": 1,
+                "y": 1,
+                "z": 1
               },
-              "ZRotation": 0.0,
+              "ZRotation": 0,
               "Enable": true
             },
             {
               "@type": "MOD.Core.TileMapComponent",
               "Color": {
-                "r": 1.0,
-                "g": 1.0,
-                "b": 1.0,
-                "a": 1.0
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
               },
-              "FootholdDrag": 1.0,
-              "FootholdForce": 0.0,
-              "FootholdWalkSpeedFactor": 1.0,
+              "FootholdDrag": 1,
+              "FootholdForce": 0,
+              "FootholdWalkSpeedFactor": 1,
               "IgnoreMapLayerCheck": false,
               "IsOddGridPosition": false,
               "OrderInLayer": 1,
@@ -4742,27 +4742,27 @@
             {
               "@type": "MOD.Core.TransformComponent",
               "Rotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
+                "x": 0,
+                "y": 0,
+                "z": 0
               },
               "Position": {
-                "x": 0.0,
-                "y": 0.0,
+                "x": 0,
+                "y": 0,
                 "z": 999.999
               },
               "QuaternionRotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0,
-                "w": 1.0
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
               },
               "Scale": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
+                "x": 1,
+                "y": 1,
+                "z": 1
               },
-              "ZRotation": 0.0,
+              "ZRotation": 0,
               "Enable": true
             },
             {
@@ -4774,20 +4774,20 @@
               "FlipY": false,
               "IgnoreMapLayerCheck": false,
               "OrderInLayer": 0,
-              "PlayRate": 1.0,
+              "PlayRate": 1,
               "RenderSetting": 0,
               "SortingLayer": "Default",
               "SpriteRUID": "8ef238e0d0ca4bb783aca526cff35d11",
               "StartFrameIndex": 0,
               "TiledSize": {
-                "x": 1.0,
-                "y": 1.0
+                "x": 1,
+                "y": 1
               },
               "Color": {
-                "r": 1.0,
-                "g": 1.0,
-                "b": 1.0,
-                "a": 1.0
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
               },
               "Enable": true
             },
@@ -4825,27 +4825,27 @@
             {
               "@type": "MOD.Core.TransformComponent",
               "Rotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
+                "x": 0,
+                "y": 0,
+                "z": 0
               },
               "Position": {
-                "x": 1.65,
-                "y": -6.15,
-                "z": 0.0
+                "x": 1.215,
+                "y": -6.180000000000001,
+                "z": 0
               },
               "QuaternionRotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0,
-                "w": 1.0
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
               },
               "Scale": {
-                "x": 2.4,
-                "y": 2.4,
-                "z": 1.0
+                "x": 0.62,
+                "y": 0.62,
+                "z": 1
               },
-              "ZRotation": 0.0,
+              "ZRotation": 0,
               "Enable": true
             },
             {
@@ -4853,19 +4853,19 @@
               "ActionSheet": {},
               "DrawMode": 0,
               "EndFrameIndex": 2147483647,
-              "FlipX": false,
+              "FlipX": true,
               "FlipY": false,
-              "OrderInLayer": 1,
-              "PlayRate": 1.0,
+              "OrderInLayer": 4,
+              "PlayRate": 1,
               "RenderSetting": 0,
               "SortingLayer": "MapLayer0",
-              "SpriteRUID": "0f5c1ad9cdde4ee68b12ff557200b606",
+              "SpriteRUID": "9c588920ad384d4aa4af0afa8163ab4b",
               "StartFrameIndex": 0,
               "Color": {
-                "r": 1.0,
-                "g": 1.0,
-                "b": 1.0,
-                "a": 1.0
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
               },
               "Enable": true
             }
@@ -4899,27 +4899,27 @@
             {
               "@type": "MOD.Core.TransformComponent",
               "Rotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
+                "x": 0,
+                "y": 0,
+                "z": 0
               },
               "Position": {
-                "x": 1.1,
-                "y": -0.35,
-                "z": 0.0
+                "x": -0.765,
+                "y": -0.38,
+                "z": 0
               },
               "QuaternionRotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0,
-                "w": 1.0
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
               },
               "Scale": {
-                "x": 2.4,
-                "y": 2.4,
-                "z": 1.0
+                "x": 0.62,
+                "y": 0.62,
+                "z": 1
               },
-              "ZRotation": 0.0,
+              "ZRotation": 0,
               "Enable": true
             },
             {
@@ -4929,17 +4929,17 @@
               "EndFrameIndex": 2147483647,
               "FlipX": false,
               "FlipY": false,
-              "OrderInLayer": 1,
-              "PlayRate": 1.0,
+              "OrderInLayer": 4,
+              "PlayRate": 1,
               "RenderSetting": 0,
               "SortingLayer": "MapLayer0",
-              "SpriteRUID": "1aabf8046c3047159f77bb44b6e8fcf9",
+              "SpriteRUID": "9c588920ad384d4aa4af0afa8163ab4b",
               "StartFrameIndex": 0,
               "Color": {
-                "r": 1.0,
-                "g": 1.0,
-                "b": 1.0,
-                "a": 1.0
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
               },
               "Enable": true
             }
@@ -4973,27 +4973,27 @@
             {
               "@type": "MOD.Core.TransformComponent",
               "Rotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
+                "x": 0,
+                "y": 0,
+                "z": 0
               },
               "Position": {
-                "x": 2.2,
-                "y": -0.35,
-                "z": 0.0
+                "x": -0.135,
+                "y": -0.38,
+                "z": 0
               },
               "QuaternionRotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0,
-                "w": 1.0
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
               },
               "Scale": {
-                "x": 2.4,
-                "y": 2.4,
-                "z": 1.0
+                "x": 0.62,
+                "y": 0.62,
+                "z": 1
               },
-              "ZRotation": 0.0,
+              "ZRotation": 0,
               "Enable": true
             },
             {
@@ -5001,19 +5001,19 @@
               "ActionSheet": {},
               "DrawMode": 0,
               "EndFrameIndex": 2147483647,
-              "FlipX": false,
+              "FlipX": true,
               "FlipY": false,
-              "OrderInLayer": 1,
-              "PlayRate": 1.0,
+              "OrderInLayer": 4,
+              "PlayRate": 1,
               "RenderSetting": 0,
               "SortingLayer": "MapLayer0",
-              "SpriteRUID": "1aabf8046c3047159f77bb44b6e8fcf9",
+              "SpriteRUID": "9c588920ad384d4aa4af0afa8163ab4b",
               "StartFrameIndex": 0,
               "Color": {
-                "r": 1.0,
-                "g": 1.0,
-                "b": 1.0,
-                "a": 1.0
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
               },
               "Enable": true
             }
@@ -5047,27 +5047,27 @@
             {
               "@type": "MOD.Core.TransformComponent",
               "Rotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
+                "x": 0,
+                "y": 0,
+                "z": 0
               },
               "Position": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
+                "x": 0,
+                "y": 0,
+                "z": 0
               },
               "QuaternionRotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0,
-                "w": 1.0
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
               },
               "Scale": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
+                "x": 1,
+                "y": 1,
+                "z": 1
               },
-              "ZRotation": 0.0,
+              "ZRotation": 0,
               "Enable": true
             },
             {
@@ -5104,27 +5104,27 @@
             {
               "@type": "MOD.Core.TransformComponent",
               "Rotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
+                "x": 0,
+                "y": 0,
+                "z": 0
               },
               "Position": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
+                "x": 0,
+                "y": 0,
+                "z": 0
               },
               "QuaternionRotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0,
-                "w": 1.0
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
               },
               "Scale": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
+                "x": 1,
+                "y": 1,
+                "z": 1
               },
-              "ZRotation": 0.0,
+              "ZRotation": 0,
               "Enable": true
             },
             {
@@ -5162,27 +5162,27 @@
             {
               "@type": "MOD.Core.TransformComponent",
               "Rotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
+                "x": 0,
+                "y": 0,
+                "z": 0
               },
               "Position": {
                 "x": -7.2,
                 "y": -12.15,
-                "z": 0.0
+                "z": 0
               },
               "QuaternionRotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0,
-                "w": 1.0
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
               },
               "Scale": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
+                "x": 1,
+                "y": 1,
+                "z": 1
               },
-              "ZRotation": 0.0,
+              "ZRotation": 0,
               "Enable": true
             },
             {
@@ -5193,15 +5193,15 @@
               "FlipX": false,
               "FlipY": false,
               "OrderInLayer": 2,
-              "PlayRate": 1.0,
+              "PlayRate": 1,
               "RenderSetting": 0,
               "SpriteRUID": "aba58d2139ca4736bab39f6b4c39aa37",
               "StartFrameIndex": 0,
               "Color": {
-                "r": 1.0,
-                "g": 1.0,
-                "b": 1.0,
-                "a": 1.0
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
               },
               "Enable": true
             },
@@ -5210,8 +5210,8 @@
               "ActionKey": 273,
               "ActionName": "로비로 돌아가기",
               "BoxSize": {
-                "x": 2.0,
-                "y": 2.0
+                "x": 2,
+                "y": 2
               },
               "IsLegacy": false,
               "ShowActionInfo": true,
@@ -5222,7 +5222,7 @@
               "Enable": true,
               "ObjectKey": "LexioExit",
               "RouteId": "LEXIO_EXIT",
-              "ServerUseDistance": 2.0
+              "ServerUseDistance": 2
             }
           ],
           "@version": 1
@@ -5254,27 +5254,27 @@
             {
               "@type": "MOD.Core.TransformComponent",
               "Rotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
+                "x": 0,
+                "y": 0,
+                "z": 0
               },
               "Position": {
-                "x": -1.15,
-                "y": -12.15,
-                "z": 0.0
+                "x": -1.165,
+                "y": -11.75,
+                "z": 0
               },
               "QuaternionRotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0,
-                "w": 1.0
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
               },
               "Scale": {
-                "x": 2.4,
-                "y": 2.4,
-                "z": 1.0
+                "x": 0.62,
+                "y": 0.62,
+                "z": 1
               },
-              "ZRotation": 0.0,
+              "ZRotation": 0,
               "Enable": true
             },
             {
@@ -5284,17 +5284,17 @@
               "EndFrameIndex": 2147483647,
               "FlipX": false,
               "FlipY": false,
-              "OrderInLayer": 1,
-              "PlayRate": 1.0,
+              "OrderInLayer": 0,
+              "PlayRate": 1,
               "RenderSetting": 0,
               "SortingLayer": "MapLayer0",
-              "SpriteRUID": "1efe0467459c42d891c91459f1363415",
+              "SpriteRUID": "9c588920ad384d4aa4af0afa8163ab4b",
               "StartFrameIndex": 0,
               "Color": {
-                "r": 1.0,
-                "g": 1.0,
-                "b": 1.0,
-                "a": 1.0
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
               },
               "Enable": true
             }
@@ -5328,27 +5328,27 @@
             {
               "@type": "MOD.Core.TransformComponent",
               "Rotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
+                "x": 0,
+                "y": 0,
+                "z": 0
               },
               "Position": {
-                "x": 0.0,
-                "y": -12.15,
-                "z": 0.0
+                "x": -0.5349999999999999,
+                "y": -11.75,
+                "z": 0
               },
               "QuaternionRotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0,
-                "w": 1.0
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
               },
               "Scale": {
-                "x": 2.4,
-                "y": 2.4,
-                "z": 1.0
+                "x": 0.62,
+                "y": 0.62,
+                "z": 1
               },
-              "ZRotation": 0.0,
+              "ZRotation": 0,
               "Enable": true
             },
             {
@@ -5356,19 +5356,19 @@
               "ActionSheet": {},
               "DrawMode": 0,
               "EndFrameIndex": 2147483647,
-              "FlipX": false,
+              "FlipX": true,
               "FlipY": false,
-              "OrderInLayer": 1,
-              "PlayRate": 1.0,
+              "OrderInLayer": 0,
+              "PlayRate": 1,
               "RenderSetting": 0,
               "SortingLayer": "MapLayer0",
-              "SpriteRUID": "1efe0467459c42d891c91459f1363415",
+              "SpriteRUID": "9c588920ad384d4aa4af0afa8163ab4b",
               "StartFrameIndex": 0,
               "Color": {
-                "r": 1.0,
-                "g": 1.0,
-                "b": 1.0,
-                "a": 1.0
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
               },
               "Enable": true
             }
@@ -5402,27 +5402,27 @@
             {
               "@type": "MOD.Core.TransformComponent",
               "Rotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
+                "x": 0,
+                "y": 0,
+                "z": 0
               },
               "Position": {
-                "x": 1.15,
-                "y": -12.15,
-                "z": 0.0
+                "x": -0.85,
+                "y": -12.18,
+                "z": 0
               },
               "QuaternionRotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0,
-                "w": 1.0
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
               },
               "Scale": {
-                "x": 2.4,
-                "y": 2.4,
-                "z": 1.0
+                "x": 0.62,
+                "y": 0.62,
+                "z": 1
               },
-              "ZRotation": 0.0,
+              "ZRotation": 0,
               "Enable": true
             },
             {
@@ -5432,17 +5432,17 @@
               "EndFrameIndex": 2147483647,
               "FlipX": false,
               "FlipY": false,
-              "OrderInLayer": 1,
-              "PlayRate": 1.0,
+              "OrderInLayer": 4,
+              "PlayRate": 1,
               "RenderSetting": 0,
               "SortingLayer": "MapLayer0",
-              "SpriteRUID": "1efe0467459c42d891c91459f1363415",
+              "SpriteRUID": "9c588920ad384d4aa4af0afa8163ab4b",
               "StartFrameIndex": 0,
               "Color": {
-                "r": 1.0,
-                "g": 1.0,
-                "b": 1.0,
-                "a": 1.0
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
               },
               "Enable": true
             }
@@ -5476,27 +5476,27 @@
             {
               "@type": "MOD.Core.TransformComponent",
               "Rotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
+                "x": 0,
+                "y": 0,
+                "z": 0
               },
               "Position": {
-                "x": 0.0,
-                "y": -6.15,
-                "z": 0.0
+                "x": 0.9,
+                "y": -6.11,
+                "z": 0
               },
               "QuaternionRotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0,
-                "w": 1.0
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
               },
               "Scale": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
+                "x": 1.35,
+                "y": 1.05,
+                "z": 1
               },
-              "ZRotation": 0.0,
+              "ZRotation": 0,
               "Enable": true
             },
             {
@@ -5506,17 +5506,17 @@
               "EndFrameIndex": 2147483647,
               "FlipX": false,
               "FlipY": false,
-              "OrderInLayer": 0,
-              "PlayRate": 1.0,
+              "OrderInLayer": 2,
+              "PlayRate": 1,
               "RenderSetting": 0,
               "SortingLayer": "MapLayer0",
-              "SpriteRUID": "ef89ea7b1e2b495498613d062b38c558",
+              "SpriteRUID": "c043c5928edb440cbe776c07731fe79f",
               "StartFrameIndex": 0,
               "Color": {
-                "r": 1.0,
-                "g": 1.0,
-                "b": 1.0,
-                "a": 1.0
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
               },
               "Enable": true
             }
@@ -5550,27 +5550,27 @@
             {
               "@type": "MOD.Core.TransformComponent",
               "Rotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
+                "x": 0,
+                "y": 0,
+                "z": 0
               },
               "Position": {
-                "x": -1.65,
-                "y": -6.15,
-                "z": 0.0
+                "x": 0.585,
+                "y": -5.75,
+                "z": 0
               },
               "QuaternionRotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0,
-                "w": 1.0
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
               },
               "Scale": {
-                "x": 2.4,
-                "y": 2.4,
-                "z": 1.0
+                "x": 0.62,
+                "y": 0.62,
+                "z": 1
               },
-              "ZRotation": 0.0,
+              "ZRotation": 0,
               "Enable": true
             },
             {
@@ -5580,17 +5580,17 @@
               "EndFrameIndex": 2147483647,
               "FlipX": false,
               "FlipY": false,
-              "OrderInLayer": 1,
-              "PlayRate": 1.0,
+              "OrderInLayer": 0,
+              "PlayRate": 1,
               "RenderSetting": 0,
               "SortingLayer": "MapLayer0",
-              "SpriteRUID": "0f5c1ad9cdde4ee68b12ff557200b606",
+              "SpriteRUID": "9c588920ad384d4aa4af0afa8163ab4b",
               "StartFrameIndex": 0,
               "Color": {
-                "r": 1.0,
-                "g": 1.0,
-                "b": 1.0,
-                "a": 1.0
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
               },
               "Enable": true
             }
@@ -5624,27 +5624,27 @@
             {
               "@type": "MOD.Core.TransformComponent",
               "Rotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
+                "x": 0,
+                "y": 0,
+                "z": 0
               },
               "Position": {
-                "x": -0.55,
-                "y": -6.15,
-                "z": 0.0
+                "x": 1.215,
+                "y": -5.75,
+                "z": 0
               },
               "QuaternionRotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0,
-                "w": 1.0
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
               },
               "Scale": {
-                "x": 2.4,
-                "y": 2.4,
-                "z": 1.0
+                "x": 0.62,
+                "y": 0.62,
+                "z": 1
               },
-              "ZRotation": 0.0,
+              "ZRotation": 0,
               "Enable": true
             },
             {
@@ -5652,19 +5652,19 @@
               "ActionSheet": {},
               "DrawMode": 0,
               "EndFrameIndex": 2147483647,
-              "FlipX": false,
+              "FlipX": true,
               "FlipY": false,
-              "OrderInLayer": 1,
-              "PlayRate": 1.0,
+              "OrderInLayer": 0,
+              "PlayRate": 1,
               "RenderSetting": 0,
               "SortingLayer": "MapLayer0",
-              "SpriteRUID": "0f5c1ad9cdde4ee68b12ff557200b606",
+              "SpriteRUID": "9c588920ad384d4aa4af0afa8163ab4b",
               "StartFrameIndex": 0,
               "Color": {
-                "r": 1.0,
-                "g": 1.0,
-                "b": 1.0,
-                "a": 1.0
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
               },
               "Enable": true
             }
@@ -5698,27 +5698,27 @@
             {
               "@type": "MOD.Core.TransformComponent",
               "Rotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
+                "x": 0,
+                "y": 0,
+                "z": 0
               },
               "Position": {
-                "x": 0.55,
-                "y": -6.15,
-                "z": 0.0
+                "x": 0.585,
+                "y": -6.180000000000001,
+                "z": 0
               },
               "QuaternionRotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0,
-                "w": 1.0
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
               },
               "Scale": {
-                "x": 2.4,
-                "y": 2.4,
-                "z": 1.0
+                "x": 0.62,
+                "y": 0.62,
+                "z": 1
               },
-              "ZRotation": 0.0,
+              "ZRotation": 0,
               "Enable": true
             },
             {
@@ -5728,17 +5728,17 @@
               "EndFrameIndex": 2147483647,
               "FlipX": false,
               "FlipY": false,
-              "OrderInLayer": 1,
-              "PlayRate": 1.0,
+              "OrderInLayer": 4,
+              "PlayRate": 1,
               "RenderSetting": 0,
               "SortingLayer": "MapLayer0",
-              "SpriteRUID": "0f5c1ad9cdde4ee68b12ff557200b606",
+              "SpriteRUID": "9c588920ad384d4aa4af0afa8163ab4b",
               "StartFrameIndex": 0,
               "Color": {
-                "r": 1.0,
-                "g": 1.0,
-                "b": 1.0,
-                "a": 1.0
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
               },
               "Enable": true
             }
@@ -5772,27 +5772,27 @@
             {
               "@type": "MOD.Core.TransformComponent",
               "Rotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
+                "x": 0,
+                "y": 0,
+                "z": 0
               },
               "Position": {
-                "x": 0.0,
-                "y": -0.35,
-                "z": 0.0
+                "x": -0.45,
+                "y": -0.31,
+                "z": 0
               },
               "QuaternionRotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0,
-                "w": 1.0
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
               },
               "Scale": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
+                "x": 1.35,
+                "y": 1.05,
+                "z": 1
               },
-              "ZRotation": 0.0,
+              "ZRotation": 0,
               "Enable": true
             },
             {
@@ -5802,17 +5802,17 @@
               "EndFrameIndex": 2147483647,
               "FlipX": false,
               "FlipY": false,
-              "OrderInLayer": 0,
-              "PlayRate": 1.0,
+              "OrderInLayer": 2,
+              "PlayRate": 1,
               "RenderSetting": 0,
               "SortingLayer": "MapLayer0",
-              "SpriteRUID": "ef89ea7b1e2b495498613d062b38c558",
+              "SpriteRUID": "c043c5928edb440cbe776c07731fe79f",
               "StartFrameIndex": 0,
               "Color": {
-                "r": 1.0,
-                "g": 1.0,
-                "b": 1.0,
-                "a": 1.0
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
               },
               "Enable": true
             }
@@ -5846,27 +5846,27 @@
             {
               "@type": "MOD.Core.TransformComponent",
               "Rotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
+                "x": 0,
+                "y": 0,
+                "z": 0
               },
               "Position": {
-                "x": -2.2,
-                "y": -0.35,
-                "z": 0.0
+                "x": -1.08,
+                "y": 0.050000000000000044,
+                "z": 0
               },
               "QuaternionRotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0,
-                "w": 1.0
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
               },
               "Scale": {
-                "x": 2.4,
-                "y": 2.4,
-                "z": 1.0
+                "x": 0.62,
+                "y": 0.62,
+                "z": 1
               },
-              "ZRotation": 0.0,
+              "ZRotation": 0,
               "Enable": true
             },
             {
@@ -5876,17 +5876,17 @@
               "EndFrameIndex": 2147483647,
               "FlipX": false,
               "FlipY": false,
-              "OrderInLayer": 1,
-              "PlayRate": 1.0,
+              "OrderInLayer": 0,
+              "PlayRate": 1,
               "RenderSetting": 0,
               "SortingLayer": "MapLayer0",
-              "SpriteRUID": "1aabf8046c3047159f77bb44b6e8fcf9",
+              "SpriteRUID": "9c588920ad384d4aa4af0afa8163ab4b",
               "StartFrameIndex": 0,
               "Color": {
-                "r": 1.0,
-                "g": 1.0,
-                "b": 1.0,
-                "a": 1.0
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
               },
               "Enable": true
             }
@@ -5920,27 +5920,27 @@
             {
               "@type": "MOD.Core.TransformComponent",
               "Rotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
+                "x": 0,
+                "y": 0,
+                "z": 0
               },
               "Position": {
-                "x": -1.1,
-                "y": -0.35,
-                "z": 0.0
+                "x": -0.45,
+                "y": 0.050000000000000044,
+                "z": 0
               },
               "QuaternionRotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0,
-                "w": 1.0
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
               },
               "Scale": {
-                "x": 2.4,
-                "y": 2.4,
-                "z": 1.0
+                "x": 0.62,
+                "y": 0.62,
+                "z": 1
               },
-              "ZRotation": 0.0,
+              "ZRotation": 0,
               "Enable": true
             },
             {
@@ -5950,17 +5950,17 @@
               "EndFrameIndex": 2147483647,
               "FlipX": false,
               "FlipY": false,
-              "OrderInLayer": 1,
-              "PlayRate": 1.0,
+              "OrderInLayer": 0,
+              "PlayRate": 1,
               "RenderSetting": 0,
               "SortingLayer": "MapLayer0",
-              "SpriteRUID": "1aabf8046c3047159f77bb44b6e8fcf9",
+              "SpriteRUID": "9c588920ad384d4aa4af0afa8163ab4b",
               "StartFrameIndex": 0,
               "Color": {
-                "r": 1.0,
-                "g": 1.0,
-                "b": 1.0,
-                "a": 1.0
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
               },
               "Enable": true
             }
@@ -5994,27 +5994,27 @@
             {
               "@type": "MOD.Core.TransformComponent",
               "Rotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
+                "x": 0,
+                "y": 0,
+                "z": 0
               },
               "Position": {
-                "x": 0.0,
-                "y": -0.35,
-                "z": 0.0
+                "x": 0.18,
+                "y": 0.050000000000000044,
+                "z": 0
               },
               "QuaternionRotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0,
-                "w": 1.0
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
               },
               "Scale": {
-                "x": 2.4,
-                "y": 2.4,
-                "z": 1.0
+                "x": 0.62,
+                "y": 0.62,
+                "z": 1
               },
-              "ZRotation": 0.0,
+              "ZRotation": 0,
               "Enable": true
             },
             {
@@ -6022,19 +6022,19 @@
               "ActionSheet": {},
               "DrawMode": 0,
               "EndFrameIndex": 2147483647,
-              "FlipX": false,
+              "FlipX": true,
               "FlipY": false,
-              "OrderInLayer": 1,
-              "PlayRate": 1.0,
+              "OrderInLayer": 0,
+              "PlayRate": 1,
               "RenderSetting": 0,
               "SortingLayer": "MapLayer0",
-              "SpriteRUID": "1aabf8046c3047159f77bb44b6e8fcf9",
+              "SpriteRUID": "9c588920ad384d4aa4af0afa8163ab4b",
               "StartFrameIndex": 0,
               "Color": {
-                "r": 1.0,
-                "g": 1.0,
-                "b": 1.0,
-                "a": 1.0
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
               },
               "Enable": true
             }
@@ -6068,27 +6068,27 @@
             {
               "@type": "MOD.Core.TransformComponent",
               "Rotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
+                "x": 0,
+                "y": 0,
+                "z": 0
               },
               "Position": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
+                "x": -0.45,
+                "y": 0,
+                "z": 0
               },
               "QuaternionRotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0,
-                "w": 1.0
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
               },
               "Scale": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
+                "x": 1,
+                "y": 1,
+                "z": 1
               },
-              "ZRotation": 0.0,
+              "ZRotation": 0,
               "Enable": true
             },
             {
@@ -6131,27 +6131,27 @@
             {
               "@type": "MOD.Core.TransformComponent",
               "Rotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
+                "x": 0,
+                "y": 0,
+                "z": 0
               },
               "Position": {
-                "x": 0.0,
-                "y": -12.15,
-                "z": 0.0
+                "x": -0.85,
+                "y": -12.110000000000001,
+                "z": 0
               },
               "QuaternionRotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0,
-                "w": 1.0
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
               },
               "Scale": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
+                "x": 1.35,
+                "y": 1.05,
+                "z": 1
               },
-              "ZRotation": 0.0,
+              "ZRotation": 0,
               "Enable": true
             },
             {
@@ -6161,17 +6161,17 @@
               "EndFrameIndex": 2147483647,
               "FlipX": false,
               "FlipY": false,
-              "OrderInLayer": 0,
-              "PlayRate": 1.0,
+              "OrderInLayer": 2,
+              "PlayRate": 1,
               "RenderSetting": 0,
               "SortingLayer": "MapLayer0",
-              "SpriteRUID": "ef89ea7b1e2b495498613d062b38c558",
+              "SpriteRUID": "c043c5928edb440cbe776c07731fe79f",
               "StartFrameIndex": 0,
               "Color": {
-                "r": 1.0,
-                "g": 1.0,
-                "b": 1.0,
-                "a": 1.0
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
               },
               "Enable": true
             }
@@ -6205,27 +6205,27 @@
             {
               "@type": "MOD.Core.TransformComponent",
               "Rotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
+                "x": 0,
+                "y": 0,
+                "z": 0
               },
               "Position": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
+                "x": -0.85,
+                "y": 0,
+                "z": 0
               },
               "QuaternionRotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0,
-                "w": 1.0
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
               },
               "Scale": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
+                "x": 1,
+                "y": 1,
+                "z": 1
               },
-              "ZRotation": 0.0,
+              "ZRotation": 0,
               "Enable": true
             },
             {
@@ -6268,27 +6268,27 @@
             {
               "@type": "MOD.Core.TransformComponent",
               "Rotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
+                "x": 0,
+                "y": 0,
+                "z": 0
               },
               "Position": {
-                "x": 0.0,
-                "y": -6.0,
-                "z": 0.0
+                "x": 0.9,
+                "y": -6,
+                "z": 0
               },
               "QuaternionRotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0,
-                "w": 1.0
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
               },
               "Scale": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
+                "x": 1,
+                "y": 1,
+                "z": 1
               },
-              "ZRotation": 0.0,
+              "ZRotation": 0,
               "Enable": true
             },
             {
@@ -6303,6 +6303,1011 @@
             }
           ],
           "@version": 1
+        }
+      },
+      {
+        "id": "0e542dea-a212-41d9-9271-c59f7ece4def",
+        "path": "/maps/map01/HenesysHouse1F",
+        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent",
+        "jsonString": {
+          "name": "HenesysHouse1F",
+          "path": "/maps/map01/HenesysHouse1F",
+          "nameEditable": true,
+          "enable": true,
+          "visible": true,
+          "localize": false,
+          "displayOrder": 205,
+          "pathConstraints": "///",
+          "revision": 1,
+          "modelId": "mapobject",
+          "@components": [
+            {
+              "@type": "MOD.Core.TransformComponent",
+              "Position": {
+                "x": 4.35,
+                "y": -12.15,
+                "z": 0
+              },
+              "QuaternionRotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
+              },
+              "Scale": {
+                "x": 0.92,
+                "y": 0.92,
+                "z": 1
+              },
+              "Enable": true
+            },
+            {
+              "@type": "MOD.Core.SpriteRendererComponent",
+              "SpriteRUID": "9e32f098dfbd46c28edc4efa72df63a4",
+              "Color": {
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
+              },
+              "DrawMode": 0,
+              "FlipX": false,
+              "FlipY": false,
+              "PlayRate": 1,
+              "OrderInLayer": -7,
+              "StartFrameIndex": 0,
+              "EndFrameIndex": 2147483647,
+              "Enable": true,
+              "SortingLayer": "MapLayer0",
+              "IgnoreMapLayerCheck": true
+            }
+          ],
+          "@version": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "mapobject",
+            "sub_entity_id": null,
+            "root_entity_id": "0e542dea-a212-41d9-9271-c59f7ece4def",
+            "replaced_model_id": null
+          }
+        }
+      },
+      {
+        "id": "f0a39f98-f3aa-45f3-895c-f74b19dd0ff4",
+        "path": "/maps/map01/HenesysTree1F",
+        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent",
+        "jsonString": {
+          "name": "HenesysTree1F",
+          "path": "/maps/map01/HenesysTree1F",
+          "nameEditable": true,
+          "enable": true,
+          "visible": true,
+          "localize": false,
+          "displayOrder": 206,
+          "pathConstraints": "///",
+          "revision": 1,
+          "modelId": "mapobject",
+          "@components": [
+            {
+              "@type": "MOD.Core.TransformComponent",
+              "Position": {
+                "x": -4.75,
+                "y": -12.15,
+                "z": 0
+              },
+              "QuaternionRotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
+              },
+              "Scale": {
+                "x": 1.12,
+                "y": 1.12,
+                "z": 1
+              },
+              "Enable": true
+            },
+            {
+              "@type": "MOD.Core.SpriteRendererComponent",
+              "SpriteRUID": "5cd0f21502dd41bc8db9bc933d7b609c",
+              "Color": {
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
+              },
+              "DrawMode": 0,
+              "FlipX": true,
+              "FlipY": false,
+              "PlayRate": 1,
+              "OrderInLayer": -6,
+              "StartFrameIndex": 0,
+              "EndFrameIndex": 2147483647,
+              "Enable": true,
+              "SortingLayer": "MapLayer0",
+              "IgnoreMapLayerCheck": true
+            }
+          ],
+          "@version": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "mapobject",
+            "sub_entity_id": null,
+            "root_entity_id": "f0a39f98-f3aa-45f3-895c-f74b19dd0ff4",
+            "replaced_model_id": null
+          }
+        }
+      },
+      {
+        "id": "a4c19548-3487-4f64-a7b8-a97eb7ba4f79",
+        "path": "/maps/map01/FloorBench1F",
+        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent",
+        "jsonString": {
+          "name": "FloorBench1F",
+          "path": "/maps/map01/FloorBench1F",
+          "nameEditable": true,
+          "enable": true,
+          "visible": true,
+          "localize": false,
+          "displayOrder": 207,
+          "pathConstraints": "///",
+          "revision": 1,
+          "modelId": "mapobject",
+          "@components": [
+            {
+              "@type": "MOD.Core.TransformComponent",
+              "Position": {
+                "x": -2.2,
+                "y": -12.13,
+                "z": 0
+              },
+              "QuaternionRotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
+              },
+              "Scale": {
+                "x": 0.72,
+                "y": 0.72,
+                "z": 1
+              },
+              "Enable": true
+            },
+            {
+              "@type": "MOD.Core.SpriteRendererComponent",
+              "SpriteRUID": "960c500154b74be0b65aa94f723fe2d2",
+              "Color": {
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
+              },
+              "DrawMode": 0,
+              "FlipX": false,
+              "FlipY": false,
+              "PlayRate": 1,
+              "OrderInLayer": -2,
+              "StartFrameIndex": 0,
+              "EndFrameIndex": 2147483647,
+              "Enable": true,
+              "SortingLayer": "MapLayer0",
+              "IgnoreMapLayerCheck": true
+            }
+          ],
+          "@version": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "mapobject",
+            "sub_entity_id": null,
+            "root_entity_id": "a4c19548-3487-4f64-a7b8-a97eb7ba4f79",
+            "replaced_model_id": null
+          }
+        }
+      },
+      {
+        "id": "2ee5aa00-80c1-4411-a7a5-20ade32b51b1",
+        "path": "/maps/map01/HenesysFlowerA1F",
+        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent",
+        "jsonString": {
+          "name": "HenesysFlowerA1F",
+          "path": "/maps/map01/HenesysFlowerA1F",
+          "nameEditable": true,
+          "enable": true,
+          "visible": true,
+          "localize": false,
+          "displayOrder": 208,
+          "pathConstraints": "///",
+          "revision": 1,
+          "modelId": "mapobject",
+          "@components": [
+            {
+              "@type": "MOD.Core.TransformComponent",
+              "Position": {
+                "x": 2,
+                "y": -12.14,
+                "z": 0
+              },
+              "QuaternionRotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
+              },
+              "Scale": {
+                "x": 1,
+                "y": 1,
+                "z": 1
+              },
+              "Enable": true
+            },
+            {
+              "@type": "MOD.Core.SpriteRendererComponent",
+              "SpriteRUID": "22d9a90f4f1441f784c716229ed89b57",
+              "Color": {
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
+              },
+              "DrawMode": 0,
+              "FlipX": false,
+              "FlipY": false,
+              "PlayRate": 1,
+              "OrderInLayer": -3,
+              "StartFrameIndex": 0,
+              "EndFrameIndex": 2147483647,
+              "Enable": true,
+              "SortingLayer": "MapLayer0",
+              "IgnoreMapLayerCheck": true
+            }
+          ],
+          "@version": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "mapobject",
+            "sub_entity_id": null,
+            "root_entity_id": "2ee5aa00-80c1-4411-a7a5-20ade32b51b1",
+            "replaced_model_id": null
+          }
+        }
+      },
+      {
+        "id": "ed24b5e6-a2d6-4ecd-866d-ffc37aacf730",
+        "path": "/maps/map01/HenesysFlowerB1F",
+        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent",
+        "jsonString": {
+          "name": "HenesysFlowerB1F",
+          "path": "/maps/map01/HenesysFlowerB1F",
+          "nameEditable": true,
+          "enable": true,
+          "visible": true,
+          "localize": false,
+          "displayOrder": 209,
+          "pathConstraints": "///",
+          "revision": 1,
+          "modelId": "mapobject",
+          "@components": [
+            {
+              "@type": "MOD.Core.TransformComponent",
+              "Position": {
+                "x": 2.7,
+                "y": -12.14,
+                "z": 0
+              },
+              "QuaternionRotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
+              },
+              "Scale": {
+                "x": 1.15,
+                "y": 1.15,
+                "z": 1
+              },
+              "Enable": true
+            },
+            {
+              "@type": "MOD.Core.SpriteRendererComponent",
+              "SpriteRUID": "65730127f2ce4295a7c0a96c79073863",
+              "Color": {
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
+              },
+              "DrawMode": 0,
+              "FlipX": false,
+              "FlipY": false,
+              "PlayRate": 1,
+              "OrderInLayer": -3,
+              "StartFrameIndex": 0,
+              "EndFrameIndex": 2147483647,
+              "Enable": true,
+              "SortingLayer": "MapLayer0",
+              "IgnoreMapLayerCheck": true
+            }
+          ],
+          "@version": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "mapobject",
+            "sub_entity_id": null,
+            "root_entity_id": "ed24b5e6-a2d6-4ecd-866d-ffc37aacf730",
+            "replaced_model_id": null
+          }
+        }
+      },
+      {
+        "id": "9e205c61-4443-4b5c-a497-099aa005c3fb",
+        "path": "/maps/map01/HenesysHouse2F",
+        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent",
+        "jsonString": {
+          "name": "HenesysHouse2F",
+          "path": "/maps/map01/HenesysHouse2F",
+          "nameEditable": true,
+          "enable": true,
+          "visible": true,
+          "localize": false,
+          "displayOrder": 210,
+          "pathConstraints": "///",
+          "revision": 1,
+          "modelId": "mapobject",
+          "@components": [
+            {
+              "@type": "MOD.Core.TransformComponent",
+              "Position": {
+                "x": -4.35,
+                "y": -6.15,
+                "z": 0
+              },
+              "QuaternionRotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
+              },
+              "Scale": {
+                "x": 0.92,
+                "y": 0.92,
+                "z": 1
+              },
+              "Enable": true
+            },
+            {
+              "@type": "MOD.Core.SpriteRendererComponent",
+              "SpriteRUID": "9e32f098dfbd46c28edc4efa72df63a4",
+              "Color": {
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
+              },
+              "DrawMode": 0,
+              "FlipX": true,
+              "FlipY": false,
+              "PlayRate": 1,
+              "OrderInLayer": -7,
+              "StartFrameIndex": 0,
+              "EndFrameIndex": 2147483647,
+              "Enable": true,
+              "SortingLayer": "MapLayer0",
+              "IgnoreMapLayerCheck": true
+            }
+          ],
+          "@version": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "mapobject",
+            "sub_entity_id": null,
+            "root_entity_id": "9e205c61-4443-4b5c-a497-099aa005c3fb",
+            "replaced_model_id": null
+          }
+        }
+      },
+      {
+        "id": "7d310277-0487-481b-8b79-7c6641064375",
+        "path": "/maps/map01/HenesysTree2F",
+        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent",
+        "jsonString": {
+          "name": "HenesysTree2F",
+          "path": "/maps/map01/HenesysTree2F",
+          "nameEditable": true,
+          "enable": true,
+          "visible": true,
+          "localize": false,
+          "displayOrder": 211,
+          "pathConstraints": "///",
+          "revision": 1,
+          "modelId": "mapobject",
+          "@components": [
+            {
+              "@type": "MOD.Core.TransformComponent",
+              "Position": {
+                "x": 4.75,
+                "y": -6.15,
+                "z": 0
+              },
+              "QuaternionRotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
+              },
+              "Scale": {
+                "x": 1.12,
+                "y": 1.12,
+                "z": 1
+              },
+              "Enable": true
+            },
+            {
+              "@type": "MOD.Core.SpriteRendererComponent",
+              "SpriteRUID": "5cd0f21502dd41bc8db9bc933d7b609c",
+              "Color": {
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
+              },
+              "DrawMode": 0,
+              "FlipX": false,
+              "FlipY": false,
+              "PlayRate": 1,
+              "OrderInLayer": -6,
+              "StartFrameIndex": 0,
+              "EndFrameIndex": 2147483647,
+              "Enable": true,
+              "SortingLayer": "MapLayer0",
+              "IgnoreMapLayerCheck": true
+            }
+          ],
+          "@version": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "mapobject",
+            "sub_entity_id": null,
+            "root_entity_id": "7d310277-0487-481b-8b79-7c6641064375",
+            "replaced_model_id": null
+          }
+        }
+      },
+      {
+        "id": "445eaaf6-9327-4bb4-b4b2-8f2dc661d848",
+        "path": "/maps/map01/FloorBench2F",
+        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent",
+        "jsonString": {
+          "name": "FloorBench2F",
+          "path": "/maps/map01/FloorBench2F",
+          "nameEditable": true,
+          "enable": true,
+          "visible": true,
+          "localize": false,
+          "displayOrder": 212,
+          "pathConstraints": "///",
+          "revision": 1,
+          "modelId": "mapobject",
+          "@components": [
+            {
+              "@type": "MOD.Core.TransformComponent",
+              "Position": {
+                "x": 2.15,
+                "y": -6.130000000000001,
+                "z": 0
+              },
+              "QuaternionRotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
+              },
+              "Scale": {
+                "x": 0.72,
+                "y": 0.72,
+                "z": 1
+              },
+              "Enable": true
+            },
+            {
+              "@type": "MOD.Core.SpriteRendererComponent",
+              "SpriteRUID": "960c500154b74be0b65aa94f723fe2d2",
+              "Color": {
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
+              },
+              "DrawMode": 0,
+              "FlipX": true,
+              "FlipY": false,
+              "PlayRate": 1,
+              "OrderInLayer": -2,
+              "StartFrameIndex": 0,
+              "EndFrameIndex": 2147483647,
+              "Enable": true,
+              "SortingLayer": "MapLayer0",
+              "IgnoreMapLayerCheck": true
+            }
+          ],
+          "@version": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "mapobject",
+            "sub_entity_id": null,
+            "root_entity_id": "445eaaf6-9327-4bb4-b4b2-8f2dc661d848",
+            "replaced_model_id": null
+          }
+        }
+      },
+      {
+        "id": "57079b35-aa95-4ab8-b385-6251b3afc087",
+        "path": "/maps/map01/HenesysFlowerA2F",
+        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent",
+        "jsonString": {
+          "name": "HenesysFlowerA2F",
+          "path": "/maps/map01/HenesysFlowerA2F",
+          "nameEditable": true,
+          "enable": true,
+          "visible": true,
+          "localize": false,
+          "displayOrder": 213,
+          "pathConstraints": "///",
+          "revision": 1,
+          "modelId": "mapobject",
+          "@components": [
+            {
+              "@type": "MOD.Core.TransformComponent",
+              "Position": {
+                "x": -1.9,
+                "y": -6.140000000000001,
+                "z": 0
+              },
+              "QuaternionRotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
+              },
+              "Scale": {
+                "x": 1,
+                "y": 1,
+                "z": 1
+              },
+              "Enable": true
+            },
+            {
+              "@type": "MOD.Core.SpriteRendererComponent",
+              "SpriteRUID": "22d9a90f4f1441f784c716229ed89b57",
+              "Color": {
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
+              },
+              "DrawMode": 0,
+              "FlipX": true,
+              "FlipY": false,
+              "PlayRate": 1,
+              "OrderInLayer": -3,
+              "StartFrameIndex": 0,
+              "EndFrameIndex": 2147483647,
+              "Enable": true,
+              "SortingLayer": "MapLayer0",
+              "IgnoreMapLayerCheck": true
+            }
+          ],
+          "@version": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "mapobject",
+            "sub_entity_id": null,
+            "root_entity_id": "57079b35-aa95-4ab8-b385-6251b3afc087",
+            "replaced_model_id": null
+          }
+        }
+      },
+      {
+        "id": "2f2e6feb-892b-431a-897d-ff193a7249ed",
+        "path": "/maps/map01/HenesysFlowerB2F",
+        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent",
+        "jsonString": {
+          "name": "HenesysFlowerB2F",
+          "path": "/maps/map01/HenesysFlowerB2F",
+          "nameEditable": true,
+          "enable": true,
+          "visible": true,
+          "localize": false,
+          "displayOrder": 214,
+          "pathConstraints": "///",
+          "revision": 1,
+          "modelId": "mapobject",
+          "@components": [
+            {
+              "@type": "MOD.Core.TransformComponent",
+              "Position": {
+                "x": -2.5999999999999996,
+                "y": -6.140000000000001,
+                "z": 0
+              },
+              "QuaternionRotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
+              },
+              "Scale": {
+                "x": 1.15,
+                "y": 1.15,
+                "z": 1
+              },
+              "Enable": true
+            },
+            {
+              "@type": "MOD.Core.SpriteRendererComponent",
+              "SpriteRUID": "65730127f2ce4295a7c0a96c79073863",
+              "Color": {
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
+              },
+              "DrawMode": 0,
+              "FlipX": false,
+              "FlipY": false,
+              "PlayRate": 1,
+              "OrderInLayer": -3,
+              "StartFrameIndex": 0,
+              "EndFrameIndex": 2147483647,
+              "Enable": true,
+              "SortingLayer": "MapLayer0",
+              "IgnoreMapLayerCheck": true
+            }
+          ],
+          "@version": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "mapobject",
+            "sub_entity_id": null,
+            "root_entity_id": "2f2e6feb-892b-431a-897d-ff193a7249ed",
+            "replaced_model_id": null
+          }
+        }
+      },
+      {
+        "id": "6684b68d-7a60-4980-b7f1-9007cbb14d5f",
+        "path": "/maps/map01/HenesysHouse3F",
+        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent",
+        "jsonString": {
+          "name": "HenesysHouse3F",
+          "path": "/maps/map01/HenesysHouse3F",
+          "nameEditable": true,
+          "enable": true,
+          "visible": true,
+          "localize": false,
+          "displayOrder": 215,
+          "pathConstraints": "///",
+          "revision": 1,
+          "modelId": "mapobject",
+          "@components": [
+            {
+              "@type": "MOD.Core.TransformComponent",
+              "Position": {
+                "x": 4.15,
+                "y": -0.35,
+                "z": 0
+              },
+              "QuaternionRotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
+              },
+              "Scale": {
+                "x": 0.92,
+                "y": 0.92,
+                "z": 1
+              },
+              "Enable": true
+            },
+            {
+              "@type": "MOD.Core.SpriteRendererComponent",
+              "SpriteRUID": "9e32f098dfbd46c28edc4efa72df63a4",
+              "Color": {
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
+              },
+              "DrawMode": 0,
+              "FlipX": false,
+              "FlipY": false,
+              "PlayRate": 1,
+              "OrderInLayer": -7,
+              "StartFrameIndex": 0,
+              "EndFrameIndex": 2147483647,
+              "Enable": true,
+              "SortingLayer": "MapLayer0",
+              "IgnoreMapLayerCheck": true
+            }
+          ],
+          "@version": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "mapobject",
+            "sub_entity_id": null,
+            "root_entity_id": "6684b68d-7a60-4980-b7f1-9007cbb14d5f",
+            "replaced_model_id": null
+          }
+        }
+      },
+      {
+        "id": "957d28a0-f053-4c69-a8ae-b45d17073c10",
+        "path": "/maps/map01/HenesysTree3F",
+        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent",
+        "jsonString": {
+          "name": "HenesysTree3F",
+          "path": "/maps/map01/HenesysTree3F",
+          "nameEditable": true,
+          "enable": true,
+          "visible": true,
+          "localize": false,
+          "displayOrder": 216,
+          "pathConstraints": "///",
+          "revision": 1,
+          "modelId": "mapobject",
+          "@components": [
+            {
+              "@type": "MOD.Core.TransformComponent",
+              "Position": {
+                "x": -4.6,
+                "y": -0.35,
+                "z": 0
+              },
+              "QuaternionRotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
+              },
+              "Scale": {
+                "x": 1.12,
+                "y": 1.12,
+                "z": 1
+              },
+              "Enable": true
+            },
+            {
+              "@type": "MOD.Core.SpriteRendererComponent",
+              "SpriteRUID": "5cd0f21502dd41bc8db9bc933d7b609c",
+              "Color": {
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
+              },
+              "DrawMode": 0,
+              "FlipX": true,
+              "FlipY": false,
+              "PlayRate": 1,
+              "OrderInLayer": -6,
+              "StartFrameIndex": 0,
+              "EndFrameIndex": 2147483647,
+              "Enable": true,
+              "SortingLayer": "MapLayer0",
+              "IgnoreMapLayerCheck": true
+            }
+          ],
+          "@version": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "mapobject",
+            "sub_entity_id": null,
+            "root_entity_id": "957d28a0-f053-4c69-a8ae-b45d17073c10",
+            "replaced_model_id": null
+          }
+        }
+      },
+      {
+        "id": "978d8363-99f3-4db0-8592-da6c8536fd6b",
+        "path": "/maps/map01/FloorBench3F",
+        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent",
+        "jsonString": {
+          "name": "FloorBench3F",
+          "path": "/maps/map01/FloorBench3F",
+          "nameEditable": true,
+          "enable": true,
+          "visible": true,
+          "localize": false,
+          "displayOrder": 217,
+          "pathConstraints": "///",
+          "revision": 1,
+          "modelId": "mapobject",
+          "@components": [
+            {
+              "@type": "MOD.Core.TransformComponent",
+              "Position": {
+                "x": -1.75,
+                "y": -0.32999999999999996,
+                "z": 0
+              },
+              "QuaternionRotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
+              },
+              "Scale": {
+                "x": 0.72,
+                "y": 0.72,
+                "z": 1
+              },
+              "Enable": true
+            },
+            {
+              "@type": "MOD.Core.SpriteRendererComponent",
+              "SpriteRUID": "960c500154b74be0b65aa94f723fe2d2",
+              "Color": {
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
+              },
+              "DrawMode": 0,
+              "FlipX": false,
+              "FlipY": false,
+              "PlayRate": 1,
+              "OrderInLayer": -2,
+              "StartFrameIndex": 0,
+              "EndFrameIndex": 2147483647,
+              "Enable": true,
+              "SortingLayer": "MapLayer0",
+              "IgnoreMapLayerCheck": true
+            }
+          ],
+          "@version": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "mapobject",
+            "sub_entity_id": null,
+            "root_entity_id": "978d8363-99f3-4db0-8592-da6c8536fd6b",
+            "replaced_model_id": null
+          }
+        }
+      },
+      {
+        "id": "10e3179f-6690-4918-9b97-1ad5210c468b",
+        "path": "/maps/map01/HenesysFlowerA3F",
+        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent",
+        "jsonString": {
+          "name": "HenesysFlowerA3F",
+          "path": "/maps/map01/HenesysFlowerA3F",
+          "nameEditable": true,
+          "enable": true,
+          "visible": true,
+          "localize": false,
+          "displayOrder": 218,
+          "pathConstraints": "///",
+          "revision": 1,
+          "modelId": "mapobject",
+          "@components": [
+            {
+              "@type": "MOD.Core.TransformComponent",
+              "Position": {
+                "x": 1.8,
+                "y": -0.33999999999999997,
+                "z": 0
+              },
+              "QuaternionRotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
+              },
+              "Scale": {
+                "x": 1,
+                "y": 1,
+                "z": 1
+              },
+              "Enable": true
+            },
+            {
+              "@type": "MOD.Core.SpriteRendererComponent",
+              "SpriteRUID": "22d9a90f4f1441f784c716229ed89b57",
+              "Color": {
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
+              },
+              "DrawMode": 0,
+              "FlipX": false,
+              "FlipY": false,
+              "PlayRate": 1,
+              "OrderInLayer": -3,
+              "StartFrameIndex": 0,
+              "EndFrameIndex": 2147483647,
+              "Enable": true,
+              "SortingLayer": "MapLayer0",
+              "IgnoreMapLayerCheck": true
+            }
+          ],
+          "@version": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "mapobject",
+            "sub_entity_id": null,
+            "root_entity_id": "10e3179f-6690-4918-9b97-1ad5210c468b",
+            "replaced_model_id": null
+          }
+        }
+      },
+      {
+        "id": "f14e628b-ffd8-4944-ae8a-6a1e592c0060",
+        "path": "/maps/map01/HenesysFlowerB3F",
+        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent",
+        "jsonString": {
+          "name": "HenesysFlowerB3F",
+          "path": "/maps/map01/HenesysFlowerB3F",
+          "nameEditable": true,
+          "enable": true,
+          "visible": true,
+          "localize": false,
+          "displayOrder": 219,
+          "pathConstraints": "///",
+          "revision": 1,
+          "modelId": "mapobject",
+          "@components": [
+            {
+              "@type": "MOD.Core.TransformComponent",
+              "Position": {
+                "x": 2.5,
+                "y": -0.33999999999999997,
+                "z": 0
+              },
+              "QuaternionRotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
+              },
+              "Scale": {
+                "x": 1.15,
+                "y": 1.15,
+                "z": 1
+              },
+              "Enable": true
+            },
+            {
+              "@type": "MOD.Core.SpriteRendererComponent",
+              "SpriteRUID": "65730127f2ce4295a7c0a96c79073863",
+              "Color": {
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
+              },
+              "DrawMode": 0,
+              "FlipX": false,
+              "FlipY": false,
+              "PlayRate": 1,
+              "OrderInLayer": -3,
+              "StartFrameIndex": 0,
+              "EndFrameIndex": 2147483647,
+              "Enable": true,
+              "SortingLayer": "MapLayer0",
+              "IgnoreMapLayerCheck": true
+            }
+          ],
+          "@version": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "mapobject",
+            "sub_entity_id": null,
+            "root_entity_id": "f14e628b-ffd8-4944-ae8a-6a1e592c0060",
+            "replaced_model_id": null
+          }
         }
       }
     ]

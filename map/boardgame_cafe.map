@@ -31,15 +31,15 @@
           "@components": [
             {
               "@type": "MOD.Core.MapComponent",
-              "AirAccelerationXFactor": 1.0,
-              "AirDecelerationXFactor": 1.0,
-              "FallSpeedMaxXFactor": 1.0,
-              "FallSpeedMaxYFactor": 1.0,
-              "Gravity": 1.0,
+              "AirAccelerationXFactor": 1,
+              "AirDecelerationXFactor": 1,
+              "FallSpeedMaxXFactor": 1,
+              "FallSpeedMaxYFactor": 1,
+              "Gravity": 1,
               "IsInstanceMap": false,
               "TileMapMode": 0,
-              "WalkAccelerationFactor": 1.0,
-              "WalkDrag": 1.0,
+              "WalkAccelerationFactor": 1,
+              "WalkDrag": 1,
               "Enable": true
             },
             {
@@ -54,9 +54,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -73,8 +73,8 @@
                       "y": -0.04000002
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -85,9 +85,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -104,8 +104,8 @@
                       "y": -0.04000002
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -116,9 +116,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -135,8 +135,8 @@
                       "y": -0.04000002
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -147,9 +147,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -166,8 +166,8 @@
                       "y": -0.04000002
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -178,9 +178,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -197,8 +197,8 @@
                       "y": -0.04000002
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -209,9 +209,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -228,8 +228,8 @@
                       "y": -0.04000002
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -240,9 +240,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -259,8 +259,8 @@
                       "y": -0.04000002
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -271,9 +271,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -290,8 +290,8 @@
                       "y": -0.04000002
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -302,9 +302,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -321,8 +321,8 @@
                       "y": -0.04000002
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -333,9 +333,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -352,8 +352,8 @@
                       "y": -0.04000002
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -364,9 +364,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -383,8 +383,8 @@
                       "y": -0.04000002
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -395,9 +395,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -414,8 +414,8 @@
                       "y": -0.04000002
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -426,9 +426,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -445,8 +445,8 @@
                       "y": -0.04000002
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -457,9 +457,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -476,8 +476,8 @@
                       "y": -0.04000002
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -488,9 +488,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -507,8 +507,8 @@
                       "y": -0.04000002
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -519,9 +519,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -538,8 +538,8 @@
                       "y": -0.04000002
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -550,9 +550,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -569,8 +569,8 @@
                       "y": -0.04000002
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -581,9 +581,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -600,8 +600,8 @@
                       "y": -0.04000002
                     },
                     "Variance": {
-                      "x": 1.0,
-                      "y": 0.0
+                      "x": 1,
+                      "y": 0
                     }
                   },
                   {
@@ -612,9 +612,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -631,8 +631,8 @@
                       "y": -0.9
                     },
                     "Variance": {
-                      "x": 0.0,
-                      "y": -1.0
+                      "x": 0,
+                      "y": -1
                     }
                   },
                   {
@@ -643,9 +643,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -662,8 +662,8 @@
                       "y": -1.50000012
                     },
                     "Variance": {
-                      "x": 0.0,
-                      "y": -1.0
+                      "x": 0,
+                      "y": -1
                     }
                   },
                   {
@@ -674,9 +674,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -693,8 +693,8 @@
                       "y": -2.10000014
                     },
                     "Variance": {
-                      "x": 0.0,
-                      "y": -1.0
+                      "x": 0,
+                      "y": -1
                     }
                   },
                   {
@@ -705,9 +705,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -724,8 +724,8 @@
                       "y": -2.7
                     },
                     "Variance": {
-                      "x": 0.0,
-                      "y": -1.0
+                      "x": 0,
+                      "y": -1
                     }
                   },
                   {
@@ -736,9 +736,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -755,8 +755,8 @@
                       "y": -3.30000019
                     },
                     "Variance": {
-                      "x": 0.0,
-                      "y": -1.0
+                      "x": 0,
+                      "y": -1
                     }
                   },
                   {
@@ -767,9 +767,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -786,8 +786,8 @@
                       "y": -3.9
                     },
                     "Variance": {
-                      "x": 0.0,
-                      "y": -1.0
+                      "x": 0,
+                      "y": -1
                     }
                   },
                   {
@@ -798,9 +798,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -817,8 +817,8 @@
                       "y": -4.50000048
                     },
                     "Variance": {
-                      "x": 0.0,
-                      "y": -1.0
+                      "x": 0,
+                      "y": -1
                     }
                   },
                   {
@@ -829,9 +829,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -848,8 +848,8 @@
                       "y": -5.10000038
                     },
                     "Variance": {
-                      "x": 0.0,
-                      "y": -1.0
+                      "x": 0,
+                      "y": -1
                     }
                   },
                   {
@@ -860,9 +860,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -879,8 +879,8 @@
                       "y": -0.04000002
                     },
                     "Variance": {
-                      "x": 0.0,
-                      "y": 1.0
+                      "x": 0,
+                      "y": 1
                     }
                   },
                   {
@@ -891,9 +891,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -910,8 +910,8 @@
                       "y": -0.9000001
                     },
                     "Variance": {
-                      "x": 0.0,
-                      "y": 1.0
+                      "x": 0,
+                      "y": 1
                     }
                   },
                   {
@@ -922,9 +922,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -941,8 +941,8 @@
                       "y": -1.50000012
                     },
                     "Variance": {
-                      "x": 0.0,
-                      "y": 1.0
+                      "x": 0,
+                      "y": 1
                     }
                   },
                   {
@@ -953,9 +953,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -972,8 +972,8 @@
                       "y": -2.10000014
                     },
                     "Variance": {
-                      "x": 0.0,
-                      "y": 1.0
+                      "x": 0,
+                      "y": 1
                     }
                   },
                   {
@@ -984,9 +984,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -1003,8 +1003,8 @@
                       "y": -2.70000029
                     },
                     "Variance": {
-                      "x": 0.0,
-                      "y": 1.0
+                      "x": 0,
+                      "y": 1
                     }
                   },
                   {
@@ -1015,9 +1015,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -1034,8 +1034,8 @@
                       "y": -3.30000019
                     },
                     "Variance": {
-                      "x": 0.0,
-                      "y": 1.0
+                      "x": 0,
+                      "y": 1
                     }
                   },
                   {
@@ -1046,9 +1046,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -1065,8 +1065,8 @@
                       "y": -3.90000033
                     },
                     "Variance": {
-                      "x": 0.0,
-                      "y": 1.0
+                      "x": 0,
+                      "y": 1
                     }
                   },
                   {
@@ -1077,9 +1077,9 @@
                     "layer": 1,
                     "sortingLayerName": "MapLayer0",
                     "attribute": {
-                      "walk": 1.0,
-                      "force": 0.0,
-                      "drag": 1.0,
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
                       "isBlockVertical": false,
                       "isDynamic": false,
                       "isCustomFoothold": false,
@@ -1096,8 +1096,8 @@
                       "y": -4.5
                     },
                     "Variance": {
-                      "x": 0.0,
-                      "y": 1.0
+                      "x": 0,
+                      "y": 1
                     }
                   }
                 ]
@@ -1203,40 +1203,40 @@
             {
               "@type": "MOD.Core.TransformComponent",
               "Rotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
+                "x": 0,
+                "y": 0,
+                "z": 0
               },
               "Position": {
                 "x": -0.225,
                 "y": -0.15,
-                "z": 1000.0
+                "z": 1000
               },
               "QuaternionRotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0,
-                "w": 1.0
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
               },
               "Scale": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
+                "x": 1,
+                "y": 1,
+                "z": 1
               },
-              "ZRotation": 0.0,
+              "ZRotation": 0,
               "Enable": true
             },
             {
               "@type": "MOD.Core.TileMapComponent",
               "Color": {
-                "r": 1.0,
-                "g": 1.0,
-                "b": 1.0,
-                "a": 1.0
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
               },
-              "FootholdDrag": 1.0,
-              "FootholdForce": 0.0,
-              "FootholdWalkSpeedFactor": 1.0,
+              "FootholdDrag": 1,
+              "FootholdForce": 0,
+              "FootholdWalkSpeedFactor": 1,
               "IgnoreMapLayerCheck": false,
               "IsOddGridPosition": false,
               "OrderInLayer": 1,
@@ -6304,27 +6304,27 @@
             {
               "@type": "MOD.Core.TransformComponent",
               "Rotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
+                "x": 0,
+                "y": 0,
+                "z": 0
               },
               "Position": {
-                "x": 0.0,
-                "y": 0.0,
+                "x": 0,
+                "y": 0,
                 "z": 999.999
               },
               "QuaternionRotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0,
-                "w": 1.0
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
               },
               "Scale": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
+                "x": 1,
+                "y": 1,
+                "z": 1
               },
-              "ZRotation": 0.0,
+              "ZRotation": 0,
               "Enable": true
             },
             {
@@ -6336,20 +6336,20 @@
               "FlipY": false,
               "IgnoreMapLayerCheck": false,
               "OrderInLayer": 0,
-              "PlayRate": 1.0,
+              "PlayRate": 1,
               "RenderSetting": 0,
               "SortingLayer": "Default",
               "SpriteRUID": "8ef238e0d0ca4bb783aca526cff35d11",
               "StartFrameIndex": 0,
               "TiledSize": {
-                "x": 1.0,
-                "y": 1.0
+                "x": 1,
+                "y": 1
               },
               "Color": {
-                "r": 1.0,
-                "g": 1.0,
-                "b": 1.0,
-                "a": 1.0
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
               },
               "Enable": true
             },
@@ -6387,27 +6387,27 @@
             {
               "@type": "MOD.Core.TransformComponent",
               "Rotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
+                "x": 0,
+                "y": 0,
+                "z": 0
               },
               "Position": {
-                "x": 2.0,
-                "y": 0.0,
-                "z": 0.0
+                "x": 0.65,
+                "y": 0,
+                "z": 0
               },
               "QuaternionRotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0,
-                "w": 1.0
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
               },
               "Scale": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
+                "x": 1,
+                "y": 1,
+                "z": 1
               },
-              "ZRotation": 0.0,
+              "ZRotation": 0,
               "Enable": true
             },
             {
@@ -6418,15 +6418,15 @@
               "FlipX": false,
               "FlipY": false,
               "OrderInLayer": 2,
-              "PlayRate": 1.0,
+              "PlayRate": 1,
               "RenderSetting": 0,
               "SpriteRUID": "aba58d2139ca4736bab39f6b4c39aa37",
               "StartFrameIndex": 0,
               "Color": {
-                "r": 1.0,
-                "g": 1.0,
-                "b": 1.0,
-                "a": 1.0
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
               },
               "Enable": true
             },
@@ -6435,8 +6435,8 @@
               "ActionKey": 273,
               "ActionName": "렉시오 입장",
               "BoxSize": {
-                "x": 2.0,
-                "y": 2.0
+                "x": 2,
+                "y": 2
               },
               "IsLegacy": false,
               "ShowActionInfo": true,
@@ -6447,7 +6447,7 @@
               "Enable": true,
               "ObjectKey": "LexioEntrance",
               "RouteId": "LEXIO_PLAY",
-              "ServerUseDistance": 2.0
+              "ServerUseDistance": 2
             }
           ],
           "@version": 1
@@ -6479,27 +6479,27 @@
             {
               "@type": "MOD.Core.TransformComponent",
               "Rotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
+                "x": 0,
+                "y": 0,
+                "z": 0
               },
               "Position": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
+                "x": 0,
+                "y": 0,
+                "z": 0
               },
               "QuaternionRotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0,
-                "w": 1.0
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
               },
               "Scale": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
+                "x": 1,
+                "y": 1,
+                "z": 1
               },
-              "ZRotation": 0.0,
+              "ZRotation": 0,
               "Enable": true
             },
             {
@@ -6537,27 +6537,27 @@
             {
               "@type": "MOD.Core.TransformComponent",
               "Rotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
+                "x": 0,
+                "y": 0,
+                "z": 0
               },
               "Position": {
-                "x": -2.0,
-                "y": 0.0,
-                "z": 0.0
+                "x": -2.25,
+                "y": 0,
+                "z": 0
               },
               "QuaternionRotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0,
-                "w": 1.0
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
               },
               "Scale": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
+                "x": 1,
+                "y": 1,
+                "z": 1
               },
-              "ZRotation": 0.0,
+              "ZRotation": 0,
               "Enable": true
             },
             {
@@ -6568,15 +6568,15 @@
               "FlipX": false,
               "FlipY": false,
               "OrderInLayer": 5,
-              "PlayRate": 1.0,
+              "PlayRate": 1,
               "RenderSetting": 0,
               "SpriteRUID": "c2919dc57fac457c9ce94fe32f8b69d2",
               "StartFrameIndex": 0,
               "Color": {
-                "r": 1.0,
-                "g": 1.0,
-                "b": 1.0,
-                "a": 1.0
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
               },
               "Enable": true
             },
@@ -6586,7 +6586,7 @@
               "ActionName": "렉시오 규칙 듣기",
               "BoxSize": {
                 "x": 2.2,
-                "y": 2.0
+                "y": 2
               },
               "IsLegacy": false,
               "ShowActionInfo": true,
@@ -6603,18 +6603,18 @@
               "@type": "MOD.Core.NameTagComponent",
               "Bold": true,
               "FontColor": {
-                "r": 1.0,
+                "r": 1,
                 "g": 0.88,
                 "b": 0.52,
-                "a": 1.0
+                "a": 1
               },
               "FontOffset": {
-                "x": 0.0,
-                "y": 0.0
+                "x": 0,
+                "y": 0
               },
               "FontSize": 1.08,
               "Name": "나인하트\n렉시오 담당",
-              "OffsetY": 0.0,
+              "OffsetY": 0,
               "Enable": true
             },
             {
@@ -6622,8 +6622,8 @@
               "AutoFitOnce": false,
               "AutoFitToSize": true,
               "Offset": {
-                "x": 0.0,
-                "y": 0.0
+                "x": 0,
+                "y": 0
               },
               "RelayEventToBehind": false,
               "TouchArea": {
@@ -6662,27 +6662,27 @@
             {
               "@type": "MOD.Core.TransformComponent",
               "Rotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
+                "x": 0,
+                "y": 0,
+                "z": 0
               },
               "Position": {
-                "x": 5.050456,
-                "y": 1.6500001,
-                "z": 0.0
+                "x": 5.05,
+                "y": 0.84,
+                "z": 0
               },
               "QuaternionRotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0,
-                "w": 1.0
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
               },
               "Scale": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
+                "x": 1.08,
+                "y": 1.08,
+                "z": 1
               },
-              "ZRotation": 0.0,
+              "ZRotation": 0,
               "Enable": true
             },
             {
@@ -6693,17 +6693,17 @@
               "FlipX": false,
               "FlipY": false,
               "IgnoreMapLayerCheck": true,
-              "OrderInLayer": 4,
-              "PlayRate": 1.0,
+              "OrderInLayer": 3,
+              "PlayRate": 1,
               "RenderSetting": 0,
               "SortingLayer": "MapLayer0",
-              "SpriteRUID": "f51c39ef7193423ca5235691a256b91c",
+              "SpriteRUID": "dbaacb70e975484d88fdd72da211006c",
               "StartFrameIndex": 0,
               "Color": {
-                "r": 1.0,
-                "g": 1.0,
-                "b": 1.0,
-                "a": 1.0
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
               },
               "Enable": true
             },
@@ -6724,8 +6724,8 @@
               "AutoFitOnce": false,
               "AutoFitToSize": true,
               "Offset": {
-                "x": 0.0,
-                "y": 0.0
+                "x": 0,
+                "y": 0
               },
               "RelayEventToBehind": false,
               "TouchArea": {
@@ -6738,81 +6738,6 @@
               "@type": "script.LexioShopNpc",
               "Enable": true,
               "InteractionDistance": 3.5
-            }
-          ],
-          "@version": 1
-        }
-      },
-      {
-        "id": "b897227e-f85b-4080-875a-363663368214",
-        "path": "/maps/boardgame_cafe/PrizeShelfLeft",
-        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent",
-        "jsonString": {
-          "name": "PrizeShelfLeft",
-          "path": "/maps/boardgame_cafe/PrizeShelfLeft",
-          "nameEditable": true,
-          "enable": true,
-          "visible": true,
-          "localize": false,
-          "displayOrder": 8,
-          "pathConstraints": "///",
-          "revision": 1,
-          "origin": {
-            "type": "Model",
-            "entry_id": "mapobject",
-            "sub_entity_id": null,
-            "root_entity_id": "b897227e-f85b-4080-875a-363663368214",
-            "replaced_model_id": null
-          },
-          "modelId": "mapobject",
-          "@components": [
-            {
-              "@type": "MOD.Core.TransformComponent",
-              "Rotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
-              },
-              "Position": {
-                "x": -4.35,
-                "y": 0.72,
-                "z": 0.0
-              },
-              "QuaternionRotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0,
-                "w": 1.0
-              },
-              "Scale": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
-              },
-              "ZRotation": 0.0,
-              "Enable": true
-            },
-            {
-              "@type": "MOD.Core.SpriteRendererComponent",
-              "ActionSheet": {},
-              "DrawMode": 0,
-              "EndFrameIndex": 2147483647,
-              "FlipX": false,
-              "FlipY": false,
-              "IgnoreMapLayerCheck": true,
-              "OrderInLayer": 3,
-              "PlayRate": 1.0,
-              "RenderSetting": 0,
-              "SortingLayer": "MapLayer0",
-              "SpriteRUID": "8909367c33814a50b82fb66af30f121f",
-              "StartFrameIndex": 0,
-              "Color": {
-                "r": 1.0,
-                "g": 1.0,
-                "b": 1.0,
-                "a": 1.0
-              },
-              "Enable": true
             }
           ],
           "@version": 1
@@ -6844,27 +6769,27 @@
             {
               "@type": "MOD.Core.TransformComponent",
               "Rotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
+                "x": 0,
+                "y": 0,
+                "z": 0
               },
               "Position": {
-                "x": 0.0,
-                "y": 2.55,
-                "z": 0.0
+                "x": 3.45,
+                "y": 1.55,
+                "z": 0
               },
               "QuaternionRotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0,
-                "w": 1.0
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
               },
               "Scale": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
+                "x": 0.68,
+                "y": 0.68,
+                "z": 1
               },
-              "ZRotation": 0.0,
+              "ZRotation": 0,
               "Enable": true
             },
             {
@@ -6875,15 +6800,15 @@
               "FlipX": false,
               "FlipY": false,
               "OrderInLayer": 0,
-              "PlayRate": 1.0,
+              "PlayRate": 1,
               "RenderSetting": 0,
               "SpriteRUID": "7fe61036786d49bd914fcc1cd2dacb78",
               "StartFrameIndex": 0,
               "Color": {
-                "r": 1.0,
-                "g": 1.0,
-                "b": 1.0,
-                "a": 1.0
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
               },
               "Enable": true
             }
@@ -6892,149 +6817,606 @@
         }
       },
       {
-        "id": "92d69b02-8c00-4c8d-95e1-96a4c605de45",
-        "path": "/maps/boardgame_cafe/WarmLampLeft",
+        "id": "6ed036f4-5ab9-47f5-ac29-9409a1f19bda",
+        "path": "/maps/boardgame_cafe/HenesysCafeTree",
         "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent",
         "jsonString": {
-          "name": "WarmLampLeft",
-          "path": "/maps/boardgame_cafe/WarmLampLeft",
+          "name": "HenesysCafeTree",
+          "path": "/maps/boardgame_cafe/HenesysCafeTree",
           "nameEditable": true,
           "enable": true,
           "visible": true,
           "localize": false,
-          "displayOrder": 10,
+          "displayOrder": 115,
           "pathConstraints": "///",
           "revision": 1,
-          "origin": {
-            "type": "Model",
-            "entry_id": "mapobject",
-            "sub_entity_id": null,
-            "root_entity_id": "92d69b02-8c00-4c8d-95e1-96a4c605de45",
-            "replaced_model_id": null
-          },
           "modelId": "mapobject",
           "@components": [
             {
               "@type": "MOD.Core.TransformComponent",
-              "Rotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
-              },
               "Position": {
-                "x": -3.5,
-                "y": 2.25,
-                "z": 0.0
+                "x": -4.75,
+                "y": 0,
+                "z": 0
               },
               "QuaternionRotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0,
-                "w": 1.0
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
               },
               "Scale": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
+                "x": 1.48,
+                "y": 1.48,
+                "z": 1
               },
-              "ZRotation": 0.0,
               "Enable": true
             },
             {
               "@type": "MOD.Core.SpriteRendererComponent",
-              "ActionSheet": {},
+              "SpriteRUID": "5cd0f21502dd41bc8db9bc933d7b609c",
+              "Color": {
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
+              },
               "DrawMode": 0,
-              "EndFrameIndex": 2147483647,
               "FlipX": false,
               "FlipY": false,
-              "OrderInLayer": 0,
-              "PlayRate": 1.0,
-              "RenderSetting": 0,
-              "SpriteRUID": "5ce1222b5bd94b5a929779ff4a048c38",
+              "PlayRate": 1,
+              "OrderInLayer": -8,
               "StartFrameIndex": 0,
-              "Color": {
-                "r": 1.0,
-                "g": 1.0,
-                "b": 1.0,
-                "a": 1.0
-              },
-              "Enable": true
+              "EndFrameIndex": 2147483647,
+              "Enable": true,
+              "SortingLayer": "MapLayer0",
+              "IgnoreMapLayerCheck": true
             }
           ],
-          "@version": 1
+          "@version": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "mapobject",
+            "sub_entity_id": null,
+            "root_entity_id": "6ed036f4-5ab9-47f5-ac29-9409a1f19bda",
+            "replaced_model_id": null
+          }
         }
       },
       {
-        "id": "533db438-6166-4518-b57a-1ae74498a124",
-        "path": "/maps/boardgame_cafe/WarmLampRight",
+        "id": "3ec94945-6eca-4990-8628-e59001d0c70c",
+        "path": "/maps/boardgame_cafe/HenesysCafeTreeSmall",
         "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent",
         "jsonString": {
-          "name": "WarmLampRight",
-          "path": "/maps/boardgame_cafe/WarmLampRight",
+          "name": "HenesysCafeTreeSmall",
+          "path": "/maps/boardgame_cafe/HenesysCafeTreeSmall",
           "nameEditable": true,
           "enable": true,
           "visible": true,
           "localize": false,
-          "displayOrder": 11,
+          "displayOrder": 116,
           "pathConstraints": "///",
           "revision": 1,
-          "origin": {
-            "type": "Model",
-            "entry_id": "mapobject",
-            "sub_entity_id": null,
-            "root_entity_id": "533db438-6166-4518-b57a-1ae74498a124",
-            "replaced_model_id": null
-          },
           "modelId": "mapobject",
           "@components": [
             {
               "@type": "MOD.Core.TransformComponent",
-              "Rotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
-              },
               "Position": {
-                "x": 3.5,
-                "y": 2.25,
-                "z": 0.0
+                "x": -3.45,
+                "y": 0,
+                "z": 0
               },
               "QuaternionRotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0,
-                "w": 1.0
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
               },
               "Scale": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
+                "x": 0.9,
+                "y": 0.9,
+                "z": 1
               },
-              "ZRotation": 0.0,
               "Enable": true
             },
             {
               "@type": "MOD.Core.SpriteRendererComponent",
-              "ActionSheet": {},
-              "DrawMode": 0,
-              "EndFrameIndex": 2147483647,
-              "FlipX": false,
-              "FlipY": false,
-              "OrderInLayer": 0,
-              "PlayRate": 1.0,
-              "RenderSetting": 0,
-              "SpriteRUID": "5ce1222b5bd94b5a929779ff4a048c38",
-              "StartFrameIndex": 0,
+              "SpriteRUID": "b71bcab7f8a74573ad8c85c81c64036a",
               "Color": {
-                "r": 1.0,
-                "g": 1.0,
-                "b": 1.0,
-                "a": 1.0
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
               },
-              "Enable": true
+              "DrawMode": 0,
+              "FlipX": true,
+              "FlipY": false,
+              "PlayRate": 1,
+              "OrderInLayer": -7,
+              "StartFrameIndex": 0,
+              "EndFrameIndex": 2147483647,
+              "Enable": true,
+              "SortingLayer": "MapLayer0",
+              "IgnoreMapLayerCheck": true
             }
           ],
-          "@version": 1
+          "@version": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "mapobject",
+            "sub_entity_id": null,
+            "root_entity_id": "3ec94945-6eca-4990-8628-e59001d0c70c",
+            "replaced_model_id": null
+          }
+        }
+      },
+      {
+        "id": "87f6d6f3-8c0b-417d-993b-c3839add94ca",
+        "path": "/maps/boardgame_cafe/HenesysCafeHouse",
+        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent",
+        "jsonString": {
+          "name": "HenesysCafeHouse",
+          "path": "/maps/boardgame_cafe/HenesysCafeHouse",
+          "nameEditable": true,
+          "enable": true,
+          "visible": true,
+          "localize": false,
+          "displayOrder": 117,
+          "pathConstraints": "///",
+          "revision": 1,
+          "modelId": "mapobject",
+          "@components": [
+            {
+              "@type": "MOD.Core.TransformComponent",
+              "Position": {
+                "x": 4.45,
+                "y": 0,
+                "z": 0
+              },
+              "QuaternionRotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
+              },
+              "Scale": {
+                "x": 1.12,
+                "y": 1.12,
+                "z": 1
+              },
+              "Enable": true
+            },
+            {
+              "@type": "MOD.Core.SpriteRendererComponent",
+              "SpriteRUID": "9e32f098dfbd46c28edc4efa72df63a4",
+              "Color": {
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
+              },
+              "DrawMode": 0,
+              "FlipX": true,
+              "FlipY": false,
+              "PlayRate": 1,
+              "OrderInLayer": -8,
+              "StartFrameIndex": 0,
+              "EndFrameIndex": 2147483647,
+              "Enable": true,
+              "SortingLayer": "MapLayer0",
+              "IgnoreMapLayerCheck": true
+            }
+          ],
+          "@version": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "mapobject",
+            "sub_entity_id": null,
+            "root_entity_id": "87f6d6f3-8c0b-417d-993b-c3839add94ca",
+            "replaced_model_id": null
+          }
+        }
+      },
+      {
+        "id": "04485ceb-798a-4310-8efe-95b2e5dc5c0d",
+        "path": "/maps/boardgame_cafe/HenesysCafePlatform",
+        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent",
+        "jsonString": {
+          "name": "HenesysCafePlatform",
+          "path": "/maps/boardgame_cafe/HenesysCafePlatform",
+          "nameEditable": true,
+          "enable": true,
+          "visible": true,
+          "localize": false,
+          "displayOrder": 118,
+          "pathConstraints": "///",
+          "revision": 1,
+          "modelId": "mapobject",
+          "@components": [
+            {
+              "@type": "MOD.Core.TransformComponent",
+              "Position": {
+                "x": 2.55,
+                "y": 0.08,
+                "z": 0
+              },
+              "QuaternionRotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
+              },
+              "Scale": {
+                "x": 1.35,
+                "y": 1.35,
+                "z": 1
+              },
+              "Enable": true
+            },
+            {
+              "@type": "MOD.Core.SpriteRendererComponent",
+              "SpriteRUID": "b787d2fe6401473e9c94d4d5230a6d92",
+              "Color": {
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
+              },
+              "DrawMode": 0,
+              "FlipX": false,
+              "FlipY": false,
+              "PlayRate": 1,
+              "OrderInLayer": -2,
+              "StartFrameIndex": 0,
+              "EndFrameIndex": 2147483647,
+              "Enable": true,
+              "SortingLayer": "MapLayer0",
+              "IgnoreMapLayerCheck": true
+            }
+          ],
+          "@version": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "mapobject",
+            "sub_entity_id": null,
+            "root_entity_id": "04485ceb-798a-4310-8efe-95b2e5dc5c0d",
+            "replaced_model_id": null
+          }
+        }
+      },
+      {
+        "id": "dc45837d-fe1a-4365-badb-2f245dd294ae",
+        "path": "/maps/boardgame_cafe/HenesysCafeLadder",
+        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent",
+        "jsonString": {
+          "name": "HenesysCafeLadder",
+          "path": "/maps/boardgame_cafe/HenesysCafeLadder",
+          "nameEditable": true,
+          "enable": true,
+          "visible": true,
+          "localize": false,
+          "displayOrder": 119,
+          "pathConstraints": "///",
+          "revision": 1,
+          "modelId": "mapobject",
+          "@components": [
+            {
+              "@type": "MOD.Core.TransformComponent",
+              "Position": {
+                "x": 1.2,
+                "y": 0.34,
+                "z": 0
+              },
+              "QuaternionRotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
+              },
+              "Scale": {
+                "x": 1,
+                "y": 1,
+                "z": 1
+              },
+              "Enable": true
+            },
+            {
+              "@type": "MOD.Core.SpriteRendererComponent",
+              "SpriteRUID": "f1de58c2f22b46c98631d24827d5fe5a",
+              "Color": {
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
+              },
+              "DrawMode": 0,
+              "FlipX": false,
+              "FlipY": false,
+              "PlayRate": 1,
+              "OrderInLayer": -1,
+              "StartFrameIndex": 0,
+              "EndFrameIndex": 2147483647,
+              "Enable": true,
+              "SortingLayer": "MapLayer0",
+              "IgnoreMapLayerCheck": true
+            }
+          ],
+          "@version": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "mapobject",
+            "sub_entity_id": null,
+            "root_entity_id": "dc45837d-fe1a-4365-badb-2f245dd294ae",
+            "replaced_model_id": null
+          }
+        }
+      },
+      {
+        "id": "234e41a1-0d73-4af5-869a-47469efb18ed",
+        "path": "/maps/boardgame_cafe/HenesysCafeBench",
+        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent",
+        "jsonString": {
+          "name": "HenesysCafeBench",
+          "path": "/maps/boardgame_cafe/HenesysCafeBench",
+          "nameEditable": true,
+          "enable": true,
+          "visible": true,
+          "localize": false,
+          "displayOrder": 120,
+          "pathConstraints": "///",
+          "revision": 1,
+          "modelId": "mapobject",
+          "@components": [
+            {
+              "@type": "MOD.Core.TransformComponent",
+              "Position": {
+                "x": -2.2,
+                "y": 0.02,
+                "z": 0
+              },
+              "QuaternionRotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
+              },
+              "Scale": {
+                "x": 0.78,
+                "y": 0.78,
+                "z": 1
+              },
+              "Enable": true
+            },
+            {
+              "@type": "MOD.Core.SpriteRendererComponent",
+              "SpriteRUID": "960c500154b74be0b65aa94f723fe2d2",
+              "Color": {
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
+              },
+              "DrawMode": 0,
+              "FlipX": false,
+              "FlipY": false,
+              "PlayRate": 1,
+              "OrderInLayer": -2,
+              "StartFrameIndex": 0,
+              "EndFrameIndex": 2147483647,
+              "Enable": true,
+              "SortingLayer": "MapLayer0",
+              "IgnoreMapLayerCheck": true
+            }
+          ],
+          "@version": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "mapobject",
+            "sub_entity_id": null,
+            "root_entity_id": "234e41a1-0d73-4af5-869a-47469efb18ed",
+            "replaced_model_id": null
+          }
+        }
+      },
+      {
+        "id": "0eb8b50a-1378-43cf-af49-eebc2e02aa24",
+        "path": "/maps/boardgame_cafe/HenesysCafeFlowerA",
+        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent",
+        "jsonString": {
+          "name": "HenesysCafeFlowerA",
+          "path": "/maps/boardgame_cafe/HenesysCafeFlowerA",
+          "nameEditable": true,
+          "enable": true,
+          "visible": true,
+          "localize": false,
+          "displayOrder": 121,
+          "pathConstraints": "///",
+          "revision": 1,
+          "modelId": "mapobject",
+          "@components": [
+            {
+              "@type": "MOD.Core.TransformComponent",
+              "Position": {
+                "x": -1.05,
+                "y": 0.01,
+                "z": 0
+              },
+              "QuaternionRotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
+              },
+              "Scale": {
+                "x": 1.18,
+                "y": 1.18,
+                "z": 1
+              },
+              "Enable": true
+            },
+            {
+              "@type": "MOD.Core.SpriteRendererComponent",
+              "SpriteRUID": "22d9a90f4f1441f784c716229ed89b57",
+              "Color": {
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
+              },
+              "DrawMode": 0,
+              "FlipX": false,
+              "FlipY": false,
+              "PlayRate": 1,
+              "OrderInLayer": -3,
+              "StartFrameIndex": 0,
+              "EndFrameIndex": 2147483647,
+              "Enable": true,
+              "SortingLayer": "MapLayer0",
+              "IgnoreMapLayerCheck": true
+            }
+          ],
+          "@version": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "mapobject",
+            "sub_entity_id": null,
+            "root_entity_id": "0eb8b50a-1378-43cf-af49-eebc2e02aa24",
+            "replaced_model_id": null
+          }
+        }
+      },
+      {
+        "id": "db08df94-a62d-4ce1-9bd5-8c6374f5cb8e",
+        "path": "/maps/boardgame_cafe/HenesysCafeFlowerB",
+        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent",
+        "jsonString": {
+          "name": "HenesysCafeFlowerB",
+          "path": "/maps/boardgame_cafe/HenesysCafeFlowerB",
+          "nameEditable": true,
+          "enable": true,
+          "visible": true,
+          "localize": false,
+          "displayOrder": 122,
+          "pathConstraints": "///",
+          "revision": 1,
+          "modelId": "mapobject",
+          "@components": [
+            {
+              "@type": "MOD.Core.TransformComponent",
+              "Position": {
+                "x": -0.45,
+                "y": 0.01,
+                "z": 0
+              },
+              "QuaternionRotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
+              },
+              "Scale": {
+                "x": 1.35,
+                "y": 1.35,
+                "z": 1
+              },
+              "Enable": true
+            },
+            {
+              "@type": "MOD.Core.SpriteRendererComponent",
+              "SpriteRUID": "65730127f2ce4295a7c0a96c79073863",
+              "Color": {
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
+              },
+              "DrawMode": 0,
+              "FlipX": false,
+              "FlipY": false,
+              "PlayRate": 1,
+              "OrderInLayer": -3,
+              "StartFrameIndex": 0,
+              "EndFrameIndex": 2147483647,
+              "Enable": true,
+              "SortingLayer": "MapLayer0",
+              "IgnoreMapLayerCheck": true
+            }
+          ],
+          "@version": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "mapobject",
+            "sub_entity_id": null,
+            "root_entity_id": "db08df94-a62d-4ce1-9bd5-8c6374f5cb8e",
+            "replaced_model_id": null
+          }
+        }
+      },
+      {
+        "id": "ec9e932a-7f1e-4113-892e-27114d354620",
+        "path": "/maps/boardgame_cafe/HenesysCafeFlowerC",
+        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent",
+        "jsonString": {
+          "name": "HenesysCafeFlowerC",
+          "path": "/maps/boardgame_cafe/HenesysCafeFlowerC",
+          "nameEditable": true,
+          "enable": true,
+          "visible": true,
+          "localize": false,
+          "displayOrder": 123,
+          "pathConstraints": "///",
+          "revision": 1,
+          "modelId": "mapobject",
+          "@components": [
+            {
+              "@type": "MOD.Core.TransformComponent",
+              "Position": {
+                "x": 3.15,
+                "y": 0.01,
+                "z": 0
+              },
+              "QuaternionRotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
+              },
+              "Scale": {
+                "x": 0.9,
+                "y": 0.9,
+                "z": 1
+              },
+              "Enable": true
+            },
+            {
+              "@type": "MOD.Core.SpriteRendererComponent",
+              "SpriteRUID": "22d9a90f4f1441f784c716229ed89b57",
+              "Color": {
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
+              },
+              "DrawMode": 0,
+              "FlipX": true,
+              "FlipY": false,
+              "PlayRate": 1,
+              "OrderInLayer": -3,
+              "StartFrameIndex": 0,
+              "EndFrameIndex": 2147483647,
+              "Enable": true,
+              "SortingLayer": "MapLayer0",
+              "IgnoreMapLayerCheck": true
+            }
+          ],
+          "@version": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "mapobject",
+            "sub_entity_id": null,
+            "root_entity_id": "ec9e932a-7f1e-4113-892e-27114d354620",
+            "replaced_model_id": null
+          }
         }
       }
     ]
