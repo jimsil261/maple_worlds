@@ -17,6 +17,12 @@ script LexioSessionCoordinator extends Component
 
 	property table readyBySeat = {}
 
+	property boolean explicitReadyRequired = false
+
+	property table explicitReadyBySeat = {}
+
+	property string privateRoomCode = ""
+
 	property table seatedBySeat = {}
 
 	property table chairBySeat = {}
@@ -63,16 +69,20 @@ script LexioSessionCoordinator extends Component
 		        self.playerEntityBySeat = {}
 		        self.bridgeByUserId = {}
 		        self.readyBySeat = {}
+		        self.explicitReadyBySeat = {}
 		        self.seatedBySeat = {}
 		        self.chairBySeat = {}
 		        for seat = 1, self.RequiredPlayerCount do
 		            self.readyBySeat[seat] = false
+		            self.explicitReadyBySeat[seat] = false
 		            self.seatedBySeat[seat] = false
 		            self.chairBySeat[seat] = ""
 		        end
 		        self.startCountdownActive = false
 		        self.startCountdown = 0
 		        self.startCountdownSecond = -1
+		        self.explicitReadyRequired = false
+		        self.privateRoomCode = ""
 		        self.spectatorByUserId = {}
 		        self.startRequested = false
 		        self.finishedResultsPublished = false
@@ -343,6 +353,7 @@ script LexioSessionCoordinator extends Component
 		        self.seatByUserId[userId] = seatIndex
 		        self.playerEntityBySeat[seatIndex] = playerEntity
 		        self.readyBySeat[seatIndex] = false
+		        self.explicitReadyBySeat[seatIndex] = false
 		        self.seatedBySeat[seatIndex] = true
 		        self.chairBySeat[seatIndex] = chairName
 		        self:AttachBridge(playerEntity, userId, seatIndex, "Player")
@@ -399,6 +410,7 @@ script LexioSessionCoordinator extends Component
 		            self.seatByUserId[userId] = nil
 		            self.playerEntityBySeat[seat] = nil
 		            self.readyBySeat[seat] = false
+		            self.explicitReadyBySeat[seat] = false
 		            self.seatedBySeat[seat] = false
 		            self.chairBySeat[seat] = ""
 		            self:CancelStartCountdown("player_left")
@@ -467,11 +479,63 @@ script LexioSessionCoordinator extends Component
 	end
 
 	@ExecSpace("ServerOnly")
+	method boolean ActivatePrivateRoom(string roomCode)
+		        local session = self.SessionEntity:GetComponent("script.LexioGameSession")
+		        if roomCode == nil or roomCode == "" or session == nil or session.phase ~= "WaitingPlayers" or self.startRequested then return false end
+		        self.privateRoomCode = roomCode
+		        session:SetPersistentRewardsEligible(false, "private_room")
+		        self.explicitReadyRequired = true
+		        for seat = 1, self.RequiredPlayerCount do self.explicitReadyBySeat[seat] = false end
+		        self:CancelStartCountdown("private_room_activated")
+		        log("[VRF] PRIVATE ROOM ACTIVE code=" .. roomCode .. " table=" .. self.TableId .. " capacity=" .. tostring(self.RequiredPlayerCount))
+		        self:BroadcastSnapshots()
+		        return true
+	end
+
+	@ExecSpace("ServerOnly")
+	method boolean SetPersistentRewardsEligible(boolean eligible, string source)
+		        local session = self.SessionEntity:GetComponent("script.LexioGameSession")
+		        if session == nil or session.phase ~= "WaitingPlayers" or self.startRequested then return false end
+		        session:SetPersistentRewardsEligible(eligible, source)
+		        return true
+	end
+
+	@ExecSpace("ServerOnly")
+	method boolean DeactivatePrivateRoom(string roomCode)
+		        if self.privateRoomCode ~= roomCode or self.startRequested then return false end
+		        self:CancelStartCountdown("private_room_closed")
+		        self.privateRoomCode = ""
+		        self.explicitReadyRequired = false
+		        for seat = 1, self.RequiredPlayerCount do self.explicitReadyBySeat[seat] = false end
+		        log("[VRF] PRIVATE ROOM CLOSED code=" .. tostring(roomCode) .. " table=" .. self.TableId)
+		        self:BroadcastSnapshots()
+		        return true
+	end
+
+	@ExecSpace("ServerOnly")
+	method boolean SetPrivateReady(string userId, Entity playerEntity, boolean ready)
+		        if not self.explicitReadyRequired or self.privateRoomCode == "" then return false end
+		        local seat = self.seatByUserId[userId]
+		        if seat == nil or self.playerEntityBySeat[seat] ~= playerEntity then return false end
+		        if playerEntity == nil or not isvalid(playerEntity) or playerEntity.PlayerComponent == nil then return false end
+		        if playerEntity.PlayerComponent.UserId ~= userId then return false end
+		        self.explicitReadyBySeat[seat] = ready
+		        -- An authenticated ready click also proves that this client's room UI is loaded.
+		        self.readyBySeat[seat] = true
+		        if not ready then self:CancelStartCountdown("player_unready") end
+		        log("[VRF] PRIVATE READY code=" .. self.privateRoomCode .. " seat=" .. tostring(seat) .. " ready=" .. tostring(ready))
+		        self:BroadcastSnapshots()
+		        self:TryStartGame()
+		        return true
+	end
+
+	@ExecSpace("ServerOnly")
 	method boolean CanStartFromSeats()
 		        local session = self.SessionEntity:GetComponent("script.LexioGameSession")
 		        if session == nil or session.phase ~= "WaitingPlayers" or self.startRequested then return false end
 		        for seat = 1, self.RequiredPlayerCount do
 		            if self.userIdBySeat[seat] == nil or not self.readyBySeat[seat] or not self.seatedBySeat[seat] then return false end
+		            if self.explicitReadyRequired and not self.explicitReadyBySeat[seat] then return false end
 		            if self.chairBySeat[seat] == nil or self.chairBySeat[seat] == "" then return false end
 		        end
 		        return true
@@ -573,8 +637,10 @@ script LexioSessionCoordinator extends Component
 		            snapshot = session:BuildPublicSnapshot()
 		        end
 		        local seatNames = {}
+		        local seatUserIds = {}
 		        for seat = 1, self.RequiredPlayerCount do
 		            local player = self.playerEntityBySeat[seat]
+		            seatUserIds[seat] = self.userIdBySeat[seat] or ""
 		            if player ~= nil and isvalid(player) then
 		                local nickname = player.Name
 		                if player.NameTagComponent ~= nil and player.NameTagComponent.Name ~= "" then
@@ -584,6 +650,7 @@ script LexioSessionCoordinator extends Component
 		            end
 		        end
 		        snapshot.seatNames = seatNames
+		        snapshot.seatUserIds = seatUserIds
 		        snapshot.hasCurrentPlay = session.currentPlay ~= nil
 		        snapshot.finishGeneration = self.finishGeneration
 		        snapshot.finishCountdown = math.ceil(self.finishCountdown)
@@ -591,6 +658,10 @@ script LexioSessionCoordinator extends Component
 		        for _, decision in pairs(self.finishDecisionByUserId) do if decision == "Replay" then snapshot.finishReplayCount = snapshot.finishReplayCount + 1 end end
 		        snapshot.winsBySeat = self:BuildWinsSnapshot()
 		        snapshot.playerCount = self.RequiredPlayerCount
+		        snapshot.privateRoomCode = self.privateRoomCode
+		        snapshot.explicitReadyRequired = self.explicitReadyRequired
+		        snapshot.explicitReadyBySeat = self.explicitReadyBySeat
+		        snapshot.startCountdown = self.startCountdownActive and math.ceil(self.startCountdown) or 0
 		        return snapshot
 	end
 

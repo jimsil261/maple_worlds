@@ -1,6 +1,8 @@
 # Lexio — Milestone Roadmap
 
-Last updated: 2026-10-20
+Last updated: 2026-11-05
+
+Platform scope: PC only. All gameplay HUD, input, and visual-polish decisions target the MapleStory Worlds PC client.
 
 ## Vision
 
@@ -19,22 +21,23 @@ Players enter a shared Lexio hall, choose a table manually or enter automatic ma
 |---|---|---|
 | M1 | Three physical tables, manual seating, automatic queue, isolated table sessions | ⏳ user-test pending |
 | M2 | Persistent reward points and Maple-style name-tag/chat-balloon cosmetic shop | 🔨 active |
-| M3 | Capacity expansion, reconnect recovery, spectator/table browsing polish | ⬜ planned |
+| M3 | Outdoor-plaza Lexio building, elevator floors, 3/4/5/Any matching, private rooms, adaptive 3–5-player game board, reconnect/AI takeover | ⬜ planned |
+| M4 | Spectator floor, tournaments, rankings, room browsing polish, and additional game buildings | ⬜ candidate |
 
 ## Backlog
 
 - Dynamic table creation beyond the initial three physical tables
 - Party-based automatic matchmaking
 - Skill/rating-based matchmaking
-- Spectator mode and table browser
+- Spectator mode and tournament floor (deferred from M3)
 - Cross-room/world matchmaking
 
 ## Current next step
 
-1. Verify the project-native persistent reward balance: every finisher earns 3 points and the winner earns a 10-point bonus.
-2. Build the Maple-style shop UI over the completed server catalog and purchase/equip RPCs.
-3. Add custom monster-themed `NameTagRUID` and `ChatBalloonRUID` skins after validating their 9-slice sprites.
-4. Keep M1 real three-client automatic matching and concurrent split-table verification as environment-blocked acceptance checks.
+1. Complete real-client acceptance for 3/4/5/Any automatic matching; exact-size requests are selected before Any fillers.
+2. Complete multi-client acceptance for the implemented 2F private-room browser, invite-code join, explicit ready state, and cancellable three-second countdown.
+3. Verify the project-native persistent reward balance: every eligible automatic-match finisher earns 3 points and the winner earns a 10-point bonus.
+4. Complete a funded-account acceptance pass for the Maple-style shop purchase, equip, replacement, and unequip paths; the plaza snapshot and insufficient-points paths are verified.
 
 ## M2 direction — Reward points and cosmetic rings
 

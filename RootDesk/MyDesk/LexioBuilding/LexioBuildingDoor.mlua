@@ -1,0 +1,40 @@
+@Component
+script LexioBuildingDoor extends Component
+
+	property string DoorMode = ""
+
+	@ExecSpace("ServerOnly")
+	method void OnBeginPlay()
+		-- Configures the visible interaction prompt for each Lexio-club room door.
+		local interaction = self.Entity.InteractionComponent
+		if interaction == nil then return end
+		interaction.ActionKey = KeyboardKey.Space
+		interaction.BoxSize = Vector2(1.4, 2.2)
+		if self.DoorMode == "AUTO_MATCH" then
+			interaction.ActionName = "자동 매칭 접수"
+		elseif self.DoorMode == "PRIVATE_ROOM" then
+			interaction.ActionName = "사설방 · 준비 중"
+		else
+			interaction.ActionName = "3층 시설 · 준비 중"
+		end
+		log("[VRF] LEXIO BUILDING DOOR READY mode=" .. self.DoorMode .. " name=" .. self.Entity.Name)
+	end
+
+	@ExecSpace("ClientOnly")
+	@EventSender("Self")
+	handler HandleInteractionEvent(InteractionEvent event)
+		-- Opens the available service or records the deferred-room interaction.
+		local player = _UserService.LocalPlayer
+		if player == nil or event.InteractionEntity ~= player then return end
+		if self.DoorMode == "AUTO_MATCH" then
+			local controls = player:GetComponent("script.LexioManualTestControls")
+			if controls ~= nil then
+				controls:OpenAutoQueueMenu()
+				log("[VRF] LEXIO AUTO MATCH DOOR used=true")
+			end
+			return
+		end
+		log("[LexioBuildingDoor] DEFERRED mode=" .. self.DoorMode)
+	end
+
+end

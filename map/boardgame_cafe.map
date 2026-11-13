@@ -47,7 +47,7 @@
               "FootholdsByLayer": {
                 "1": [
                   {
-                    "Length": 1.27999973,
+                    "Length": 1.28000069,
                     "NextFootholdId": 2,
                     "PreviousFootholdId": 27,
                     "groupID": 1,
@@ -69,7 +69,7 @@
                       "y": -0.04000002
                     },
                     "EndPoint": {
-                      "x": -7.65000057,
+                      "x": -7.64999962,
                       "y": -0.04000002
                     },
                     "Variance": {
@@ -264,7 +264,7 @@
                     }
                   },
                   {
-                    "Length": 0.899999738,
+                    "Length": 0.9,
                     "NextFootholdId": 9,
                     "PreviousFootholdId": 7,
                     "groupID": 1,
@@ -286,7 +286,7 @@
                       "y": -0.04000002
                     },
                     "EndPoint": {
-                      "x": -1.35,
+                      "x": -1.34999979,
                       "y": -0.04000002
                     },
                     "Variance": {
@@ -437,11 +437,11 @@
                     "OwnerId": "92d64bda-dc70-4ec4-869f-ca153eebcd89",
                     "Id": 13,
                     "StartPoint": {
-                      "x": 2.25,
+                      "x": 2.24999976,
                       "y": -0.04000002
                     },
                     "EndPoint": {
-                      "x": 3.15,
+                      "x": 3.14999986,
                       "y": -0.04000002
                     },
                     "Variance": {
@@ -530,11 +530,11 @@
                     "OwnerId": "92d64bda-dc70-4ec4-869f-ca153eebcd89",
                     "Id": 16,
                     "StartPoint": {
-                      "x": 4.95000029,
+                      "x": 4.95,
                       "y": -0.04000002
                     },
                     "EndPoint": {
-                      "x": 5.85,
+                      "x": 5.84999943,
                       "y": -0.04000002
                     },
                     "Variance": {
@@ -574,7 +574,7 @@
                     }
                   },
                   {
-                    "Length": 1.27999973,
+                    "Length": 1.27999878,
                     "NextFootholdId": 19,
                     "PreviousFootholdId": 17,
                     "groupID": 1,
@@ -596,7 +596,7 @@
                       "y": -0.04000002
                     },
                     "EndPoint": {
-                      "x": 8.03,
+                      "x": 8.029999,
                       "y": -0.04000002
                     },
                     "Variance": {
@@ -623,11 +623,11 @@
                     "OwnerId": "92d64bda-dc70-4ec4-869f-ca153eebcd89",
                     "Id": 19,
                     "StartPoint": {
-                      "x": 8.03,
+                      "x": 8.029999,
                       "y": -0.04000002
                     },
                     "EndPoint": {
-                      "x": 8.03,
+                      "x": 8.029999,
                       "y": -0.9
                     },
                     "Variance": {
@@ -654,11 +654,11 @@
                     "OwnerId": "92d64bda-dc70-4ec4-869f-ca153eebcd89",
                     "Id": 20,
                     "StartPoint": {
-                      "x": 8.03,
+                      "x": 8.029999,
                       "y": -0.9000001
                     },
                     "EndPoint": {
-                      "x": 8.03,
+                      "x": 8.029999,
                       "y": -1.50000012
                     },
                     "Variance": {
@@ -685,11 +685,11 @@
                     "OwnerId": "92d64bda-dc70-4ec4-869f-ca153eebcd89",
                     "Id": 21,
                     "StartPoint": {
-                      "x": 8.03,
+                      "x": 8.029999,
                       "y": -1.50000012
                     },
                     "EndPoint": {
-                      "x": 8.03,
+                      "x": 8.029999,
                       "y": -2.10000014
                     },
                     "Variance": {
@@ -716,11 +716,11 @@
                     "OwnerId": "92d64bda-dc70-4ec4-869f-ca153eebcd89",
                     "Id": 22,
                     "StartPoint": {
-                      "x": 8.03,
+                      "x": 8.029999,
                       "y": -2.10000014
                     },
                     "EndPoint": {
-                      "x": 8.03,
+                      "x": 8.029999,
                       "y": -2.7
                     },
                     "Variance": {
@@ -747,12 +747,12 @@
                     "OwnerId": "92d64bda-dc70-4ec4-869f-ca153eebcd89",
                     "Id": 23,
                     "StartPoint": {
-                      "x": 8.03,
-                      "y": -2.70000029
+                      "x": 8.029999,
+                      "y": -2.7
                     },
                     "EndPoint": {
-                      "x": 8.03,
-                      "y": -3.30000019
+                      "x": 8.029999,
+                      "y": -3.3
                     },
                     "Variance": {
                       "x": 0,
@@ -778,11 +778,11 @@
                     "OwnerId": "92d64bda-dc70-4ec4-869f-ca153eebcd89",
                     "Id": 24,
                     "StartPoint": {
-                      "x": 8.03,
+                      "x": 8.029999,
                       "y": -3.30000019
                     },
                     "EndPoint": {
-                      "x": 8.03,
+                      "x": 8.029999,
                       "y": -3.9
                     },
                     "Variance": {
@@ -809,11 +809,11 @@
                     "OwnerId": "92d64bda-dc70-4ec4-869f-ca153eebcd89",
                     "Id": 25,
                     "StartPoint": {
-                      "x": 8.03,
+                      "x": 8.029999,
                       "y": -3.90000033
                     },
                     "EndPoint": {
-                      "x": 8.03,
+                      "x": 8.029999,
                       "y": -4.50000048
                     },
                     "Variance": {
@@ -840,11 +840,11 @@
                     "OwnerId": "92d64bda-dc70-4ec4-869f-ca153eebcd89",
                     "Id": 26,
                     "StartPoint": {
-                      "x": 8.03,
+                      "x": 8.029999,
                       "y": -4.5
                     },
                     "EndPoint": {
-                      "x": 8.03,
+                      "x": 8.029999,
                       "y": -5.10000038
                     },
                     "Variance": {
@@ -996,11 +996,11 @@
                     "Id": 31,
                     "StartPoint": {
                       "x": -8.93,
-                      "y": -3.30000019
+                      "y": -3.3
                     },
                     "EndPoint": {
                       "x": -8.93,
-                      "y": -2.70000029
+                      "y": -2.7
                     },
                     "Variance": {
                       "x": 0,
@@ -1102,39 +1102,6 @@
                   }
                 ]
               },
-              "Enable": true
-            }
-          ],
-          "@version": 1
-        }
-      },
-      {
-        "id": "854c0b89-772b-4aef-b9dc-39ccfcb790fb",
-        "path": "/maps/boardgame_cafe/Background",
-        "componentNames": "MOD.Core.BackgroundComponent",
-        "jsonString": {
-          "name": "Background",
-          "path": "/maps/boardgame_cafe/Background",
-          "nameEditable": false,
-          "enable": true,
-          "visible": true,
-          "localize": false,
-          "displayOrder": 0,
-          "pathConstraints": "///",
-          "revision": 0,
-          "modelId": null,
-          "@components": [
-            {
-              "@type": "MOD.Core.BackgroundComponent",
-              "SolidColor": {
-                "r": 0.5019608,
-                "g": 0.5019608,
-                "b": 0.5019608,
-                "a": 0.7058824
-              },
-              "TemplateRUID": "794ad8421e2543d8a6d2c70307637450",
-              "Type": 1,
-              "WebUrl": "",
               "Enable": true
             }
           ],
@@ -6351,7 +6318,7 @@
                 "b": 1,
                 "a": 1
               },
-              "Enable": true
+              "Enable": false
             },
             {
               "@type": "MOD.Core.SpawnLocationComponent",
@@ -6428,7 +6395,7 @@
                 "b": 1,
                 "a": 1
               },
-              "Enable": true
+              "Enable": false
             },
             {
               "@type": "MOD.Core.InteractionComponent",
@@ -6512,131 +6479,6 @@
         }
       },
       {
-        "id": "1439b2e4-4530-42dc-ab1b-697074a4ad90",
-        "path": "/maps/boardgame_cafe/LexioGuideNeinheart",
-        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent,MOD.Core.InteractionComponent,script.LexioGuideNpc,MOD.Core.NameTagComponent,MOD.Core.TouchReceiveComponent",
-        "jsonString": {
-          "name": "LexioGuideNeinheart",
-          "path": "/maps/boardgame_cafe/LexioGuideNeinheart",
-          "nameEditable": true,
-          "enable": true,
-          "visible": true,
-          "localize": false,
-          "displayOrder": 6,
-          "pathConstraints": "///",
-          "revision": 1,
-          "origin": {
-            "type": "Model",
-            "entry_id": "mapobject",
-            "sub_entity_id": null,
-            "root_entity_id": "1439b2e4-4530-42dc-ab1b-697074a4ad90",
-            "replaced_model_id": null
-          },
-          "modelId": "mapobject",
-          "@components": [
-            {
-              "@type": "MOD.Core.TransformComponent",
-              "Rotation": {
-                "x": 0,
-                "y": 0,
-                "z": 0
-              },
-              "Position": {
-                "x": -2.25,
-                "y": 0,
-                "z": 0
-              },
-              "QuaternionRotation": {
-                "x": 0,
-                "y": 0,
-                "z": 0,
-                "w": 1
-              },
-              "Scale": {
-                "x": 1,
-                "y": 1,
-                "z": 1
-              },
-              "ZRotation": 0,
-              "Enable": true
-            },
-            {
-              "@type": "MOD.Core.SpriteRendererComponent",
-              "ActionSheet": {},
-              "DrawMode": 0,
-              "EndFrameIndex": 2147483647,
-              "FlipX": false,
-              "FlipY": false,
-              "OrderInLayer": 5,
-              "PlayRate": 1,
-              "RenderSetting": 0,
-              "SpriteRUID": "c2919dc57fac457c9ce94fe32f8b69d2",
-              "StartFrameIndex": 0,
-              "Color": {
-                "r": 1,
-                "g": 1,
-                "b": 1,
-                "a": 1
-              },
-              "Enable": true
-            },
-            {
-              "@type": "MOD.Core.InteractionComponent",
-              "ActionKey": 32,
-              "ActionName": "렉시오 규칙 듣기",
-              "BoxSize": {
-                "x": 2.2,
-                "y": 2
-              },
-              "IsLegacy": false,
-              "ShowActionInfo": true,
-              "Enable": true
-            },
-            {
-              "@type": "script.LexioGuideNpc",
-              "Enable": true,
-              "DialogId": "LEXIO_GUIDE",
-              "PortraitRUID": "13b30e6f8eff4bca9ff2308bed1cd3db",
-              "dialogRegistered": false
-            },
-            {
-              "@type": "MOD.Core.NameTagComponent",
-              "Bold": true,
-              "FontColor": {
-                "r": 1,
-                "g": 0.88,
-                "b": 0.52,
-                "a": 1
-              },
-              "FontOffset": {
-                "x": 0,
-                "y": 0
-              },
-              "FontSize": 1.08,
-              "Name": "나인하트\n렉시오 담당",
-              "OffsetY": 0,
-              "Enable": true
-            },
-            {
-              "@type": "MOD.Core.TouchReceiveComponent",
-              "AutoFitOnce": false,
-              "AutoFitToSize": true,
-              "Offset": {
-                "x": 0,
-                "y": 0
-              },
-              "RelayEventToBehind": false,
-              "TouchArea": {
-                "x": 2.4,
-                "y": 2.8
-              },
-              "Enable": true
-            }
-          ],
-          "@version": 1
-        }
-      },
-      {
         "id": "e3a5d3b5-c738-46ca-8833-9986fae8ecae",
         "path": "/maps/boardgame_cafe/CafeCounter",
         "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent,MOD.Core.InteractionComponent,MOD.Core.TouchReceiveComponent,script.LexioShopNpc",
@@ -6647,7 +6489,7 @@
           "enable": true,
           "visible": true,
           "localize": false,
-          "displayOrder": 7,
+          "displayOrder": 6,
           "pathConstraints": "///",
           "revision": 1,
           "origin": {
@@ -6705,7 +6547,7 @@
                 "b": 1,
                 "a": 1
               },
-              "Enable": true
+              "Enable": false
             },
             {
               "@type": "MOD.Core.InteractionComponent",
@@ -6754,7 +6596,7 @@
           "enable": true,
           "visible": true,
           "localize": false,
-          "displayOrder": 9,
+          "displayOrder": 7,
           "pathConstraints": "///",
           "revision": 1,
           "origin": {
@@ -6810,7 +6652,7 @@
                 "b": 1,
                 "a": 1
               },
-              "Enable": true
+              "Enable": false
             }
           ],
           "@version": 1
@@ -6827,13 +6669,25 @@
           "enable": true,
           "visible": true,
           "localize": false,
-          "displayOrder": 115,
+          "displayOrder": 8,
           "pathConstraints": "///",
           "revision": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "mapobject",
+            "sub_entity_id": null,
+            "root_entity_id": "6ed036f4-5ab9-47f5-ac29-9409a1f19bda",
+            "replaced_model_id": null
+          },
           "modelId": "mapobject",
           "@components": [
             {
               "@type": "MOD.Core.TransformComponent",
+              "Rotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
               "Position": {
                 "x": -4.75,
                 "y": 0,
@@ -6850,37 +6704,33 @@
                 "y": 1.48,
                 "z": 1
               },
+              "ZRotation": 0,
               "Enable": true
             },
             {
               "@type": "MOD.Core.SpriteRendererComponent",
+              "ActionSheet": {},
+              "DrawMode": 0,
+              "EndFrameIndex": 2147483647,
+              "FlipX": false,
+              "FlipY": false,
+              "IgnoreMapLayerCheck": true,
+              "OrderInLayer": -8,
+              "PlayRate": 1,
+              "RenderSetting": 0,
+              "SortingLayer": "MapLayer0",
               "SpriteRUID": "5cd0f21502dd41bc8db9bc933d7b609c",
+              "StartFrameIndex": 0,
               "Color": {
                 "r": 1,
                 "g": 1,
                 "b": 1,
                 "a": 1
               },
-              "DrawMode": 0,
-              "FlipX": false,
-              "FlipY": false,
-              "PlayRate": 1,
-              "OrderInLayer": -8,
-              "StartFrameIndex": 0,
-              "EndFrameIndex": 2147483647,
-              "Enable": true,
-              "SortingLayer": "MapLayer0",
-              "IgnoreMapLayerCheck": true
+              "Enable": false
             }
           ],
-          "@version": 1,
-          "origin": {
-            "type": "Model",
-            "entry_id": "mapobject",
-            "sub_entity_id": null,
-            "root_entity_id": "6ed036f4-5ab9-47f5-ac29-9409a1f19bda",
-            "replaced_model_id": null
-          }
+          "@version": 1
         }
       },
       {
@@ -6894,13 +6744,25 @@
           "enable": true,
           "visible": true,
           "localize": false,
-          "displayOrder": 116,
+          "displayOrder": 9,
           "pathConstraints": "///",
           "revision": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "mapobject",
+            "sub_entity_id": null,
+            "root_entity_id": "3ec94945-6eca-4990-8628-e59001d0c70c",
+            "replaced_model_id": null
+          },
           "modelId": "mapobject",
           "@components": [
             {
               "@type": "MOD.Core.TransformComponent",
+              "Rotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
               "Position": {
                 "x": -3.45,
                 "y": 0,
@@ -6917,37 +6779,33 @@
                 "y": 0.9,
                 "z": 1
               },
+              "ZRotation": 0,
               "Enable": true
             },
             {
               "@type": "MOD.Core.SpriteRendererComponent",
+              "ActionSheet": {},
+              "DrawMode": 0,
+              "EndFrameIndex": 2147483647,
+              "FlipX": true,
+              "FlipY": false,
+              "IgnoreMapLayerCheck": true,
+              "OrderInLayer": -7,
+              "PlayRate": 1,
+              "RenderSetting": 0,
+              "SortingLayer": "MapLayer0",
               "SpriteRUID": "b71bcab7f8a74573ad8c85c81c64036a",
+              "StartFrameIndex": 0,
               "Color": {
                 "r": 1,
                 "g": 1,
                 "b": 1,
                 "a": 1
               },
-              "DrawMode": 0,
-              "FlipX": true,
-              "FlipY": false,
-              "PlayRate": 1,
-              "OrderInLayer": -7,
-              "StartFrameIndex": 0,
-              "EndFrameIndex": 2147483647,
-              "Enable": true,
-              "SortingLayer": "MapLayer0",
-              "IgnoreMapLayerCheck": true
+              "Enable": false
             }
           ],
-          "@version": 1,
-          "origin": {
-            "type": "Model",
-            "entry_id": "mapobject",
-            "sub_entity_id": null,
-            "root_entity_id": "3ec94945-6eca-4990-8628-e59001d0c70c",
-            "replaced_model_id": null
-          }
+          "@version": 1
         }
       },
       {
@@ -6961,13 +6819,25 @@
           "enable": true,
           "visible": true,
           "localize": false,
-          "displayOrder": 117,
+          "displayOrder": 10,
           "pathConstraints": "///",
           "revision": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "mapobject",
+            "sub_entity_id": null,
+            "root_entity_id": "87f6d6f3-8c0b-417d-993b-c3839add94ca",
+            "replaced_model_id": null
+          },
           "modelId": "mapobject",
           "@components": [
             {
               "@type": "MOD.Core.TransformComponent",
+              "Rotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
               "Position": {
                 "x": 4.45,
                 "y": 0,
@@ -6984,37 +6854,33 @@
                 "y": 1.12,
                 "z": 1
               },
+              "ZRotation": 0,
               "Enable": true
             },
             {
               "@type": "MOD.Core.SpriteRendererComponent",
+              "ActionSheet": {},
+              "DrawMode": 0,
+              "EndFrameIndex": 2147483647,
+              "FlipX": true,
+              "FlipY": false,
+              "IgnoreMapLayerCheck": true,
+              "OrderInLayer": -8,
+              "PlayRate": 1,
+              "RenderSetting": 0,
+              "SortingLayer": "MapLayer0",
               "SpriteRUID": "9e32f098dfbd46c28edc4efa72df63a4",
+              "StartFrameIndex": 0,
               "Color": {
                 "r": 1,
                 "g": 1,
                 "b": 1,
                 "a": 1
               },
-              "DrawMode": 0,
-              "FlipX": true,
-              "FlipY": false,
-              "PlayRate": 1,
-              "OrderInLayer": -8,
-              "StartFrameIndex": 0,
-              "EndFrameIndex": 2147483647,
-              "Enable": true,
-              "SortingLayer": "MapLayer0",
-              "IgnoreMapLayerCheck": true
+              "Enable": false
             }
           ],
-          "@version": 1,
-          "origin": {
-            "type": "Model",
-            "entry_id": "mapobject",
-            "sub_entity_id": null,
-            "root_entity_id": "87f6d6f3-8c0b-417d-993b-c3839add94ca",
-            "replaced_model_id": null
-          }
+          "@version": 1
         }
       },
       {
@@ -7028,13 +6894,25 @@
           "enable": true,
           "visible": true,
           "localize": false,
-          "displayOrder": 118,
+          "displayOrder": 11,
           "pathConstraints": "///",
           "revision": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "mapobject",
+            "sub_entity_id": null,
+            "root_entity_id": "04485ceb-798a-4310-8efe-95b2e5dc5c0d",
+            "replaced_model_id": null
+          },
           "modelId": "mapobject",
           "@components": [
             {
               "@type": "MOD.Core.TransformComponent",
+              "Rotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
               "Position": {
                 "x": 2.55,
                 "y": 0.08,
@@ -7051,37 +6929,33 @@
                 "y": 1.35,
                 "z": 1
               },
+              "ZRotation": 0,
               "Enable": true
             },
             {
               "@type": "MOD.Core.SpriteRendererComponent",
+              "ActionSheet": {},
+              "DrawMode": 0,
+              "EndFrameIndex": 2147483647,
+              "FlipX": false,
+              "FlipY": false,
+              "IgnoreMapLayerCheck": true,
+              "OrderInLayer": -2,
+              "PlayRate": 1,
+              "RenderSetting": 0,
+              "SortingLayer": "MapLayer0",
               "SpriteRUID": "b787d2fe6401473e9c94d4d5230a6d92",
+              "StartFrameIndex": 0,
               "Color": {
                 "r": 1,
                 "g": 1,
                 "b": 1,
                 "a": 1
               },
-              "DrawMode": 0,
-              "FlipX": false,
-              "FlipY": false,
-              "PlayRate": 1,
-              "OrderInLayer": -2,
-              "StartFrameIndex": 0,
-              "EndFrameIndex": 2147483647,
-              "Enable": true,
-              "SortingLayer": "MapLayer0",
-              "IgnoreMapLayerCheck": true
+              "Enable": false
             }
           ],
-          "@version": 1,
-          "origin": {
-            "type": "Model",
-            "entry_id": "mapobject",
-            "sub_entity_id": null,
-            "root_entity_id": "04485ceb-798a-4310-8efe-95b2e5dc5c0d",
-            "replaced_model_id": null
-          }
+          "@version": 1
         }
       },
       {
@@ -7095,13 +6969,25 @@
           "enable": true,
           "visible": true,
           "localize": false,
-          "displayOrder": 119,
+          "displayOrder": 12,
           "pathConstraints": "///",
           "revision": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "mapobject",
+            "sub_entity_id": null,
+            "root_entity_id": "dc45837d-fe1a-4365-badb-2f245dd294ae",
+            "replaced_model_id": null
+          },
           "modelId": "mapobject",
           "@components": [
             {
               "@type": "MOD.Core.TransformComponent",
+              "Rotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
               "Position": {
                 "x": 1.2,
                 "y": 0.34,
@@ -7118,37 +7004,33 @@
                 "y": 1,
                 "z": 1
               },
+              "ZRotation": 0,
               "Enable": true
             },
             {
               "@type": "MOD.Core.SpriteRendererComponent",
+              "ActionSheet": {},
+              "DrawMode": 0,
+              "EndFrameIndex": 2147483647,
+              "FlipX": false,
+              "FlipY": false,
+              "IgnoreMapLayerCheck": true,
+              "OrderInLayer": -1,
+              "PlayRate": 1,
+              "RenderSetting": 0,
+              "SortingLayer": "MapLayer0",
               "SpriteRUID": "f1de58c2f22b46c98631d24827d5fe5a",
+              "StartFrameIndex": 0,
               "Color": {
                 "r": 1,
                 "g": 1,
                 "b": 1,
                 "a": 1
               },
-              "DrawMode": 0,
-              "FlipX": false,
-              "FlipY": false,
-              "PlayRate": 1,
-              "OrderInLayer": -1,
-              "StartFrameIndex": 0,
-              "EndFrameIndex": 2147483647,
-              "Enable": true,
-              "SortingLayer": "MapLayer0",
-              "IgnoreMapLayerCheck": true
+              "Enable": false
             }
           ],
-          "@version": 1,
-          "origin": {
-            "type": "Model",
-            "entry_id": "mapobject",
-            "sub_entity_id": null,
-            "root_entity_id": "dc45837d-fe1a-4365-badb-2f245dd294ae",
-            "replaced_model_id": null
-          }
+          "@version": 1
         }
       },
       {
@@ -7162,13 +7044,25 @@
           "enable": true,
           "visible": true,
           "localize": false,
-          "displayOrder": 120,
+          "displayOrder": 13,
           "pathConstraints": "///",
           "revision": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "mapobject",
+            "sub_entity_id": null,
+            "root_entity_id": "234e41a1-0d73-4af5-869a-47469efb18ed",
+            "replaced_model_id": null
+          },
           "modelId": "mapobject",
           "@components": [
             {
               "@type": "MOD.Core.TransformComponent",
+              "Rotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
               "Position": {
                 "x": -2.2,
                 "y": 0.02,
@@ -7185,37 +7079,33 @@
                 "y": 0.78,
                 "z": 1
               },
+              "ZRotation": 0,
               "Enable": true
             },
             {
               "@type": "MOD.Core.SpriteRendererComponent",
+              "ActionSheet": {},
+              "DrawMode": 0,
+              "EndFrameIndex": 2147483647,
+              "FlipX": false,
+              "FlipY": false,
+              "IgnoreMapLayerCheck": true,
+              "OrderInLayer": -2,
+              "PlayRate": 1,
+              "RenderSetting": 0,
+              "SortingLayer": "MapLayer0",
               "SpriteRUID": "960c500154b74be0b65aa94f723fe2d2",
+              "StartFrameIndex": 0,
               "Color": {
                 "r": 1,
                 "g": 1,
                 "b": 1,
                 "a": 1
               },
-              "DrawMode": 0,
-              "FlipX": false,
-              "FlipY": false,
-              "PlayRate": 1,
-              "OrderInLayer": -2,
-              "StartFrameIndex": 0,
-              "EndFrameIndex": 2147483647,
-              "Enable": true,
-              "SortingLayer": "MapLayer0",
-              "IgnoreMapLayerCheck": true
+              "Enable": false
             }
           ],
-          "@version": 1,
-          "origin": {
-            "type": "Model",
-            "entry_id": "mapobject",
-            "sub_entity_id": null,
-            "root_entity_id": "234e41a1-0d73-4af5-869a-47469efb18ed",
-            "replaced_model_id": null
-          }
+          "@version": 1
         }
       },
       {
@@ -7229,13 +7119,25 @@
           "enable": true,
           "visible": true,
           "localize": false,
-          "displayOrder": 121,
+          "displayOrder": 14,
           "pathConstraints": "///",
           "revision": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "mapobject",
+            "sub_entity_id": null,
+            "root_entity_id": "0eb8b50a-1378-43cf-af49-eebc2e02aa24",
+            "replaced_model_id": null
+          },
           "modelId": "mapobject",
           "@components": [
             {
               "@type": "MOD.Core.TransformComponent",
+              "Rotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
               "Position": {
                 "x": -1.05,
                 "y": 0.01,
@@ -7252,37 +7154,33 @@
                 "y": 1.18,
                 "z": 1
               },
+              "ZRotation": 0,
               "Enable": true
             },
             {
               "@type": "MOD.Core.SpriteRendererComponent",
+              "ActionSheet": {},
+              "DrawMode": 0,
+              "EndFrameIndex": 2147483647,
+              "FlipX": false,
+              "FlipY": false,
+              "IgnoreMapLayerCheck": true,
+              "OrderInLayer": -3,
+              "PlayRate": 1,
+              "RenderSetting": 0,
+              "SortingLayer": "MapLayer0",
               "SpriteRUID": "22d9a90f4f1441f784c716229ed89b57",
+              "StartFrameIndex": 0,
               "Color": {
                 "r": 1,
                 "g": 1,
                 "b": 1,
                 "a": 1
               },
-              "DrawMode": 0,
-              "FlipX": false,
-              "FlipY": false,
-              "PlayRate": 1,
-              "OrderInLayer": -3,
-              "StartFrameIndex": 0,
-              "EndFrameIndex": 2147483647,
-              "Enable": true,
-              "SortingLayer": "MapLayer0",
-              "IgnoreMapLayerCheck": true
+              "Enable": false
             }
           ],
-          "@version": 1,
-          "origin": {
-            "type": "Model",
-            "entry_id": "mapobject",
-            "sub_entity_id": null,
-            "root_entity_id": "0eb8b50a-1378-43cf-af49-eebc2e02aa24",
-            "replaced_model_id": null
-          }
+          "@version": 1
         }
       },
       {
@@ -7296,13 +7194,25 @@
           "enable": true,
           "visible": true,
           "localize": false,
-          "displayOrder": 122,
+          "displayOrder": 15,
           "pathConstraints": "///",
           "revision": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "mapobject",
+            "sub_entity_id": null,
+            "root_entity_id": "db08df94-a62d-4ce1-9bd5-8c6374f5cb8e",
+            "replaced_model_id": null
+          },
           "modelId": "mapobject",
           "@components": [
             {
               "@type": "MOD.Core.TransformComponent",
+              "Rotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
               "Position": {
                 "x": -0.45,
                 "y": 0.01,
@@ -7319,37 +7229,33 @@
                 "y": 1.35,
                 "z": 1
               },
+              "ZRotation": 0,
               "Enable": true
             },
             {
               "@type": "MOD.Core.SpriteRendererComponent",
+              "ActionSheet": {},
+              "DrawMode": 0,
+              "EndFrameIndex": 2147483647,
+              "FlipX": false,
+              "FlipY": false,
+              "IgnoreMapLayerCheck": true,
+              "OrderInLayer": -3,
+              "PlayRate": 1,
+              "RenderSetting": 0,
+              "SortingLayer": "MapLayer0",
               "SpriteRUID": "65730127f2ce4295a7c0a96c79073863",
+              "StartFrameIndex": 0,
               "Color": {
                 "r": 1,
                 "g": 1,
                 "b": 1,
                 "a": 1
               },
-              "DrawMode": 0,
-              "FlipX": false,
-              "FlipY": false,
-              "PlayRate": 1,
-              "OrderInLayer": -3,
-              "StartFrameIndex": 0,
-              "EndFrameIndex": 2147483647,
-              "Enable": true,
-              "SortingLayer": "MapLayer0",
-              "IgnoreMapLayerCheck": true
+              "Enable": false
             }
           ],
-          "@version": 1,
-          "origin": {
-            "type": "Model",
-            "entry_id": "mapobject",
-            "sub_entity_id": null,
-            "root_entity_id": "db08df94-a62d-4ce1-9bd5-8c6374f5cb8e",
-            "replaced_model_id": null
-          }
+          "@version": 1
         }
       },
       {
@@ -7363,13 +7269,25 @@
           "enable": true,
           "visible": true,
           "localize": false,
-          "displayOrder": 123,
+          "displayOrder": 16,
           "pathConstraints": "///",
           "revision": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "mapobject",
+            "sub_entity_id": null,
+            "root_entity_id": "ec9e932a-7f1e-4113-892e-27114d354620",
+            "replaced_model_id": null
+          },
           "modelId": "mapobject",
           "@components": [
             {
               "@type": "MOD.Core.TransformComponent",
+              "Rotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
               "Position": {
                 "x": 3.15,
                 "y": 0.01,
@@ -7386,37 +7304,33 @@
                 "y": 0.9,
                 "z": 1
               },
+              "ZRotation": 0,
               "Enable": true
             },
             {
               "@type": "MOD.Core.SpriteRendererComponent",
+              "ActionSheet": {},
+              "DrawMode": 0,
+              "EndFrameIndex": 2147483647,
+              "FlipX": true,
+              "FlipY": false,
+              "IgnoreMapLayerCheck": true,
+              "OrderInLayer": -3,
+              "PlayRate": 1,
+              "RenderSetting": 0,
+              "SortingLayer": "MapLayer0",
               "SpriteRUID": "22d9a90f4f1441f784c716229ed89b57",
+              "StartFrameIndex": 0,
               "Color": {
                 "r": 1,
                 "g": 1,
                 "b": 1,
                 "a": 1
               },
-              "DrawMode": 0,
-              "FlipX": true,
-              "FlipY": false,
-              "PlayRate": 1,
-              "OrderInLayer": -3,
-              "StartFrameIndex": 0,
-              "EndFrameIndex": 2147483647,
-              "Enable": true,
-              "SortingLayer": "MapLayer0",
-              "IgnoreMapLayerCheck": true
+              "Enable": false
             }
           ],
-          "@version": 1,
-          "origin": {
-            "type": "Model",
-            "entry_id": "mapobject",
-            "sub_entity_id": null,
-            "root_entity_id": "ec9e932a-7f1e-4113-892e-27114d354620",
-            "replaced_model_id": null
-          }
+          "@version": 1
         }
       }
     ]

@@ -39,6 +39,10 @@ script LexioGameSession extends Component
 
 	property table scoreDeltas = {}
 
+	property boolean persistentRewardsEligible = false
+
+	property boolean persistentRewardSettled = false
+
 	@ExecSpace("ServerOnly")
 	method void ResetSession()
 		        -- Restores the component to its only pre-game state without starting a game.
@@ -61,6 +65,7 @@ script LexioGameSession extends Component
 		        self.winnerIndex = 0
 		        self.scoreLedger = {}
 		        self.scoreDeltas = {}
+		        self.persistentRewardSettled = false
 	end
 
 	method void CalculateFinishedScores()
@@ -84,7 +89,21 @@ script LexioGameSession extends Component
 		        local total = 0
 		        for seat = 1, self.playerCount do total = total + (self.scoreDeltas[seat] or 0) end
 		        log("[VRF] SCORE SETTLED winner=" .. tostring(self.winnerIndex) .. " delta_sum=" .. tostring(total))
-		        _LexioRewardService:GrantMatchRewards(self.userIds, self.winnerIndex)
+		        if self.persistentRewardsEligible and not self.persistentRewardSettled then
+		            self.persistentRewardSettled = true
+		            _LexioRewardService:GrantMatchRewards(self.userIds, self.winnerIndex)
+		        elseif self.persistentRewardSettled then
+		            log("[VRF] REWARD SKIP reason=already_settled players=" .. tostring(#self.userIds))
+		        else
+		            log("[VRF] REWARD SKIP reason=ineligible_session players=" .. tostring(#self.userIds))
+		        end
+	end
+
+	@ExecSpace("ServerOnly")
+	method void SetPersistentRewardsEligible(boolean eligible, string source)
+		        self.persistentRewardsEligible = eligible
+		        if not eligible then self.persistentRewardSettled = false end
+		        log("[VRF] REWARD ELIGIBILITY eligible=" .. tostring(eligible) .. " source=" .. tostring(source))
 	end
 
 	method boolean IsTransitionAllowed(string fromPhase, string toPhase)

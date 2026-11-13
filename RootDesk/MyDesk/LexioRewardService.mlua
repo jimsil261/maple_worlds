@@ -201,8 +201,10 @@ script LexioRewardService
 		if amount <= 0 then return false end
 		local profile = self:LoadProfile(userId)
 		if profile == nil then return false end
-		profile.points = profile.points + amount
+		local previousPoints = profile.points
+		profile.points = previousPoints + amount
 		local saved = self:SaveProfile(userId)
+		if not saved then profile.points = previousPoints end
 		log("[VRF] REWARD GRANT user=" .. userId .. " amount=" .. tostring(amount) .. " reason=" .. reason .. " balance=" .. tostring(profile.points) .. " saved=" .. tostring(saved))
 		return saved
 	end

@@ -1,0 +1,23 @@
+{
+  "Id": "",
+  "GameId": "",
+  "EntryKey": "directory://d98a4eaba60247fe8b3b1e3faef2d23f",
+  "ContentType": "x-mod/directory",
+  "Content": "",
+  "Usage": 0,
+  "UsePublish": 1,
+  "UseService": 0,
+  "CoreVersion": "26.10.0.0",
+  "StudioVersion": "",
+  "DynamicLoading": 0,
+  "ContentProto": {
+    "Use": "Json",
+    "Json": {
+      "entry_id": "directory://d98a4eaba60247fe8b3b1e3faef2d23f",
+      "name": "LexioBuilding",
+      "lock": false,
+      "folding": false,
+      "nameEditable": true
+    }
+  }
+}

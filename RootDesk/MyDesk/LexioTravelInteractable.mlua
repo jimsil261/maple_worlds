@@ -10,16 +10,37 @@ script LexioTravelInteractable extends Component
 	@ExecSpace("ClientOnly")
 	@EventSender("Self")
 	handler HandleInteractionEvent(InteractionEvent event)
-		        local player = _UserService.LocalPlayer
-		        if self.RouteId ~= "LEXIO_EXIT" then return end
-		        if player == nil or event.InteractionEntity ~= player then return end
-		        local bridge = player:GetComponent("script.LexioTravelBridge")
-		        if bridge == nil then
-		            log_warning("[LexioTravelInteractable] bridge unavailable route=" .. self.RouteId)
-		            return
-		        end
-		        log("[LexioTravelInteractable] INTERACT route=" .. self.RouteId)
-		        bridge:RequestTravel(self.ObjectKey, self.RouteId, player)
+		-- Sends every configured portal interaction, including elevator doors,
+		-- through the authenticated player bridge. Static map entities are not
+		-- discoverable by client path lookup, so their native InteractionEvent is
+		-- the authoritative elevator input path.
+		local player = _UserService.LocalPlayer
+		if player == nil or event.InteractionEntity ~= player then return end
+		local bridge = player:GetComponent("script.LexioTravelBridge")
+		if bridge == nil then
+			log_warning("[LexioTravelInteractable] bridge unavailable route=" .. self.RouteId)
+			return
+		end
+		log("[VRF] LEXIO INTERACT route=" .. self.RouteId .. " object=" .. self.ObjectKey)
+		bridge:RequestTravel(self.ObjectKey, self.RouteId, player)
+	end
+
+	@ExecSpace("ServerOnly")
+	@EventSender("Self")
+	handler HandleElevatorInteractionEvent(InteractionEvent event)
+		if string.sub(self.RouteId, 1, 15) ~= "LEXIO_ELEVATOR_" then return end
+		local player = event.InteractionEntity
+		if player == nil or player.PlayerComponent == nil or player.CurrentMap ~= self.Entity.CurrentMap then return end
+		local destinations = {
+			LEXIO_ELEVATOR_1F_UP = Vector3(-5.8, -5.79, 0),
+			LEXIO_ELEVATOR_2F_DOWN = Vector3(5.8, -11.79, 0),
+			LEXIO_ELEVATOR_2F_UP = Vector3(-5.8, 0.21, 0),
+			LEXIO_ELEVATOR_3F_DOWN = Vector3(5.8, -5.79, 0)
+		}
+		local destination = destinations[self.RouteId]
+		if destination == nil then return end
+		player.TransformComponent.WorldPosition = destination
+		log("[VRF] ELEVATOR INTERACTION route=" .. self.RouteId .. " destination=(" .. tostring(destination.x) .. "," .. tostring(destination.y) .. ")")
 	end
 
 end

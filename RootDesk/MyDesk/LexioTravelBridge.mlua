@@ -117,6 +117,19 @@ script LexioTravelBridge extends Component
 	end
 
 	method table GetRoute(string routeId)
+		-- Returns the server-owned travel contract for map transitions and elevator stops.
+		if routeId == "LEXIO_ELEVATOR_1F_UP" then
+			return { sourceMap = "map01", objectKey = "LexioElevator1FUp", objectPath = "/maps/map01/LexioElevator1FUp", destinationMap = "map01", destinationPosition = Vector3(-5.8, -5.79, 0), localMove = true }
+		end
+		if routeId == "LEXIO_ELEVATOR_2F_DOWN" then
+			return { sourceMap = "map01", objectKey = "LexioElevator2FDown", objectPath = "/maps/map01/LexioElevator2FDown", destinationMap = "map01", destinationPosition = Vector3(5.8, -11.79, 0), localMove = true }
+		end
+		if routeId == "LEXIO_ELEVATOR_2F_UP" then
+			return { sourceMap = "map01", objectKey = "LexioElevator2FUp", objectPath = "/maps/map01/LexioElevator2FUp", destinationMap = "map01", destinationPosition = Vector3(-5.8, 0.21, 0), localMove = true }
+		end
+		if routeId == "LEXIO_ELEVATOR_3F_DOWN" then
+			return { sourceMap = "map01", objectKey = "LexioElevator3FDown", objectPath = "/maps/map01/LexioElevator3FDown", destinationMap = "map01", destinationPosition = Vector3(5.8, -5.79, 0), localMove = true }
+		end
 		        if routeId == "CAFE_ENTER" then
 		            return {
 		                sourceMap = "TileMapTemplate",
@@ -157,10 +170,17 @@ script LexioTravelBridge extends Component
 		        local route = self:GetRoute(routeId)
 		        if route == nil then return "invalid_route" end
 		        if objectKey ~= route.objectKey then return "invalid_object" end
-		        if self.allowedMapName ~= route.sourceMap or self.Entity.CurrentMapName ~= route.sourceMap then return "invalid_source_map" end
 		        local source = _EntityService:GetEntityByPath(route.objectPath)
 		        if source == nil or not isvalid(source) then return "missing_object" end
-		        if source.CurrentMap == nil or source.CurrentMap.Name ~= route.sourceMap then return "invalid_object_map" end
+		        if route.localMove == true then
+		            -- MSW can expose different proxy objects for the same loaded map.
+		            -- The fixed map01 object path plus the distance check below is the
+		            -- authoritative local-elevator validation.
+		            if self.Entity.CurrentMap == nil or source.CurrentMap == nil then return "invalid_source_map" end
+		        else
+		            if self.allowedMapName ~= route.sourceMap or self.Entity.CurrentMapName ~= route.sourceMap then return "invalid_source_map" end
+		            if source.CurrentMap == nil or source.CurrentMap.Name ~= route.sourceMap then return "invalid_object_map" end
+		        end
 		        if source.InteractionComponent == nil then return "missing_interaction" end
 		        local interactable = source:GetComponent("script.LexioTravelInteractable")
 		        if interactable == nil or interactable.ObjectKey ~= objectKey or interactable.RouteId ~= routeId then return "object_contract" end
@@ -181,6 +201,7 @@ script LexioTravelBridge extends Component
 
 	@ExecSpace("ServerOnly")
 	method boolean BeginTravel(string objectKey, string routeId, Entity claimedPlayerEntity, string callerUserId)
+		-- Validates a portal request and performs either an in-map elevator move or map teleport.
 		        local rejection = self:ValidateRequest(callerUserId, objectKey, routeId, claimedPlayerEntity)
 		        if rejection ~= "" then
 		            log_warning("[LexioTravel] REJECT userId=" .. tostring(callerUserId) .. " route=" .. tostring(routeId) .. " reason=" .. rejection)
@@ -191,6 +212,15 @@ script LexioTravelBridge extends Component
 		            local host = self.Entity.CurrentMap:GetChildByName("LexioManualSessionHost")
 		            local coordinator = host ~= nil and host:GetComponent("script.LexioSessionCoordinator") or nil
 		            if coordinator ~= nil then coordinator:PreparePlayerExit(callerUserId, self.Entity) end
+		        end
+		        if route.localMove == true then
+		            self.cooldownRemaining = self.requestCooldown
+		            -- Player physics rewrites direct Transform/Rigidbody changes on the
+		            -- next frame. TeleportToMapPosition commits the destination through
+		            -- the authoritative player travel pipeline, even within map01.
+		            _TeleportService:TeleportToMapPosition(self.Entity, route.destinationPosition, "map01")
+		            log("[VRF] LEXIO ELEVATOR userId=" .. callerUserId .. " route=" .. routeId .. " y=" .. tostring(route.destinationPosition.y))
+		            return true
 		        end
 		        self.inFlight = true
 		        self.destinationMapName = route.destinationMap

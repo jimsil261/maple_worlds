@@ -58,6 +58,15 @@ script LexioPlayerBridge extends Component
 		        return true
 	end
 
+	@ExecSpace("ServerOnly")
+	method boolean IsAuthenticatedShopCaller(string callerUserId)
+		        if callerUserId == nil or callerUserId == "" then return false end
+		        if self.Entity == nil or not isvalid(self.Entity) or self.Entity.PlayerComponent == nil then return false end
+		        if self.Entity.PlayerComponent.UserId ~= callerUserId then return false end
+		        local mapName = self.Entity.CurrentMapName
+		        return mapName == "boardgame_cafe" or mapName == "TileMapTemplate" or mapName == "map01"
+	end
+
 	method boolean IsRequestIdValid(string requestId)
 		        return requestId ~= nil and requestId ~= "" and #requestId <= 64
 	end
@@ -199,29 +208,31 @@ script LexioPlayerBridge extends Component
 
 	@ExecSpace("Server")
 	method void RequestShopSnapshot(string requestId)
-		        if not self:IsAuthenticatedCaller(senderUserId) or not self:IsRequestIdValid(requestId) then return end
-		        self:ReceiveShopResult(requestId, true, "snapshot", _LexioRewardService:GetShopSnapshot(senderUserId), self.boundUserId)
+		        local authenticated = self:IsAuthenticatedShopCaller(senderUserId)
+		        log("[VRF] SHOP SNAPSHOT REQUEST user=" .. tostring(senderUserId) .. " authenticated=" .. tostring(authenticated) .. " requestId=" .. tostring(requestId))
+		        if not authenticated or not self:IsRequestIdValid(requestId) then return end
+		        self:ReceiveShopResult(requestId, true, "snapshot", _LexioRewardService:GetShopSnapshot(senderUserId), senderUserId)
 	end
 
 	@ExecSpace("Server")
 	method void RequestShopPurchase(string requestId, string itemId)
-		        if not self:IsAuthenticatedCaller(senderUserId) or not self:IsRequestIdValid(requestId) then return end
+		        if not self:IsAuthenticatedShopCaller(senderUserId) or not self:IsRequestIdValid(requestId) then return end
 		        local result = _LexioRewardService:PurchaseItem(senderUserId, itemId)
-		        self:ReceiveShopResult(requestId, result.ok, result.reason, result.snapshot or _LexioRewardService:GetShopSnapshot(senderUserId), self.boundUserId)
+		        self:ReceiveShopResult(requestId, result.ok, result.reason, result.snapshot or _LexioRewardService:GetShopSnapshot(senderUserId), senderUserId)
 	end
 
 	@ExecSpace("Server")
 	method void RequestShopEquip(string requestId, string itemId)
-		        if not self:IsAuthenticatedCaller(senderUserId) or not self:IsRequestIdValid(requestId) then return end
-		        local result = _LexioRewardService:EquipItem(senderUserId, self.ownerPlayerEntity, itemId)
-		        self:ReceiveShopResult(requestId, result.ok, result.reason, result.snapshot or _LexioRewardService:GetShopSnapshot(senderUserId), self.boundUserId)
+		        if not self:IsAuthenticatedShopCaller(senderUserId) or not self:IsRequestIdValid(requestId) then return end
+		        local result = _LexioRewardService:EquipItem(senderUserId, self.Entity, itemId)
+		        self:ReceiveShopResult(requestId, result.ok, result.reason, result.snapshot or _LexioRewardService:GetShopSnapshot(senderUserId), senderUserId)
 	end
 
 	@ExecSpace("Server")
 	method void RequestShopUnequip(string requestId, string slot)
-		        if not self:IsAuthenticatedCaller(senderUserId) or not self:IsRequestIdValid(requestId) then return end
-		        local result = _LexioRewardService:UnequipSlot(senderUserId, self.ownerPlayerEntity, slot)
-		        self:ReceiveShopResult(requestId, result.ok, result.reason, result.snapshot or _LexioRewardService:GetShopSnapshot(senderUserId), self.boundUserId)
+		        if not self:IsAuthenticatedShopCaller(senderUserId) or not self:IsRequestIdValid(requestId) then return end
+		        local result = _LexioRewardService:UnequipSlot(senderUserId, self.Entity, slot)
+		        self:ReceiveShopResult(requestId, result.ok, result.reason, result.snapshot or _LexioRewardService:GetShopSnapshot(senderUserId), senderUserId)
 	end
 
 	@ExecSpace("ServerOnly")

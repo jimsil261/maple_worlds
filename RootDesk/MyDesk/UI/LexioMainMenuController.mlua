@@ -1,0 +1,445 @@
+@Component
+script LexioMainMenuController extends Component
+
+	property Entity MenuRoot = "26405ff8-9265-4d88-a1ee-431c07780f13"
+	property Entity Background = "d44f40c2-3d95-4fc3-9e4b-2fb46dbae3c2"
+	property Entity Logo = "91d9fd39-a100-43b7-bfed-4e531cbaf69c"
+	property Entity Footer = "f34187a9-da8c-4ec1-8a03-e1ed1a100c8e"
+	property Entity StartButton = "591bc26d-64c7-4430-b635-d045b7a82a07"
+	property Entity RulesButton = "41b3e6fc-86a6-464f-928c-3650c0e5054d"
+	property Entity ExitButton = "170d0d3c-25cb-44ab-b4bb-d7feb246af58"
+	property Entity RulesPanel = "77996246-5620-420c-a4e4-aabeb7424630"
+	property Entity RulesCloseButton = "adca6403-3a00-461d-833e-190551fd02cf"
+	property Entity ExitPanel = "8f96626c-829c-46e9-9a9a-30856feb874c"
+	property Entity ExitCloseButton = "491d178e-c26b-4edc-b5ee-200a8f56630c"
+	property Entity LobbyRoot = nil
+	property Entity AutoMatchButton = nil
+	property Entity MatchPanel = nil
+	property Entity LobbyBackButton = nil
+	property Entity CreateRoomOpenButton = nil
+	property Entity CreateRoomCancelButton = nil
+	property Entity HandGuide = "7a492086-c673-47a7-8ee2-2c07984eaf8b"
+	property Entity RulesHandGuideButton = "b6ff78a2-1ac6-43d4-a86e-1c93c0f6d027"
+	property Entity RulePageLabel = nil
+	property Entity RulePrevButton = nil
+	property Entity RuleNextButton = nil
+	property Entity GameHandGuideButton = nil
+	property Entity HandGuideCloseButton = "d412e22e-8be4-4911-9491-082ed990599d"
+
+	@ExecSpace("ClientOnly")
+	method void OnBeginPlay()
+		self._T.Elapsed = 0
+		self._T.LobbyOpened = false
+		self._T.RulePage = 1
+		self._T.Connections = {}
+		if not isvalid(self.LobbyRoot) then
+			self.LobbyRoot = _EntityService:GetEntityByPath("/ui/LexioPrivateRoom")
+		end
+		self.AutoMatchButton = _EntityService:GetEntityByPath("/ui/LexioPrivateRoom/Browser/AutoMatchButton")
+		self.MatchPanel = _EntityService:GetEntityByPath("/ui/LexioPlayHUD/MatchPanel")
+		self.LobbyBackButton = _EntityService:GetEntityByPath("/ui/LexioPrivateRoom/Browser/BackButton")
+		self.CreateRoomOpenButton = _EntityService:GetEntityByPath("/ui/LexioPrivateRoom/Browser/OpenCreateButton")
+		self.CreateRoomCancelButton = _EntityService:GetEntityByPath("/ui/LexioPrivateRoom/Browser/CreateCancelButton")
+		self.GameHandGuideButton = _EntityService:GetEntityByPath("/ui/LexioPlayHUD/HandGuideButton")
+		self.HandGuideCloseButton = _EntityService:GetEntityByPath("/ui/LexioMainMenu/HandGuide/CloseButton")
+		self.RulePageLabel = _EntityService:GetEntityByPath("/ui/LexioMainMenu/RulesPanel/PageLabel")
+		self.RulePrevButton = _EntityService:GetEntityByPath("/ui/LexioMainMenu/RulesPanel/PrevButton")
+		self.RuleNextButton = _EntityService:GetEntityByPath("/ui/LexioMainMenu/RulesPanel/NextButton")
+
+		if isvalid(self.MenuRoot) then
+			self.MenuRoot.Enable = true
+		end
+		if isvalid(self.RulesPanel) then
+			self.RulesPanel.Enable = false
+		end
+		if isvalid(self.ExitPanel) then
+			self.ExitPanel.Enable = false
+		end
+		if isvalid(self.HandGuide) then
+			self.HandGuide.Enable = false
+			self:NormalizeHandGuide()
+		end
+		if isvalid(self.LobbyRoot) then
+			self.LobbyRoot.Enable = false
+		end
+
+		self:ConnectButton(self.StartButton, function()
+			self:OpenLobby()
+		end)
+		self:ConnectButton(self.RulesButton, function()
+			self:OpenRules()
+		end)
+		self:ConnectButton(self.ExitButton, function()
+			self:OpenExitGuide()
+		end)
+		self:ConnectButton(self.RulesCloseButton, function()
+			self:CloseRules()
+		end)
+		self:ConnectButton(self.RulePrevButton, function()
+			self:ChangeRulePage(-1)
+		end)
+		self:ConnectButton(self.RuleNextButton, function()
+			self:ChangeRulePage(1)
+		end)
+		self:ConnectButton(self.ExitCloseButton, function()
+			self:CloseExitGuide()
+		end)
+		self:ConnectButton(self.AutoMatchButton, function()
+			self:OpenAutoMatch()
+		end)
+		self:ConnectButton(self.LobbyBackButton, function()
+			self:CloseLobby()
+		end)
+		self:ConnectButton(self.CreateRoomOpenButton, function()
+			_LexioPlayUIController:SetCreatePopupVisible(true)
+		end)
+		self:ConnectButton(self.CreateRoomCancelButton, function()
+			_LexioPlayUIController:SetCreatePopupVisible(false)
+		end)
+		self:ConnectButton(self.RulesHandGuideButton, function()
+			self:CloseRules()
+			self:OpenHandGuide()
+		end)
+		self:ConnectButton(self.GameHandGuideButton, function()
+			self:OpenHandGuide()
+		end)
+		self:ConnectButton(self.HandGuideCloseButton, function()
+			self:CloseHandGuide()
+		end)
+
+		log("[VRF] LexioMainMenu ready lobbyHidden=true")
+	end
+
+	@ExecSpace("ClientOnly")
+	method void OnUpdate(number delta)
+		if self._T.LobbyOpened and isvalid(self.LobbyRoot) then
+			-- Room/game visibility belongs to the play UI controller after opening the lobby.
+		end
+		if not isvalid(self.Logo) then
+			return
+		end
+
+		self._T.Elapsed = self._T.Elapsed + delta
+		local entrance = math.min(self._T.Elapsed / 0.45, 1)
+		local eased = 1 - ((1 - entrance) * (1 - entrance) * (1 - entrance))
+		local breathe = math.sin(self._T.Elapsed * 1.55) * 0.012
+		local scale = (0.82 + (0.18 * eased)) + breathe
+		local floatY = math.sin(self._T.Elapsed * 1.2) * 6
+		self.Logo.UITransformComponent.UIScale = Vector3(scale, scale, 1)
+		self.Logo.UITransformComponent.anchoredPosition = Vector2(0, 260 + floatY)
+	end
+
+	@ExecSpace("ClientOnly")
+	method void ConnectButton(Entity button, any callback)
+		if not isvalid(button) then
+			return
+		end
+		local connection = button:ConnectEvent(ButtonClickEvent, callback)
+		table.insert(self._T.Connections, { entity = button, connection = connection })
+	end
+
+	@ExecSpace("ClientOnly")
+	method void OpenLobby()
+		-- Enters the authoritative session map while retaining the static lobby presentation.
+		local player = _UserService.LocalPlayer
+		local controls = player ~= nil and player:GetComponent("script.LexioManualTestControls") or nil
+		if controls ~= nil then controls:RequestEnterStaticLobby() end
+		self._T.LobbyOpened = true
+		_LexioPlayUIController:SetStaticLobbyOpen(true)
+		self:SetMenuChrome(false)
+		if isvalid(self.LobbyRoot) then
+			self.LobbyRoot.Enable = true
+		if self.LobbyRoot.UIGroupComponent ~= nil then
+			self.LobbyRoot.UIGroupComponent.GroupOrder = 100
+		end
+		if self.LobbyRoot.UITransformComponent ~= nil and self.MenuRoot.UITransformComponent ~= nil then
+			local menuIndex = _UILogic:GetSiblingIndex(self.MenuRoot.UITransformComponent)
+			_UILogic:SetSiblingIndex(self.LobbyRoot.UITransformComponent, menuIndex + 1)
+		end
+		end
+		log("[VRF] LexioMainMenu startClicked lobbyShown=true")
+	end
+
+	@ExecSpace("ClientOnly")
+	method void CloseLobby()
+		self._T.LobbyOpened = false
+		_LexioPlayUIController:SetStaticLobbyOpen(false)
+		if isvalid(self.LobbyRoot) then self.LobbyRoot.Enable = false end
+		self:SetMenuChrome(true)
+		log("[VRF] LexioMainMenu lobbyClosed=true")
+	end
+
+	@ExecSpace("ClientOnly")
+	method void SetMenuChrome(boolean enabled)
+		if isvalid(self.Logo) then self.Logo.Enable = enabled end
+		if isvalid(self.Footer) then self.Footer.Enable = enabled end
+		if isvalid(self.StartButton) then self.StartButton.Enable = enabled end
+		if isvalid(self.RulesButton) then self.RulesButton.Enable = enabled end
+		if isvalid(self.ExitButton) then self.ExitButton.Enable = false end
+	end
+
+	@ExecSpace("ClientOnly")
+	method void OpenRules()
+		self:SetMenuChrome(false)
+		if isvalid(self.RulesPanel) then
+			self.RulesPanel.Enable = true
+		end
+		self._T.RulePage = 1
+		self:RenderRulePage()
+		log("[VRF] LexioMainMenu rulesOpened=true")
+	end
+
+	@ExecSpace("ClientOnly")
+	method void ChangeRulePage(integer delta)
+		local page = self._T.RulePage + delta
+		if page < 1 then page = 1 end
+		if page > 5 then page = 5 end
+		self._T.RulePage = page
+		self:RenderRulePage()
+		log("[VRF] rules page=" .. tostring(page))
+	end
+
+	@ExecSpace("ClientOnly")
+	method void RenderRulePage()
+		local page = self._T.RulePage
+		local body = _EntityService:GetEntityByPath("/ui/LexioMainMenu/RulesPanel/Body")
+		local texts = {
+			"카드를 가장 먼저 모두 내면 승리합니다.\n내 차례에는 앞사람과 같은 장수의 더 강한 조합을 내거나 패스하세요.",
+			"숫자: 3 < 4 < … < 15 < 1 < 2\n같은 숫자: 파란 달팽이 < 주황버섯 < 슬라임 < 핑크빈",
+			"한 번에 1장·2장·3장 또는 5장을 냅니다.\n싱글 / 같은 숫자 페어 / 같은 숫자 트리플 / 5장 족보",
+			"5장 조합: 스트레이트 < 플러시 < 풀하우스 < 포카드 < 스트레이트 플러시\n아래 ‘족보 자세히 보기’에서 몬스터 카드 예시를 확인하세요.",
+			"한 명이 패를 모두 내면 라운드가 끝납니다.\n남은 패와 2 카드 수로 점수를 정산하며 1·5·10점은 동·은·금 메소로 표시합니다."
+		}
+		if isvalid(body) then
+			body.TextGUIRendererComponent.Text = texts[page]
+			body.UITransformComponent.anchoredPosition = Vector2(0, page == 4 and -128 or -105)
+			body.UITransformComponent.RectSize = Vector2(860, page == 4 and 58 or 140)
+		end
+		if isvalid(self.RulePageLabel) then self.RulePageLabel.TextGUIRendererComponent.Text = tostring(page) .. " / 5" end
+		if isvalid(self.RulePrevButton) then self.RulePrevButton.ButtonComponent.Enable = page > 1 end
+		if isvalid(self.RuleNextButton) then self.RuleNextButton.ButtonComponent.Enable = page < 5 end
+		if isvalid(self.RulesHandGuideButton) then
+			self.RulesHandGuideButton.Enable = page == 4
+			self.RulesHandGuideButton.UITransformComponent.anchoredPosition = Vector2(0, -42)
+		end
+		if isvalid(self.RulePrevButton) then self.RulePrevButton.UITransformComponent.anchoredPosition = Vector2(-300, 58) end
+		if isvalid(self.RuleNextButton) then self.RuleNextButton.UITransformComponent.anchoredPosition = Vector2(0, 58) end
+		if isvalid(self.RulesCloseButton) then self.RulesCloseButton.UITransformComponent.anchoredPosition = Vector2(300, 58) end
+		for _, button in ipairs({ self.RulePrevButton, self.RuleNextButton, self.RulesCloseButton }) do
+			if isvalid(button) then
+				button.UITransformComponent.AnchorsMin = Vector2(0.5, 0)
+				button.UITransformComponent.AnchorsMax = Vector2(0.5, 0)
+				button.UITransformComponent.Pivot = Vector2(0.5, 0)
+				button.UITransformComponent.RectSize = Vector2(220, 76)
+			end
+		end
+
+		local monsterRuids = {
+			"2f40053ed63e4b64938c8d9ed1837f89", "ca3a6ed536d24949b79d3f7b430cb82a",
+			"460975bed1114ad6a34ea2e0e5a43953", "f97f9f3a41ef44ff86e29956dcbf0cbf"
+		}
+		local mesoRuids = {
+			"9a8432ee58654e75b5c6e3c984ca9efd", "9a8432ee58654e75b5c6e3c984ca9efd",
+			"9a8432ee58654e75b5c6e3c984ca9efd"
+		}
+		local visualCount = 4
+		if page == 3 or page == 5 then visualCount = 3 end
+		if page == 4 then visualCount = 5 end
+		for i = 1, 5 do
+			local visual = _EntityService:GetEntityByPath("/ui/LexioMainMenu/RulesPanel/Visual" .. tostring(i))
+			if isvalid(visual) then
+				visual.Enable = false
+				local visualX = (i - ((visualCount + 1) / 2)) * 120
+				local visualY = 20
+				if page == 5 then
+					visualX = visualX - 68
+					visualY = -40
+				end
+				visual.UITransformComponent.anchoredPosition = Vector2(visualX, visualY)
+				visual.SpriteGUIRendererComponent.Color = Color(1, 1, 1, 1)
+				if (page == 1 or page == 2) and i <= 4 then
+					visual.Enable = true
+					visual.SpriteGUIRendererComponent.ImageRUID = monsterRuids[i]
+				elseif page == 3 and i <= 3 then
+					visual.Enable = true
+					visual.SpriteGUIRendererComponent.ImageRUID = monsterRuids[i]
+				elseif page == 4 then
+					visual.Enable = true
+					visual.SpriteGUIRendererComponent.ImageRUID = monsterRuids[((i - 1) % 4) + 1]
+				elseif page == 5 and i <= 3 then
+					visual.Enable = true
+					visual.SpriteGUIRendererComponent.ImageRUID = mesoRuids[i]
+					if i == 1 then visual.SpriteGUIRendererComponent.Color = Color(0.72, 0.36, 0.12, 1) end
+					if i == 2 then visual.SpriteGUIRendererComponent.Color = Color(1, 1, 1, 1) end
+					if i == 3 then visual.SpriteGUIRendererComponent.Color = Color(1, 0.78, 0.18, 1) end
+				end
+			end
+		end
+	end
+
+	@ExecSpace("ClientOnly")
+	method void CloseRules()
+		if isvalid(self.RulesPanel) then
+			self.RulesPanel.Enable = false
+		end
+		if not self._T.LobbyOpened then self:SetMenuChrome(true) end
+	end
+
+	@ExecSpace("ClientOnly")
+	method void OpenExitGuide()
+		self:SetMenuChrome(false)
+		if isvalid(self.ExitPanel) then
+			self.ExitPanel.Enable = true
+		end
+		log("[VRF] LexioMainMenu exitGuideOpened=true")
+	end
+
+	@ExecSpace("ClientOnly")
+	method void CloseExitGuide()
+		if isvalid(self.ExitPanel) then
+			self.ExitPanel.Enable = false
+		end
+		if not self._T.LobbyOpened then self:SetMenuChrome(true) end
+	end
+
+	@ExecSpace("ClientOnly")
+	method void OpenAutoMatch()
+		if isvalid(self.MatchPanel) then self.MatchPanel.Enable = true end
+		log("[VRF] LexioMainMenu autoMatchOpened=true")
+	end
+
+	@ExecSpace("ClientOnly")
+	method void OpenHandGuide()
+		local guideGroup = _EntityService:GetEntityByPath("/ui/LexioMainMenu")
+		if guideGroup ~= nil then
+			guideGroup.Enable = true
+			if guideGroup.UIGroupComponent ~= nil then guideGroup.UIGroupComponent.GroupOrder = 200 end
+			if guideGroup.UITransformComponent ~= nil then _UILogic:SetSiblingIndex(guideGroup.UITransformComponent, 999) end
+		end
+		self.HandGuide = _EntityService:GetEntityByPath("/ui/LexioMainMenu/HandGuide")
+		-- Raise the guide's group above the active game HUD.
+		if self.MenuRoot.UIGroupComponent ~= nil then self.MenuRoot.UIGroupComponent.GroupOrder = 200 end
+		self:SetMenuChrome(false)
+		if isvalid(self.RulesPanel) then self.RulesPanel.Enable = false end
+		if isvalid(self.ExitPanel) then self.ExitPanel.Enable = false end
+		if isvalid(self.HandGuide) then
+			self:NormalizeHandGuide()
+			self.HandGuide.Enable = true
+		end
+		log("[VRF] LexioMainMenu handGuideOpened=true")
+	end
+
+	@ExecSpace("ClientOnly")
+	method void NormalizeHandGuide()
+		if not isvalid(self.HandGuide) then return end
+		local guideTransform = self.HandGuide.UITransformComponent
+		-- PC 화면 전체를 사용하는 족보 화면. 작은 팝업처럼 보이지 않게 한다.
+		guideTransform.RectSize = Vector2(1840, 980)
+		guideTransform.anchoredPosition = Vector2(0, 0)
+		-- 기존 장식 프레임은 이미지 내부 투명 여백이 커서 내용이 밖으로 빠진다.
+		-- 여백 없는 9-slice 패널로 교체해 RectSize 전체를 실제 표시 영역으로 사용한다.
+		if self.HandGuide.SpriteGUIRendererComponent ~= nil then
+			self.HandGuide.SpriteGUIRendererComponent.ImageRUID = "fbf4da2cad8e46599e95186e8ca82b54"
+			self.HandGuide.SpriteGUIRendererComponent.Type = 1
+			self.HandGuide.SpriteGUIRendererComponent.Color = Color(0.78, 0.62, 0.82, 1)
+		end
+		local title = self.HandGuide:GetChildByName("Title")
+		local hint = self.HandGuide:GetChildByName("Hint")
+		local closeButton = self.HandGuide:GetChildByName("CloseButton")
+		if title ~= nil then
+			title.UITransformComponent.anchoredPosition = Vector2(0, 430)
+			title.UITransformComponent.RectSize = Vector2(1200, 64)
+			title.TextGUIRendererComponent.FontSize = 40
+		end
+		if hint ~= nil then
+			hint.UITransformComponent.anchoredPosition = Vector2(0, 375)
+			hint.UITransformComponent.RectSize = Vector2(1600, 70)
+			hint.TextGUIRendererComponent.FontSize = 23
+			hint.TextGUIRendererComponent.Text = "같은 숫자일 때 진영: 파란 달팽이 < 주황버섯 < 슬라임 < 핑크빈 (강함)\n같은 장수끼리 비교 · 5장 조합은 아래로 갈수록 강합니다."
+		end
+		if closeButton ~= nil then
+			closeButton.Enable = true
+			closeButton.ButtonComponent.Enable = true
+			closeButton.UITransformComponent.AnchorsMin = Vector2(0.5, 0.5)
+			closeButton.UITransformComponent.AnchorsMax = Vector2(0.5, 0.5)
+			closeButton.UITransformComponent.Pivot = Vector2(0.5, 0.5)
+			closeButton.UITransformComponent.anchoredPosition = Vector2(0, -425)
+			closeButton.UITransformComponent.RectSize = Vector2(180, 58)
+			_UILogic:SetSiblingIndex(closeButton.UITransformComponent, 999)
+		end
+
+		local leftRowY = { 160, 0, -160 }
+		local rightRowY = { 280, 140, 0, -140, -280 }
+		for index = 1, 8 do
+			local row = self.HandGuide:GetChildByName("Row" .. tostring(index))
+			if row ~= nil then
+				-- 왼쪽은 싱글/페어/트리플, 오른쪽은 아래로 갈수록 강한 5장 족보이다.
+				local column = index <= 3 and 1 or 2
+				local rowIndex = column == 1 and index or (index - 3)
+				local positionY = column == 1 and leftRowY[rowIndex] or rightRowY[rowIndex]
+				row.UITransformComponent.anchoredPosition = Vector2(column == 1 and -690 or 145, positionY)
+				row.UITransformComponent.RectSize = Vector2(300, 132)
+				row.TextGUIRendererComponent.FontSize = 27
+				row.TextGUIRendererComponent.HorizontalAlignment = 1
+				for cardIndex = 1, 5 do
+					local card = row:GetChildByName("Card" .. tostring(cardIndex))
+					if card ~= nil then
+						local cardWidth = 76
+						local cardScale = cardWidth / 118
+						card.UITransformComponent.RectSize = Vector2(cardWidth, 116)
+						local cardStartX = 255
+						card.UITransformComponent.anchoredPosition = Vector2(cardStartX + ((cardIndex - 1) * 82), 0)
+						local aura = card:GetChildByName("Aura")
+						local monster = card:GetChildByName("Monster")
+						local rankTop = card:GetChildByName("RankTop")
+						local rankBottom = card:GetChildByName("RankBottom")
+						local monsterName = card:GetChildByName("MonsterName")
+						if aura ~= nil then
+							local auraDiameter = cardWidth - (8 * cardScale)
+							aura.UITransformComponent.RectSize = Vector2(auraDiameter, auraDiameter)
+							aura.UITransformComponent.anchoredPosition = Vector2(0, -6 * cardScale)
+						end
+						if monster ~= nil then
+							monster.UITransformComponent.RectSize = Vector2(82 * cardScale, 88 * cardScale)
+							local isSlime = string.find(tostring(monster.SpriteGUIRendererComponent.ImageRUID), "460975bed1114ad6a34ea2e0e5a43953") ~= nil
+							monster.UITransformComponent.anchoredPosition = Vector2(isSlime and 0 or -2, isSlime and -3 or -7)
+						end
+						if rankTop ~= nil then
+							rankTop.UITransformComponent.RectSize = Vector2(28, 22)
+							rankTop.UITransformComponent.anchoredPosition = Vector2(-27, 45)
+						end
+						if rankBottom ~= nil then
+							rankBottom.UITransformComponent.RectSize = Vector2(28, 22)
+							rankBottom.UITransformComponent.anchoredPosition = Vector2(27, -45)
+						end
+						if monsterName ~= nil then monsterName.Enable = false end
+					end
+				end
+			end
+		end
+		log("[VRF] HAND GUIDE normalized rows=8")
+	end
+
+	@ExecSpace("ClientOnly")
+	method void CloseHandGuide()
+		local guideGroup = _EntityService:GetEntityByPath("/ui/LexioMainMenu")
+		if guideGroup ~= nil and guideGroup.UIGroupComponent ~= nil then guideGroup.UIGroupComponent.GroupOrder = 0 end
+		if self.MenuRoot.UIGroupComponent ~= nil then self.MenuRoot.UIGroupComponent.GroupOrder = 0 end
+		if isvalid(self.HandGuide) then self.HandGuide.Enable = false end
+		if not self._T.LobbyOpened then self:SetMenuChrome(true) end
+	end
+
+	@ExecSpace("ClientOnly")
+	method void OnEndPlay()
+		if self._T.Connections == nil then
+			return
+		end
+		for _, item in ipairs(self._T.Connections) do
+			if isvalid(item.entity) then
+				item.entity:DisconnectEvent(item.connection)
+			end
+		end
+		self._T.Connections = {}
+	end
+
+end

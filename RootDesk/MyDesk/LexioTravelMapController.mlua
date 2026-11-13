@@ -9,21 +9,152 @@ script LexioTravelMapController extends Component
 
 	@ExecSpace("ServerOnly")
 	method void OnBeginPlay()
+		-- Initializes travel bridges; floor travel is authored as static elevator doors.
 		        log("[LexioTravelMapController] READY map=" .. self.ManagedMapName)
 		        self.scanElapsed = 0
-		        if self.ManagedMapName == "map01" then self:SpawnFloorPortals() end
+		        if self.ManagedMapName == "map01" then self:ConfigureGameRoomInterior() end
 		        self:ConfigureExistingPortalKeys()
 		        self:AttachCurrentPlayers()
 	end
 
 	@ExecSpace("ServerOnly")
+	method void ConfigureGameRoomInterior()
+		        local interiorNames = { "LexioInterior1F", "LexioInterior2F", "LexioInterior3F" }
+		        for index, interiorName in ipairs(interiorNames) do
+		            local interior = self.Entity.CurrentMap:GetChildByName(interiorName)
+		            if interior ~= nil and interior.SpriteRendererComponent ~= nil and interior.TransformComponent ~= nil then
+		                interior.SpriteRendererComponent.OrderInLayer = -20
+		                if index == 1 then
+		                    -- One continuous three-floor building image. The non-uniform scale
+		                    -- aligns its painted floor decks with the map's six-unit floor spacing.
+		                    interior.SpriteRendererComponent.Enable = true
+		                    interior.SpriteRendererComponent.SpriteRUID = "a848687eb24a4e99b536c62a39407e94"
+		                    -- The sprite pivot is centered. Place the center of the three-floor
+		                    -- artwork on floor 2 so its bottom, middle, and top rooms line up
+		                    -- with gameplay floors 1, 2, and 3 respectively.
+		                    interior.TransformComponent.Position = Vector3(0, -6.17, 0)
+		                    interior.TransformComponent.Scale = Vector3(1.75, 1.224, 1)
+		                    self:ConfigureInteriorStairs(interior, index, 1.75, 1.224)
+		                else
+		                    -- Keep the existing entities for foothold ownership, but do not
+		                    -- render repeated background copies on floors two and three.
+		                    interior.SpriteRendererComponent.Enable = false
+		                    interior.TransformComponent.Scale = Vector3(0.76, 0.76, 1)
+		                    self:ConfigureInteriorStairs(interior, index, 0.76, 0.76)
+		                end
+		                log("[VRF] GAME_ROOM_INTERIOR floor=" .. interiorName .. " singleBackground=" .. tostring(index == 1))
+		            end
+		        end
+		        self:ConfigureFloorInteraction(1, -12.17, 3)
+		        self:ConfigureFloorInteraction(2, -6.17, 4)
+		        self:ConfigureFloorInteraction(3, -0.37, 5)
+		        local tileMap = self.Entity.CurrentMap:GetChildByName("TileMap")
+		        if tileMap ~= nil and tileMap.TileMapComponent ~= nil then
+		            -- Keep the original MapleTile foothold collision but hide its outdoor
+		            -- grass/stone rendering. The continuous cafe artwork supplies the floor.
+		            tileMap.TileMapComponent.Color = Color(1, 1, 1, 0)
+		            log("[VRF] GAME_ROOM_TILE_VISUAL hidden=true collision=preserved")
+		        end
+	end
+
+	@ExecSpace("ServerOnly")
+	method void ConfigureInteriorStairs(Entity interior, integer floor, number scaleX, number scaleY)
+		        local foothold = interior.CustomFootholdComponent
+		        if foothold == nil then foothold = interior:AddComponent("MOD.Core.CustomFootholdComponent") end
+		        if foothold == nil then return end
+		        local fx = 1 / scaleX
+		        local fy = 1 / scaleY
+		        -- Invisible step footholds span the full six-unit gap between floors.
+		        local edges = {}
+		        if floor == 1 then
+		            -- The artwork connects floor 1 to floor 2 with the left staircase.
+		            for step = 0, 11 do
+		                -- LexioInterior1F is visually centered on floor 2. Offset the local
+		                -- collision by one floor so the footholds remain on floors 1-2.
+		                local y = (-5.55 + step * 0.5) * fy
+		                local x = (-8.25 + step * 0.24) * fx
+		                table.insert(edges, { Vector2(x, y), Vector2(x + 0.52 * fx, y) })
+		            end
+		        elseif floor == 2 then
+		            -- The artwork connects floor 2 to floor 3 with the right staircase.
+		            for step = 0, 11 do
+		                local y = (0.45 + step * 0.5) * fy
+		                local x = (7.73 - step * 0.24) * fx
+		                table.insert(edges, { Vector2(x, y), Vector2(x + 0.52 * fx, y) })
+		            end
+		        end
+		        foothold.edgeLists = edges
+	end
+
+	@ExecSpace("ServerOnly")
+	method void ConfigureFloorInteraction(integer floor, number baseY, integer seatCount)
+		        local seatXByCount = {
+		            [3] = { -3.7, 0, 3.7 },
+		            [4] = { -3.7, -1.3, 1.3, 3.7 },
+		            [5] = { -3.7, -1.8, 0, 1.8, 3.7 }
+		        }
+		        for seat = 1, seatCount do
+		            local chair = self.Entity.CurrentMap:GetChildByName("LexioTable0" .. tostring(floor) .. "Chair" .. tostring(seat))
+		            if chair ~= nil and chair.TransformComponent ~= nil then
+		                chair.TransformComponent.Position = Vector3(seatXByCount[seatCount][seat], baseY + 0.2, 0)
+		            end
+		        end
+
+		        local roomDoor = self.Entity.CurrentMap:GetChildByName("LexioRoomDoor" .. tostring(floor) .. "F")
+		        if roomDoor ~= nil then
+		            if roomDoor.SpriteRendererComponent ~= nil then roomDoor.SpriteRendererComponent.Enable = false end
+		            roomDoor.TransformComponent.Position = Vector3(0, baseY + 0.35, 0)
+		            if roomDoor.InteractionComponent ~= nil then roomDoor.InteractionComponent.BoxSize = Vector2(2.4, 1.3) end
+		        end
+
+		        local elevatorNames = {}
+		        if floor == 1 then elevatorNames = { "LexioElevator1FUp" }
+		        elseif floor == 2 then elevatorNames = { "LexioElevator2FDown", "LexioElevator2FUp" }
+		        else elevatorNames = { "LexioElevator3FDown" } end
+		        for index, elevatorName in ipairs(elevatorNames) do
+		            local elevator = self.Entity.CurrentMap:GetChildByName(elevatorName)
+		            if elevator ~= nil then
+		                if elevator.SpriteRendererComponent ~= nil then elevator.SpriteRendererComponent.Enable = false end
+		                -- Down elevators use the left shaft; up elevators use the right shaft.
+		                local isDown = string.find(elevatorName, "Down") ~= nil
+		                local x = isDown and -7.45 or 7.45
+		                -- Center the interaction on the top step/landing rather than
+		                -- near the top of the painted door, so Up works after climbing.
+		                elevator.TransformComponent.Position = Vector3(x, baseY + 1.10, 0)
+		                if elevator.InteractionComponent ~= nil then
+		                    elevator.InteractionComponent.BoxSize = Vector2(1.0, 1.5)
+		                    if isDown then
+		                        elevator.InteractionComponent.ActionName = tostring(floor - 1) .. "층으로 내려가기"
+		                    else
+		                        elevator.InteractionComponent.ActionName = tostring(floor + 1) .. "층으로 올라가기"
+		                    end
+		                end
+		            end
+		        end
+		        local stairCount = floor < 3 and 12 or 0
+		        log("[VRF] GAME_ROOM_HITBOX floor=" .. tostring(floor) .. " seats=" .. tostring(seatCount) .. " stairs=" .. tostring(stairCount))
+	end
+
+	@ExecSpace("ServerOnly")
 	method void ConfigureExistingPortalKeys()
-		        local portalNames = {"CafeEntrance", "LexioEntrance", "LexioExit"}
+		        local portalNames = {
+		            "CafeEntrance",
+		            "LexioEntrance",
+		            "LexioExit",
+		            "LexioElevator1FUp",
+		            "LexioElevator2FDown",
+		            "LexioElevator2FUp",
+		            "LexioElevator3FDown"
+		        }
 		        for _, portalName in ipairs(portalNames) do
 		            local portal = self.Entity.CurrentMap:GetChildByName(portalName)
 		            if portal ~= nil and portal.InteractionComponent ~= nil then
 		                portal.InteractionComponent.ActionKey = KeyboardKey.UpArrow
-		                portal.InteractionComponent.BoxSize = Vector2(0.9, 1.2)
+		                if string.sub(portalName, 1, 13) == "LexioElevator" then
+		                    portal.InteractionComponent.BoxSize = Vector2(0.9, 1.4)
+		                else
+		                    portal.InteractionComponent.BoxSize = Vector2(0.9, 1.2)
+		                end
 		                log("[LexioTravelMapController] PORTAL_KEY name=" .. portalName .. " key=UpArrow")
 		            end
 		        end

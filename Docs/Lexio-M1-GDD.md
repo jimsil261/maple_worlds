@@ -25,7 +25,7 @@ A shared RectTile Lexio hall with 3/4/5-player physical tables where players eit
 | Item | Decision |
 |---|---|
 | Players | Manual tables support 3/4/5 players; M1 automatic matching groups three players |
-| Platform | PC first; mobile-compatible UI bindings retained |
+| Platform | PC only; keyboard and mouse UI optimized for the MapleStory Worlds PC client |
 | Map | `map01`, `TileMapMode=1` RectTile |
 | Player body | `KinematicbodyComponent` |
 | Input | Movement + X sit/stand + UI automatic-match/cancel button |
@@ -144,3 +144,4 @@ Exactly one state at a time:
 |---|---|---|---|---|
 | 2026-08-16 | Brownfield milestone | Added three-table manual and automatic matching M1 | Extend the existing single-table prototype | Replaces map-wide match ownership with table-scoped authority across four Phases |
 | 2026-10-20 | Onboarding polish | Added Neinheart Lexio guide NPC to the board-game cafe lobby | Teach rules in-world without leaving the MapleStory presentation | Official dialog package, Space interaction, portrait-safe six-page guide |
+| 2026-10-24 | Platform scope | Fixed the Lexio experience to PC only | Remove mobile layout branches and concentrate polish on the primary MapleStory Worlds play environment | The PC HUD is the sole runtime presentation; dormant mobile bindings remain only for safe compatibility cleanup later |

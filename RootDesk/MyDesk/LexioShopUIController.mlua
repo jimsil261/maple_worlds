@@ -11,12 +11,15 @@ script LexioShopUIController extends Component
 	property Entity Item4Button = "d5790266-c8f4-46dd-9760-c96fa175b68e"
 	property Entity Item5Button = "c153d4b6-2a49-4abf-8c5a-8144f7836f9f"
 	property Entity Item6Button = "08d6411d-0089-4b1e-b27c-6b983b6fc781"
+	property Entity StatusText = nil
 
 	@ExecSpace("ClientOnly")
 	method any GetBridge()
 		local player = _UserService.LocalPlayer
 		if player == nil then return nil end
-		return player:GetComponent("script.LexioPlayerBridge")
+		local bridge = player:GetComponent("script.LexioPlayerBridge")
+		if bridge ~= nil then return bridge end
+		return player:GetComponent("script.LexioManualTestControls")
 	end
 
 	@ExecSpace("ClientOnly")
@@ -30,6 +33,7 @@ script LexioShopUIController extends Component
 		self.ShopPanel.Enable = open
 		if open then
 			local bridge = self:GetBridge()
+			log("[VRF] SHOP OPEN bridge=" .. tostring(bridge ~= nil))
 			if bridge ~= nil then bridge:RequestShopSnapshot(self:NextRequestId("snapshot")) end
 		end
 	end
@@ -80,6 +84,7 @@ script LexioShopUIController extends Component
 	method void OnBeginPlay()
 		self._T.RequestSequence = 0
 		self._T.LastShopSequence = -1
+		self.StatusText = _EntityService:GetEntityByPath("/ui/LexioPlayHUD/ShopPanel/SellNotice")
 		self:SetPanelOpen(false)
 		self.OpenButton:ConnectEvent(ButtonClickEvent, function() self:SetPanelOpen(true) end)
 		self.CloseButton:ConnectEvent(ButtonClickEvent, function() self:SetPanelOpen(false) end)
@@ -103,6 +108,18 @@ script LexioShopUIController extends Component
 		if sequence ~= self._T.LastShopSequence then
 			self._T.LastShopSequence = sequence
 			self:RenderSnapshot(bridge._T.ShopSnapshot)
+			local result = bridge._T.LastShopResult
+			if self.StatusText ~= nil and result ~= nil then
+				local message = "상점 정보를 불러왔습니다."
+				if result.reason == "not_enough_points" then message = "렉시오 포인트가 부족합니다."
+				elseif result.reason == "purchased" then message = "구매가 완료되었습니다."
+				elseif result.reason == "equipped" then message = "아이템을 장착했습니다."
+				elseif result.reason == "unequipped" then message = "아이템을 해제했습니다."
+				elseif result.reason == "already_owned" then message = "이미 보유한 아이템입니다."
+				elseif result.reason == "apply_failed" then message = "현재 캐릭터에 장착할 수 없습니다."
+				elseif not result.ok then message = "상점 요청에 실패했습니다. (" .. tostring(result.reason) .. ")" end
+				self.StatusText.TextGUIRendererComponent.Text = message
+			end
 		end
 	end
 

@@ -19,6 +19,7 @@ script LexioPortalInputController extends Logic
 		        end
 		        local portal = _EntityService:GetEntityByPath(portalPath)
 		        if portal == nil or not isvalid(portal) then return end
+		        if player.CurrentMap == nil or portal.CurrentMap ~= player.CurrentMap then return end
 		        local playerPosition = player.TransformComponent.WorldPosition
 		        local portalPosition = portal.TransformComponent.WorldPosition
 		        local distance = Vector2.Distance(Vector2(playerPosition.x, playerPosition.y), Vector2(portalPosition.x, portalPosition.y))
@@ -33,21 +34,26 @@ script LexioPortalInputController extends Logic
 	method void RequestFloorTravel(Entity claimedPlayer, string portalName)
 		        local player = _UserService:GetUserEntityByUserId(senderUserId)
 		        if player == nil or player ~= claimedPlayer or player.PlayerComponent == nil then return end
-		        if player.PlayerComponent.UserId ~= senderUserId or player.CurrentMapName ~= "map01" then return end
+		        if player.PlayerComponent.UserId ~= senderUserId then return end
 		        local portal = _EntityService:GetEntityByPath("/maps/map01/" .. portalName)
 		        if portal == nil or not isvalid(portal) then return end
+		        -- map01's runtime display name is TileMapTemplate. Validate the
+		        -- actual map entity instead of comparing the display-name string.
+		        if player.CurrentMap == nil or portal.CurrentMap ~= player.CurrentMap then return end
 		        local playerPosition = player.TransformComponent.WorldPosition
 		        local portalPosition = portal.TransformComponent.WorldPosition
 		        local distance = Vector2.Distance(Vector2(playerPosition.x, playerPosition.y), Vector2(portalPosition.x, portalPosition.y))
-		        if distance > 0.9 then return end
+		        if distance > 1 then return end
 		        local destinationPosition = Vector3(0, 0, 0)
-		        if portalName == "Floor1UpPortal" then destinationPosition = Vector3(-5.2, -6.0, 0)
-		        elseif portalName == "Floor2DownPortal" then destinationPosition = Vector3(5.2, -12.0, 0)
-		        elseif portalName == "Floor2UpPortal" then destinationPosition = Vector3(-5.2, 0.5, 0)
-		        elseif portalName == "Floor3DownPortal" then destinationPosition = Vector3(5.2, -6.0, 0)
+		        if portalName == "LexioElevator1FUp" then destinationPosition = Vector3(-5.8, -5.79, 0)
+		        elseif portalName == "LexioElevator2FDown" then destinationPosition = Vector3(5.8, -11.79, 0)
+		        elseif portalName == "LexioElevator2FUp" then destinationPosition = Vector3(-5.8, 0.21, 0)
+		        elseif portalName == "LexioElevator3FDown" then destinationPosition = Vector3(5.8, -5.79, 0)
 		        else return end
-		        log("[LexioPortalInput] FLOOR userId=" .. senderUserId .. " portal=" .. portalName)
-		        player.PlayerComponent:MoveToMapPosition("map01", Vector2(destinationPosition.x, destinationPosition.y))
+		        log("[VRF] LEXIO ELEVATOR INPUT userId=" .. senderUserId .. " portal=" .. portalName .. " destinationY=" .. tostring(destinationPosition.y))
+		        -- Commit the in-building move through the authoritative teleport
+		        -- pipeline so MapleTile physics does not restore the old foothold.
+		        _TeleportService:TeleportToMapPosition(player, destinationPosition, "map01")
 	end
 
 	@ExecSpace("ClientOnly")
@@ -56,40 +62,71 @@ script LexioPortalInputController extends Logic
 		        if event.key ~= KeyboardKey.UpArrow then return end
 		        local player = _UserService.LocalPlayer
 		        if player == nil then return end
-		        local portal = nil
-		        if player.CurrentMapName == "TileMapTemplate" then
-		            portal = _EntityService:GetEntityByPath("/maps/TileMapTemplate/CafeEntrance")
-		        elseif player.CurrentMapName == "boardgame_cafe" then
-		            portal = _EntityService:GetEntityByPath("/maps/boardgame_cafe/LexioEntrance")
-		        elseif player.CurrentMapName == "map01" then
-		            local portalNames = {"Floor1UpPortal", "Floor2DownPortal", "Floor2UpPortal", "Floor3DownPortal"}
-		            local playerPosition = player.TransformComponent.WorldPosition
-		            local nearestPortal = nil
-		            local nearestDistance = 999
-		            for _, portalName in ipairs(portalNames) do
-		                local candidate = _EntityService:GetEntityByPath("/maps/map01/" .. portalName)
-		                if candidate ~= nil then
-		                    local candidatePosition = candidate.TransformComponent.WorldPosition
-		                    local candidateDistance = Vector2.Distance(Vector2(playerPosition.x, playerPosition.y), Vector2(candidatePosition.x, candidatePosition.y))
-		                    if candidateDistance < nearestDistance then nearestPortal = candidate; nearestDistance = candidateDistance end
-		                end
-		            end
-		            if nearestPortal == nil or nearestDistance > 0.9 then return end
-		            log("[LexioPortalInput] UP floor_portal=" .. nearestPortal.Name .. " distance=" .. tostring(nearestDistance))
-		            self:RequestFloorTravel(player, nearestPortal.Name)
-		            return
+		        -- Static elevator entities are server-owned and cannot be found by
+		        -- client path. Choose the expected door from the player's floor/side,
+		        -- then let the existing server RPC verify map identity and distance.
+		        local playerPosition = player.TransformComponent.WorldPosition
+		        local portalName = ""
+		        if playerPosition.y < -9 then
+		            portalName = "LexioElevator1FUp"
+		        elseif playerPosition.y < -3 then
+		            if playerPosition.x < 0 then portalName = "LexioElevator2FDown"
+		            else portalName = "LexioElevator2FUp" end
 		        else
+		            portalName = "LexioElevator3FDown"
+		        end
+		        self:RequestFloorTravel(player, portalName)
+		        -- This second request succeeds only on the actual plaza/cafe map;
+		        -- RequestEntranceTravel now validates that the portal shares the map.
+		        self:RequestEntranceTravel(player)
+	end
+
+	@ExecSpace("Server")
+	method void RequestContextualUp(Entity claimedPlayer)
+		        local player = _UserService:GetUserEntityByUserId(senderUserId)
+		        if player == nil or player ~= claimedPlayer or player.PlayerComponent == nil then return end
+		        if player.PlayerComponent.UserId ~= senderUserId or player.CurrentMap == nil then return end
+		        local destinations = {
+		            LexioElevator1FUp = Vector3(-5.8, -5.79, 0),
+		            LexioElevator2FDown = Vector3(5.8, -11.79, 0),
+		            LexioElevator2FUp = Vector3(-5.8, 0.21, 0),
+		            LexioElevator3FDown = Vector3(5.8, -5.79, 0)
+		        }
+		        local nearestName = ""
+		        local nearestDistance = 999
+		        local playerPosition = player.TransformComponent.WorldPosition
+		        for portalName, destination in pairs(destinations) do
+		            local candidate = _EntityService:GetEntityByPath("/maps/map01/" .. portalName)
+		            if candidate ~= nil and isvalid(candidate) and candidate.CurrentMap == player.CurrentMap then
+		                local candidatePosition = candidate.TransformComponent.WorldPosition
+		                local distance = Vector2.Distance(Vector2(playerPosition.x, playerPosition.y), Vector2(candidatePosition.x, candidatePosition.y))
+		                if distance < nearestDistance then nearestName = portalName; nearestDistance = distance end
+		            end
+		        end
+		        if nearestName ~= "" and nearestDistance <= 1.25 then
+		            local destination = destinations[nearestName]
+		            player.TransformComponent.WorldPosition = destination
+		            log("[VRF] LEXIO ELEVATOR CONTEXT userId=" .. senderUserId .. " portal=" .. nearestName .. " destination=(" .. tostring(destination.x) .. "," .. tostring(destination.y) .. ")")
 		            return
 		        end
-		        if portal == nil then return end
-		        local playerPosition = player.TransformComponent.WorldPosition
+		        -- No elevator on this map: handle the two inter-map entrances.
+		        local portal = nil
+		        local destinationMap = ""
+		        if player.CurrentMapName == "TileMapTemplate" then
+		            portal = _EntityService:GetEntityByPath("/maps/TileMapTemplate/CafeEntrance")
+		            destinationMap = "boardgame_cafe"
+		        elseif player.CurrentMapName == "boardgame_cafe" then
+		            portal = _EntityService:GetEntityByPath("/maps/boardgame_cafe/LexioEntrance")
+		            destinationMap = "map01"
+		        end
+		        if portal == nil or not isvalid(portal) or portal.CurrentMap ~= player.CurrentMap then return end
 		        local portalPosition = portal.TransformComponent.WorldPosition
 		        local distance = Vector2.Distance(Vector2(playerPosition.x, playerPosition.y), Vector2(portalPosition.x, portalPosition.y))
 		        if distance > 0.9 then return end
-		        log("[LexioPortalInput] UP route=LEXIO_PLAY distance=" .. tostring(distance))
-		        -- Entrance travel is validated independently so a stale per-player bridge
-		        -- left over from map01 cannot reject the lobby as invalid_source_map.
-		        self:RequestEntranceTravel(player)
+		        local destinationPosition = Vector2(0, 0)
+		        if destinationMap == "map01" then destinationPosition = Vector2(-5.2, -12.0) end
+		        log("[LexioPortalInput] SERVER CONTEXT ENTER userId=" .. senderUserId .. " destination=" .. destinationMap)
+		        player.PlayerComponent:MoveToMapPosition(destinationMap, destinationPosition)
 	end
 
 end

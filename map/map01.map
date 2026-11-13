@@ -1905,42 +1905,319 @@
                       "x": 0,
                       "y": 1
                     }
+                  },
+                  {
+                    "Length": 6.655328,
+                    "NextFootholdId": 0,
+                    "PreviousFootholdId": 0,
+                    "groupID": 4,
+                    "layer": 1,
+                    "sortingLayerName": "MapLayer0",
+                    "attribute": {
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
+                      "isBlockVertical": false,
+                      "isDynamic": false,
+                      "isCustomFoothold": true,
+                      "inertiaOption": 0
+                    },
+                    "OwnerId": "924a23bb-c5be-49ad-8873-91f7a65cf886",
+                    "Id": 61,
+                    "StartPoint": {
+                      "x": -8.2498,
+                      "y": -11.7198
+                    },
+                    "EndPoint": {
+                      "x": -5.3706,
+                      "y": -5.7195
+                    },
+                    "Variance": {
+                      "x": 0.432615727,
+                      "y": 0.9015784
+                    }
+                  },
+                  {
+                    "Length": 6.654585,
+                    "NextFootholdId": 0,
+                    "PreviousFootholdId": 0,
+                    "groupID": 5,
+                    "layer": 1,
+                    "sortingLayerName": "MapLayer0",
+                    "attribute": {
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
+                      "isBlockVertical": false,
+                      "isDynamic": false,
+                      "isCustomFoothold": true,
+                      "inertiaOption": 0
+                    },
+                    "OwnerId": "924a23bb-c5be-49ad-8873-91f7a65cf886",
+                    "Id": 62,
+                    "StartPoint": {
+                      "x": 4.8498,
+                      "y": 0.2794
+                    },
+                    "EndPoint": {
+                      "x": 7.7302,
+                      "y": -5.7195
+                    },
+                    "Variance": {
+                      "x": 0.432844371,
+                      "y": -0.9014687
+                    }
+                  },
+                  {
+                    "Length": 1.58315873,
+                    "NextFootholdId": 64,
+                    "PreviousFootholdId": 0,
+                    "groupID": 6,
+                    "layer": 1,
+                    "sortingLayerName": "MapLayer0",
+                    "attribute": {
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
+                      "isBlockVertical": false,
+                      "isDynamic": false,
+                      "isCustomFoothold": true,
+                      "inertiaOption": 0
+                    },
+                    "OwnerId": "924a23bb-c5be-49ad-8873-91f7a65cf886",
+                    "Id": 63,
+                    "StartPoint": {
+                      "x": 5.8997,
+                      "y": -11.7198
+                    },
+                    "EndPoint": {
+                      "x": 6.6001,
+                      "y": -10.3
+                    },
+                    "Variance": {
+                      "x": 0.4424066,
+                      "y": 0.8968146
+                    }
+                  },
+                  {
+                    "Length": 1.70000029,
+                    "NextFootholdId": 0,
+                    "PreviousFootholdId": 63,
+                    "groupID": 6,
+                    "layer": 1,
+                    "sortingLayerName": "MapLayer0",
+                    "attribute": {
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
+                      "isBlockVertical": false,
+                      "isDynamic": false,
+                      "isCustomFoothold": true,
+                      "inertiaOption": 0
+                    },
+                    "OwnerId": "924a23bb-c5be-49ad-8873-91f7a65cf886",
+                    "Id": 64,
+                    "StartPoint": {
+                      "x": 6.6001,
+                      "y": -10.3
+                    },
+                    "EndPoint": {
+                      "x": 8.3001,
+                      "y": -10.3
+                    },
+                    "Variance": {
+                      "x": 1,
+                      "y": 0
+                    }
+                  },
+                  {
+                    "Length": 1.70000029,
+                    "NextFootholdId": 66,
+                    "PreviousFootholdId": 0,
+                    "groupID": 7,
+                    "layer": 1,
+                    "sortingLayerName": "MapLayer0",
+                    "attribute": {
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
+                      "isBlockVertical": false,
+                      "isDynamic": false,
+                      "isCustomFoothold": true,
+                      "inertiaOption": 0
+                    },
+                    "OwnerId": "924a23bb-c5be-49ad-8873-91f7a65cf886",
+                    "Id": 65,
+                    "StartPoint": {
+                      "x": -8.3001,
+                      "y": -4.2997
+                    },
+                    "EndPoint": {
+                      "x": -6.6001,
+                      "y": -4.2997
+                    },
+                    "Variance": {
+                      "x": 1,
+                      "y": 0
+                    }
+                  },
+                  {
+                    "Length": 1.58315909,
+                    "NextFootholdId": 0,
+                    "PreviousFootholdId": 65,
+                    "groupID": 7,
+                    "layer": 1,
+                    "sortingLayerName": "MapLayer0",
+                    "attribute": {
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
+                      "isBlockVertical": false,
+                      "isDynamic": false,
+                      "isCustomFoothold": true,
+                      "inertiaOption": 0
+                    },
+                    "OwnerId": "924a23bb-c5be-49ad-8873-91f7a65cf886",
+                    "Id": 66,
+                    "StartPoint": {
+                      "x": -6.6001,
+                      "y": -4.2997
+                    },
+                    "EndPoint": {
+                      "x": -5.8997,
+                      "y": -5.7195
+                    },
+                    "Variance": {
+                      "x": 0.4424065,
+                      "y": -0.896814644
+                    }
+                  },
+                  {
+                    "Length": 1.58315909,
+                    "NextFootholdId": 68,
+                    "PreviousFootholdId": 0,
+                    "groupID": 8,
+                    "layer": 1,
+                    "sortingLayerName": "MapLayer0",
+                    "attribute": {
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
+                      "isBlockVertical": false,
+                      "isDynamic": false,
+                      "isCustomFoothold": true,
+                      "inertiaOption": 0
+                    },
+                    "OwnerId": "924a23bb-c5be-49ad-8873-91f7a65cf886",
+                    "Id": 67,
+                    "StartPoint": {
+                      "x": 5.8997,
+                      "y": -5.7195
+                    },
+                    "EndPoint": {
+                      "x": 6.6001,
+                      "y": -4.2997
+                    },
+                    "Variance": {
+                      "x": 0.4424065,
+                      "y": 0.896814644
+                    }
+                  },
+                  {
+                    "Length": 1.70000029,
+                    "NextFootholdId": 0,
+                    "PreviousFootholdId": 67,
+                    "groupID": 8,
+                    "layer": 1,
+                    "sortingLayerName": "MapLayer0",
+                    "attribute": {
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
+                      "isBlockVertical": false,
+                      "isDynamic": false,
+                      "isCustomFoothold": true,
+                      "inertiaOption": 0
+                    },
+                    "OwnerId": "924a23bb-c5be-49ad-8873-91f7a65cf886",
+                    "Id": 68,
+                    "StartPoint": {
+                      "x": 6.6001,
+                      "y": -4.2997
+                    },
+                    "EndPoint": {
+                      "x": 8.3001,
+                      "y": -4.2997
+                    },
+                    "Variance": {
+                      "x": 1,
+                      "y": 0
+                    }
+                  },
+                  {
+                    "Length": 1.70000029,
+                    "NextFootholdId": 70,
+                    "PreviousFootholdId": 0,
+                    "groupID": 9,
+                    "layer": 1,
+                    "sortingLayerName": "MapLayer0",
+                    "attribute": {
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
+                      "isBlockVertical": false,
+                      "isDynamic": false,
+                      "isCustomFoothold": true,
+                      "inertiaOption": 0
+                    },
+                    "OwnerId": "924a23bb-c5be-49ad-8873-91f7a65cf886",
+                    "Id": 69,
+                    "StartPoint": {
+                      "x": -8.3001,
+                      "y": 1.7006
+                    },
+                    "EndPoint": {
+                      "x": -6.6001,
+                      "y": 1.7006
+                    },
+                    "Variance": {
+                      "x": 1,
+                      "y": 0
+                    }
+                  },
+                  {
+                    "Length": 1.5844146,
+                    "NextFootholdId": 0,
+                    "PreviousFootholdId": 69,
+                    "groupID": 9,
+                    "layer": 1,
+                    "sortingLayerName": "MapLayer0",
+                    "attribute": {
+                      "walk": 1,
+                      "force": 0,
+                      "drag": 1,
+                      "isBlockVertical": false,
+                      "isDynamic": false,
+                      "isCustomFoothold": true,
+                      "inertiaOption": 0
+                    },
+                    "OwnerId": "924a23bb-c5be-49ad-8873-91f7a65cf886",
+                    "Id": 70,
+                    "StartPoint": {
+                      "x": -6.6001,
+                      "y": 1.7006
+                    },
+                    "EndPoint": {
+                      "x": -5.8997,
+                      "y": 0.2794
+                    },
+                    "Variance": {
+                      "x": 0.442055941,
+                      "y": -0.896987438
+                    }
                   }
                 ]
               },
-              "Enable": true
-            }
-          ],
-          "@version": 1
-        }
-      },
-      {
-        "id": "66f71abf-adb1-4bf0-84f3-8d6a1b97d71d",
-        "path": "/maps/map01/Background",
-        "componentNames": "MOD.Core.BackgroundComponent",
-        "jsonString": {
-          "name": "Background",
-          "path": "/maps/map01/Background",
-          "nameEditable": false,
-          "enable": true,
-          "visible": true,
-          "localize": false,
-          "displayOrder": 0,
-          "pathConstraints": "///",
-          "revision": 0,
-          "modelId": null,
-          "@components": [
-            {
-              "@type": "MOD.Core.BackgroundComponent",
-              "SolidColor": {
-                "r": 0.5019608,
-                "g": 0.5019608,
-                "b": 0.5019608,
-                "a": 0.7058824
-              },
-              "TemplateRUID": "794ad8421e2543d8a6d2c70307637450",
-              "Type": 1,
-              "WebUrl": "",
               "Enable": true
             }
           ],
@@ -4800,228 +5077,6 @@
         }
       },
       {
-        "id": "4ce897bb-7fc5-4f0b-9266-8b119e0613a9",
-        "path": "/maps/map01/LexioTable02Chair4",
-        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent",
-        "jsonString": {
-          "name": "LexioTable02Chair4",
-          "path": "/maps/map01/LexioTable02Chair4",
-          "nameEditable": true,
-          "enable": true,
-          "visible": true,
-          "localize": false,
-          "displayOrder": 4,
-          "pathConstraints": "///",
-          "revision": 1,
-          "origin": {
-            "type": "Model",
-            "entry_id": "mapobject",
-            "sub_entity_id": null,
-            "root_entity_id": "4ce897bb-7fc5-4f0b-9266-8b119e0613a9",
-            "replaced_model_id": null
-          },
-          "modelId": "mapobject",
-          "@components": [
-            {
-              "@type": "MOD.Core.TransformComponent",
-              "Rotation": {
-                "x": 0,
-                "y": 0,
-                "z": 0
-              },
-              "Position": {
-                "x": 1.215,
-                "y": -6.180000000000001,
-                "z": 0
-              },
-              "QuaternionRotation": {
-                "x": 0,
-                "y": 0,
-                "z": 0,
-                "w": 1
-              },
-              "Scale": {
-                "x": 0.62,
-                "y": 0.62,
-                "z": 1
-              },
-              "ZRotation": 0,
-              "Enable": true
-            },
-            {
-              "@type": "MOD.Core.SpriteRendererComponent",
-              "ActionSheet": {},
-              "DrawMode": 0,
-              "EndFrameIndex": 2147483647,
-              "FlipX": true,
-              "FlipY": false,
-              "OrderInLayer": 4,
-              "PlayRate": 1,
-              "RenderSetting": 0,
-              "SortingLayer": "MapLayer0",
-              "SpriteRUID": "9c588920ad384d4aa4af0afa8163ab4b",
-              "StartFrameIndex": 0,
-              "Color": {
-                "r": 1,
-                "g": 1,
-                "b": 1,
-                "a": 1
-              },
-              "Enable": true
-            }
-          ],
-          "@version": 1
-        }
-      },
-      {
-        "id": "8fe8b11c-64ac-4aaf-a234-fe0dd5604a8b",
-        "path": "/maps/map01/LexioTable03Chair4",
-        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent",
-        "jsonString": {
-          "name": "LexioTable03Chair4",
-          "path": "/maps/map01/LexioTable03Chair4",
-          "nameEditable": true,
-          "enable": true,
-          "visible": true,
-          "localize": false,
-          "displayOrder": 5,
-          "pathConstraints": "///",
-          "revision": 1,
-          "origin": {
-            "type": "Model",
-            "entry_id": "mapobject",
-            "sub_entity_id": null,
-            "root_entity_id": "8fe8b11c-64ac-4aaf-a234-fe0dd5604a8b",
-            "replaced_model_id": null
-          },
-          "modelId": "mapobject",
-          "@components": [
-            {
-              "@type": "MOD.Core.TransformComponent",
-              "Rotation": {
-                "x": 0,
-                "y": 0,
-                "z": 0
-              },
-              "Position": {
-                "x": -0.765,
-                "y": -0.38,
-                "z": 0
-              },
-              "QuaternionRotation": {
-                "x": 0,
-                "y": 0,
-                "z": 0,
-                "w": 1
-              },
-              "Scale": {
-                "x": 0.62,
-                "y": 0.62,
-                "z": 1
-              },
-              "ZRotation": 0,
-              "Enable": true
-            },
-            {
-              "@type": "MOD.Core.SpriteRendererComponent",
-              "ActionSheet": {},
-              "DrawMode": 0,
-              "EndFrameIndex": 2147483647,
-              "FlipX": false,
-              "FlipY": false,
-              "OrderInLayer": 4,
-              "PlayRate": 1,
-              "RenderSetting": 0,
-              "SortingLayer": "MapLayer0",
-              "SpriteRUID": "9c588920ad384d4aa4af0afa8163ab4b",
-              "StartFrameIndex": 0,
-              "Color": {
-                "r": 1,
-                "g": 1,
-                "b": 1,
-                "a": 1
-              },
-              "Enable": true
-            }
-          ],
-          "@version": 1
-        }
-      },
-      {
-        "id": "61c03f83-a518-44b5-925a-7fad0bbe29e5",
-        "path": "/maps/map01/LexioTable03Chair5",
-        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent",
-        "jsonString": {
-          "name": "LexioTable03Chair5",
-          "path": "/maps/map01/LexioTable03Chair5",
-          "nameEditable": true,
-          "enable": true,
-          "visible": true,
-          "localize": false,
-          "displayOrder": 6,
-          "pathConstraints": "///",
-          "revision": 1,
-          "origin": {
-            "type": "Model",
-            "entry_id": "mapobject",
-            "sub_entity_id": null,
-            "root_entity_id": "61c03f83-a518-44b5-925a-7fad0bbe29e5",
-            "replaced_model_id": null
-          },
-          "modelId": "mapobject",
-          "@components": [
-            {
-              "@type": "MOD.Core.TransformComponent",
-              "Rotation": {
-                "x": 0,
-                "y": 0,
-                "z": 0
-              },
-              "Position": {
-                "x": -0.135,
-                "y": -0.38,
-                "z": 0
-              },
-              "QuaternionRotation": {
-                "x": 0,
-                "y": 0,
-                "z": 0,
-                "w": 1
-              },
-              "Scale": {
-                "x": 0.62,
-                "y": 0.62,
-                "z": 1
-              },
-              "ZRotation": 0,
-              "Enable": true
-            },
-            {
-              "@type": "MOD.Core.SpriteRendererComponent",
-              "ActionSheet": {},
-              "DrawMode": 0,
-              "EndFrameIndex": 2147483647,
-              "FlipX": true,
-              "FlipY": false,
-              "OrderInLayer": 4,
-              "PlayRate": 1,
-              "RenderSetting": 0,
-              "SortingLayer": "MapLayer0",
-              "SpriteRUID": "9c588920ad384d4aa4af0afa8163ab4b",
-              "StartFrameIndex": 0,
-              "Color": {
-                "r": 1,
-                "g": 1,
-                "b": 1,
-                "a": 1
-              },
-              "Enable": true
-            }
-          ],
-          "@version": 1
-        }
-      },
-      {
         "id": "c84be19f-5c62-41cc-976d-9a1db3717e02",
         "path": "/maps/map01/LexioManualSessionHost",
         "componentNames": "MOD.Core.TransformComponent,script.LexioTableRegistry",
@@ -5032,7 +5087,7 @@
           "enable": true,
           "visible": true,
           "localize": false,
-          "displayOrder": 7,
+          "displayOrder": 4,
           "pathConstraints": "///",
           "revision": 1,
           "origin": {
@@ -5089,7 +5144,7 @@
           "enable": true,
           "visible": true,
           "localize": false,
-          "displayOrder": 8,
+          "displayOrder": 5,
           "pathConstraints": "///",
           "revision": 1,
           "origin": {
@@ -5147,7 +5202,7 @@
           "enable": true,
           "visible": true,
           "localize": false,
-          "displayOrder": 9,
+          "displayOrder": 6,
           "pathConstraints": "///",
           "revision": 1,
           "origin": {
@@ -5167,7 +5222,7 @@
                 "z": 0
               },
               "Position": {
-                "x": -7.2,
+                "x": -7.25,
                 "y": -12.15,
                 "z": 0
               },
@@ -5203,7 +5258,7 @@
                 "b": 1,
                 "a": 1
               },
-              "Enable": true
+              "Enable": false
             },
             {
               "@type": "MOD.Core.InteractionComponent",
@@ -5229,820 +5284,6 @@
         }
       },
       {
-        "id": "c2b94648-a01b-4d63-9d1a-bcfe761e3094",
-        "path": "/maps/map01/LexioTable01Chair1",
-        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent",
-        "jsonString": {
-          "name": "LexioTable01Chair1",
-          "path": "/maps/map01/LexioTable01Chair1",
-          "nameEditable": true,
-          "enable": true,
-          "visible": true,
-          "localize": false,
-          "displayOrder": 10,
-          "pathConstraints": "///",
-          "revision": 1,
-          "origin": {
-            "type": "Model",
-            "entry_id": "lexiobamboochair",
-            "sub_entity_id": null,
-            "root_entity_id": "bc86c3de-8483-4e3f-ad49-289354f9320f",
-            "replaced_model_id": null
-          },
-          "modelId": "lexiobamboochair",
-          "@components": [
-            {
-              "@type": "MOD.Core.TransformComponent",
-              "Rotation": {
-                "x": 0,
-                "y": 0,
-                "z": 0
-              },
-              "Position": {
-                "x": -1.165,
-                "y": -11.75,
-                "z": 0
-              },
-              "QuaternionRotation": {
-                "x": 0,
-                "y": 0,
-                "z": 0,
-                "w": 1
-              },
-              "Scale": {
-                "x": 0.62,
-                "y": 0.62,
-                "z": 1
-              },
-              "ZRotation": 0,
-              "Enable": true
-            },
-            {
-              "@type": "MOD.Core.SpriteRendererComponent",
-              "ActionSheet": {},
-              "DrawMode": 0,
-              "EndFrameIndex": 2147483647,
-              "FlipX": false,
-              "FlipY": false,
-              "OrderInLayer": 0,
-              "PlayRate": 1,
-              "RenderSetting": 0,
-              "SortingLayer": "MapLayer0",
-              "SpriteRUID": "9c588920ad384d4aa4af0afa8163ab4b",
-              "StartFrameIndex": 0,
-              "Color": {
-                "r": 1,
-                "g": 1,
-                "b": 1,
-                "a": 1
-              },
-              "Enable": true
-            }
-          ],
-          "@version": 1
-        }
-      },
-      {
-        "id": "de8eb25a-7fe1-4628-b94a-9358836f42e8",
-        "path": "/maps/map01/LexioTable01Chair2",
-        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent",
-        "jsonString": {
-          "name": "LexioTable01Chair2",
-          "path": "/maps/map01/LexioTable01Chair2",
-          "nameEditable": true,
-          "enable": true,
-          "visible": true,
-          "localize": false,
-          "displayOrder": 11,
-          "pathConstraints": "///",
-          "revision": 1,
-          "origin": {
-            "type": "Model",
-            "entry_id": "lexiobamboochair",
-            "sub_entity_id": null,
-            "root_entity_id": "c98b22d1-5227-4d0f-8778-4ba6cb97a847",
-            "replaced_model_id": null
-          },
-          "modelId": "lexiobamboochair",
-          "@components": [
-            {
-              "@type": "MOD.Core.TransformComponent",
-              "Rotation": {
-                "x": 0,
-                "y": 0,
-                "z": 0
-              },
-              "Position": {
-                "x": -0.5349999999999999,
-                "y": -11.75,
-                "z": 0
-              },
-              "QuaternionRotation": {
-                "x": 0,
-                "y": 0,
-                "z": 0,
-                "w": 1
-              },
-              "Scale": {
-                "x": 0.62,
-                "y": 0.62,
-                "z": 1
-              },
-              "ZRotation": 0,
-              "Enable": true
-            },
-            {
-              "@type": "MOD.Core.SpriteRendererComponent",
-              "ActionSheet": {},
-              "DrawMode": 0,
-              "EndFrameIndex": 2147483647,
-              "FlipX": true,
-              "FlipY": false,
-              "OrderInLayer": 0,
-              "PlayRate": 1,
-              "RenderSetting": 0,
-              "SortingLayer": "MapLayer0",
-              "SpriteRUID": "9c588920ad384d4aa4af0afa8163ab4b",
-              "StartFrameIndex": 0,
-              "Color": {
-                "r": 1,
-                "g": 1,
-                "b": 1,
-                "a": 1
-              },
-              "Enable": true
-            }
-          ],
-          "@version": 1
-        }
-      },
-      {
-        "id": "79186449-c7a7-4dde-ba4b-a03bdd036116",
-        "path": "/maps/map01/LexioTable01Chair3",
-        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent",
-        "jsonString": {
-          "name": "LexioTable01Chair3",
-          "path": "/maps/map01/LexioTable01Chair3",
-          "nameEditable": true,
-          "enable": true,
-          "visible": true,
-          "localize": false,
-          "displayOrder": 12,
-          "pathConstraints": "///",
-          "revision": 1,
-          "origin": {
-            "type": "Model",
-            "entry_id": "lexiobamboochair",
-            "sub_entity_id": null,
-            "root_entity_id": "e725730f-dc31-4899-83d9-2994fa1fc40b",
-            "replaced_model_id": null
-          },
-          "modelId": "lexiobamboochair",
-          "@components": [
-            {
-              "@type": "MOD.Core.TransformComponent",
-              "Rotation": {
-                "x": 0,
-                "y": 0,
-                "z": 0
-              },
-              "Position": {
-                "x": -0.85,
-                "y": -12.18,
-                "z": 0
-              },
-              "QuaternionRotation": {
-                "x": 0,
-                "y": 0,
-                "z": 0,
-                "w": 1
-              },
-              "Scale": {
-                "x": 0.62,
-                "y": 0.62,
-                "z": 1
-              },
-              "ZRotation": 0,
-              "Enable": true
-            },
-            {
-              "@type": "MOD.Core.SpriteRendererComponent",
-              "ActionSheet": {},
-              "DrawMode": 0,
-              "EndFrameIndex": 2147483647,
-              "FlipX": false,
-              "FlipY": false,
-              "OrderInLayer": 4,
-              "PlayRate": 1,
-              "RenderSetting": 0,
-              "SortingLayer": "MapLayer0",
-              "SpriteRUID": "9c588920ad384d4aa4af0afa8163ab4b",
-              "StartFrameIndex": 0,
-              "Color": {
-                "r": 1,
-                "g": 1,
-                "b": 1,
-                "a": 1
-              },
-              "Enable": true
-            }
-          ],
-          "@version": 1
-        }
-      },
-      {
-        "id": "6152cf85-1d93-4c16-b726-d0e2a04521e8",
-        "path": "/maps/map01/LexioTable02",
-        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent",
-        "jsonString": {
-          "name": "LexioTable02",
-          "path": "/maps/map01/LexioTable02",
-          "nameEditable": true,
-          "enable": true,
-          "visible": true,
-          "localize": false,
-          "displayOrder": 13,
-          "pathConstraints": "///",
-          "revision": 1,
-          "origin": {
-            "type": "Model",
-            "entry_id": "lexiotable",
-            "sub_entity_id": null,
-            "root_entity_id": "853efa1a-dfa0-4505-a7cb-c5f52672a268",
-            "replaced_model_id": null
-          },
-          "modelId": "lexiotable",
-          "@components": [
-            {
-              "@type": "MOD.Core.TransformComponent",
-              "Rotation": {
-                "x": 0,
-                "y": 0,
-                "z": 0
-              },
-              "Position": {
-                "x": 0.9,
-                "y": -6.11,
-                "z": 0
-              },
-              "QuaternionRotation": {
-                "x": 0,
-                "y": 0,
-                "z": 0,
-                "w": 1
-              },
-              "Scale": {
-                "x": 1.35,
-                "y": 1.05,
-                "z": 1
-              },
-              "ZRotation": 0,
-              "Enable": true
-            },
-            {
-              "@type": "MOD.Core.SpriteRendererComponent",
-              "ActionSheet": {},
-              "DrawMode": 0,
-              "EndFrameIndex": 2147483647,
-              "FlipX": false,
-              "FlipY": false,
-              "OrderInLayer": 2,
-              "PlayRate": 1,
-              "RenderSetting": 0,
-              "SortingLayer": "MapLayer0",
-              "SpriteRUID": "c043c5928edb440cbe776c07731fe79f",
-              "StartFrameIndex": 0,
-              "Color": {
-                "r": 1,
-                "g": 1,
-                "b": 1,
-                "a": 1
-              },
-              "Enable": true
-            }
-          ],
-          "@version": 1
-        }
-      },
-      {
-        "id": "62307121-5f93-41f3-a3b6-a42c7ae93999",
-        "path": "/maps/map01/LexioTable02Chair1",
-        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent",
-        "jsonString": {
-          "name": "LexioTable02Chair1",
-          "path": "/maps/map01/LexioTable02Chair1",
-          "nameEditable": true,
-          "enable": true,
-          "visible": true,
-          "localize": false,
-          "displayOrder": 14,
-          "pathConstraints": "///",
-          "revision": 1,
-          "origin": {
-            "type": "Model",
-            "entry_id": "lexiobluechair",
-            "sub_entity_id": null,
-            "root_entity_id": "d72893b4-616b-44e1-a46e-408658ee3d61",
-            "replaced_model_id": null
-          },
-          "modelId": "lexiobluechair",
-          "@components": [
-            {
-              "@type": "MOD.Core.TransformComponent",
-              "Rotation": {
-                "x": 0,
-                "y": 0,
-                "z": 0
-              },
-              "Position": {
-                "x": 0.585,
-                "y": -5.75,
-                "z": 0
-              },
-              "QuaternionRotation": {
-                "x": 0,
-                "y": 0,
-                "z": 0,
-                "w": 1
-              },
-              "Scale": {
-                "x": 0.62,
-                "y": 0.62,
-                "z": 1
-              },
-              "ZRotation": 0,
-              "Enable": true
-            },
-            {
-              "@type": "MOD.Core.SpriteRendererComponent",
-              "ActionSheet": {},
-              "DrawMode": 0,
-              "EndFrameIndex": 2147483647,
-              "FlipX": false,
-              "FlipY": false,
-              "OrderInLayer": 0,
-              "PlayRate": 1,
-              "RenderSetting": 0,
-              "SortingLayer": "MapLayer0",
-              "SpriteRUID": "9c588920ad384d4aa4af0afa8163ab4b",
-              "StartFrameIndex": 0,
-              "Color": {
-                "r": 1,
-                "g": 1,
-                "b": 1,
-                "a": 1
-              },
-              "Enable": true
-            }
-          ],
-          "@version": 1
-        }
-      },
-      {
-        "id": "82176f7f-a947-45fa-a36e-ebd932e794a4",
-        "path": "/maps/map01/LexioTable02Chair2",
-        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent",
-        "jsonString": {
-          "name": "LexioTable02Chair2",
-          "path": "/maps/map01/LexioTable02Chair2",
-          "nameEditable": true,
-          "enable": true,
-          "visible": true,
-          "localize": false,
-          "displayOrder": 15,
-          "pathConstraints": "///",
-          "revision": 1,
-          "origin": {
-            "type": "Model",
-            "entry_id": "lexiobluechair",
-            "sub_entity_id": null,
-            "root_entity_id": "07686591-cbb6-44a4-b1ae-4778143b34ae",
-            "replaced_model_id": null
-          },
-          "modelId": "lexiobluechair",
-          "@components": [
-            {
-              "@type": "MOD.Core.TransformComponent",
-              "Rotation": {
-                "x": 0,
-                "y": 0,
-                "z": 0
-              },
-              "Position": {
-                "x": 1.215,
-                "y": -5.75,
-                "z": 0
-              },
-              "QuaternionRotation": {
-                "x": 0,
-                "y": 0,
-                "z": 0,
-                "w": 1
-              },
-              "Scale": {
-                "x": 0.62,
-                "y": 0.62,
-                "z": 1
-              },
-              "ZRotation": 0,
-              "Enable": true
-            },
-            {
-              "@type": "MOD.Core.SpriteRendererComponent",
-              "ActionSheet": {},
-              "DrawMode": 0,
-              "EndFrameIndex": 2147483647,
-              "FlipX": true,
-              "FlipY": false,
-              "OrderInLayer": 0,
-              "PlayRate": 1,
-              "RenderSetting": 0,
-              "SortingLayer": "MapLayer0",
-              "SpriteRUID": "9c588920ad384d4aa4af0afa8163ab4b",
-              "StartFrameIndex": 0,
-              "Color": {
-                "r": 1,
-                "g": 1,
-                "b": 1,
-                "a": 1
-              },
-              "Enable": true
-            }
-          ],
-          "@version": 1
-        }
-      },
-      {
-        "id": "ce38d3a1-32e1-489a-a0ae-a686de2c7563",
-        "path": "/maps/map01/LexioTable02Chair3",
-        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent",
-        "jsonString": {
-          "name": "LexioTable02Chair3",
-          "path": "/maps/map01/LexioTable02Chair3",
-          "nameEditable": true,
-          "enable": true,
-          "visible": true,
-          "localize": false,
-          "displayOrder": 16,
-          "pathConstraints": "///",
-          "revision": 1,
-          "origin": {
-            "type": "Model",
-            "entry_id": "lexiobluechair",
-            "sub_entity_id": null,
-            "root_entity_id": "e2bc6c57-4d0d-49ca-beae-3518d7a6fc16",
-            "replaced_model_id": null
-          },
-          "modelId": "lexiobluechair",
-          "@components": [
-            {
-              "@type": "MOD.Core.TransformComponent",
-              "Rotation": {
-                "x": 0,
-                "y": 0,
-                "z": 0
-              },
-              "Position": {
-                "x": 0.585,
-                "y": -6.180000000000001,
-                "z": 0
-              },
-              "QuaternionRotation": {
-                "x": 0,
-                "y": 0,
-                "z": 0,
-                "w": 1
-              },
-              "Scale": {
-                "x": 0.62,
-                "y": 0.62,
-                "z": 1
-              },
-              "ZRotation": 0,
-              "Enable": true
-            },
-            {
-              "@type": "MOD.Core.SpriteRendererComponent",
-              "ActionSheet": {},
-              "DrawMode": 0,
-              "EndFrameIndex": 2147483647,
-              "FlipX": false,
-              "FlipY": false,
-              "OrderInLayer": 4,
-              "PlayRate": 1,
-              "RenderSetting": 0,
-              "SortingLayer": "MapLayer0",
-              "SpriteRUID": "9c588920ad384d4aa4af0afa8163ab4b",
-              "StartFrameIndex": 0,
-              "Color": {
-                "r": 1,
-                "g": 1,
-                "b": 1,
-                "a": 1
-              },
-              "Enable": true
-            }
-          ],
-          "@version": 1
-        }
-      },
-      {
-        "id": "e0b922d6-b919-47ec-803f-9a7a44d28a13",
-        "path": "/maps/map01/LexioTable03",
-        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent",
-        "jsonString": {
-          "name": "LexioTable03",
-          "path": "/maps/map01/LexioTable03",
-          "nameEditable": true,
-          "enable": true,
-          "visible": true,
-          "localize": false,
-          "displayOrder": 17,
-          "pathConstraints": "///",
-          "revision": 1,
-          "origin": {
-            "type": "Model",
-            "entry_id": "lexiotable",
-            "sub_entity_id": null,
-            "root_entity_id": "c0ce574f-cfb3-491e-b4fc-d7a777174d3d",
-            "replaced_model_id": null
-          },
-          "modelId": "lexiotable",
-          "@components": [
-            {
-              "@type": "MOD.Core.TransformComponent",
-              "Rotation": {
-                "x": 0,
-                "y": 0,
-                "z": 0
-              },
-              "Position": {
-                "x": -0.45,
-                "y": -0.31,
-                "z": 0
-              },
-              "QuaternionRotation": {
-                "x": 0,
-                "y": 0,
-                "z": 0,
-                "w": 1
-              },
-              "Scale": {
-                "x": 1.35,
-                "y": 1.05,
-                "z": 1
-              },
-              "ZRotation": 0,
-              "Enable": true
-            },
-            {
-              "@type": "MOD.Core.SpriteRendererComponent",
-              "ActionSheet": {},
-              "DrawMode": 0,
-              "EndFrameIndex": 2147483647,
-              "FlipX": false,
-              "FlipY": false,
-              "OrderInLayer": 2,
-              "PlayRate": 1,
-              "RenderSetting": 0,
-              "SortingLayer": "MapLayer0",
-              "SpriteRUID": "c043c5928edb440cbe776c07731fe79f",
-              "StartFrameIndex": 0,
-              "Color": {
-                "r": 1,
-                "g": 1,
-                "b": 1,
-                "a": 1
-              },
-              "Enable": true
-            }
-          ],
-          "@version": 1
-        }
-      },
-      {
-        "id": "fdcaeef3-432e-4d58-9293-b187dabbcdad",
-        "path": "/maps/map01/LexioTable03Chair1",
-        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent",
-        "jsonString": {
-          "name": "LexioTable03Chair1",
-          "path": "/maps/map01/LexioTable03Chair1",
-          "nameEditable": true,
-          "enable": true,
-          "visible": true,
-          "localize": false,
-          "displayOrder": 18,
-          "pathConstraints": "///",
-          "revision": 1,
-          "origin": {
-            "type": "Model",
-            "entry_id": "lexiorelaxchair",
-            "sub_entity_id": null,
-            "root_entity_id": "8ccbba6a-f013-45bc-a21e-0e5493e99cea",
-            "replaced_model_id": null
-          },
-          "modelId": "lexiorelaxchair",
-          "@components": [
-            {
-              "@type": "MOD.Core.TransformComponent",
-              "Rotation": {
-                "x": 0,
-                "y": 0,
-                "z": 0
-              },
-              "Position": {
-                "x": -1.08,
-                "y": 0.050000000000000044,
-                "z": 0
-              },
-              "QuaternionRotation": {
-                "x": 0,
-                "y": 0,
-                "z": 0,
-                "w": 1
-              },
-              "Scale": {
-                "x": 0.62,
-                "y": 0.62,
-                "z": 1
-              },
-              "ZRotation": 0,
-              "Enable": true
-            },
-            {
-              "@type": "MOD.Core.SpriteRendererComponent",
-              "ActionSheet": {},
-              "DrawMode": 0,
-              "EndFrameIndex": 2147483647,
-              "FlipX": false,
-              "FlipY": false,
-              "OrderInLayer": 0,
-              "PlayRate": 1,
-              "RenderSetting": 0,
-              "SortingLayer": "MapLayer0",
-              "SpriteRUID": "9c588920ad384d4aa4af0afa8163ab4b",
-              "StartFrameIndex": 0,
-              "Color": {
-                "r": 1,
-                "g": 1,
-                "b": 1,
-                "a": 1
-              },
-              "Enable": true
-            }
-          ],
-          "@version": 1
-        }
-      },
-      {
-        "id": "2634a1e1-d2bf-4197-8e9a-c73201bcb6d7",
-        "path": "/maps/map01/LexioTable03Chair2",
-        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent",
-        "jsonString": {
-          "name": "LexioTable03Chair2",
-          "path": "/maps/map01/LexioTable03Chair2",
-          "nameEditable": true,
-          "enable": true,
-          "visible": true,
-          "localize": false,
-          "displayOrder": 19,
-          "pathConstraints": "///",
-          "revision": 1,
-          "origin": {
-            "type": "Model",
-            "entry_id": "lexiorelaxchair",
-            "sub_entity_id": null,
-            "root_entity_id": "e87be36f-ec73-46c6-8752-bf7f53017452",
-            "replaced_model_id": null
-          },
-          "modelId": "lexiorelaxchair",
-          "@components": [
-            {
-              "@type": "MOD.Core.TransformComponent",
-              "Rotation": {
-                "x": 0,
-                "y": 0,
-                "z": 0
-              },
-              "Position": {
-                "x": -0.45,
-                "y": 0.050000000000000044,
-                "z": 0
-              },
-              "QuaternionRotation": {
-                "x": 0,
-                "y": 0,
-                "z": 0,
-                "w": 1
-              },
-              "Scale": {
-                "x": 0.62,
-                "y": 0.62,
-                "z": 1
-              },
-              "ZRotation": 0,
-              "Enable": true
-            },
-            {
-              "@type": "MOD.Core.SpriteRendererComponent",
-              "ActionSheet": {},
-              "DrawMode": 0,
-              "EndFrameIndex": 2147483647,
-              "FlipX": false,
-              "FlipY": false,
-              "OrderInLayer": 0,
-              "PlayRate": 1,
-              "RenderSetting": 0,
-              "SortingLayer": "MapLayer0",
-              "SpriteRUID": "9c588920ad384d4aa4af0afa8163ab4b",
-              "StartFrameIndex": 0,
-              "Color": {
-                "r": 1,
-                "g": 1,
-                "b": 1,
-                "a": 1
-              },
-              "Enable": true
-            }
-          ],
-          "@version": 1
-        }
-      },
-      {
-        "id": "975b1e0c-1100-41aa-8150-b22cc92e336b",
-        "path": "/maps/map01/LexioTable03Chair3",
-        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent",
-        "jsonString": {
-          "name": "LexioTable03Chair3",
-          "path": "/maps/map01/LexioTable03Chair3",
-          "nameEditable": true,
-          "enable": true,
-          "visible": true,
-          "localize": false,
-          "displayOrder": 20,
-          "pathConstraints": "///",
-          "revision": 1,
-          "origin": {
-            "type": "Model",
-            "entry_id": "lexiorelaxchair",
-            "sub_entity_id": null,
-            "root_entity_id": "e155bc73-d7ec-47f4-a86c-1579ec5f2fc7",
-            "replaced_model_id": null
-          },
-          "modelId": "lexiorelaxchair",
-          "@components": [
-            {
-              "@type": "MOD.Core.TransformComponent",
-              "Rotation": {
-                "x": 0,
-                "y": 0,
-                "z": 0
-              },
-              "Position": {
-                "x": 0.18,
-                "y": 0.050000000000000044,
-                "z": 0
-              },
-              "QuaternionRotation": {
-                "x": 0,
-                "y": 0,
-                "z": 0,
-                "w": 1
-              },
-              "Scale": {
-                "x": 0.62,
-                "y": 0.62,
-                "z": 1
-              },
-              "ZRotation": 0,
-              "Enable": true
-            },
-            {
-              "@type": "MOD.Core.SpriteRendererComponent",
-              "ActionSheet": {},
-              "DrawMode": 0,
-              "EndFrameIndex": 2147483647,
-              "FlipX": true,
-              "FlipY": false,
-              "OrderInLayer": 0,
-              "PlayRate": 1,
-              "RenderSetting": 0,
-              "SortingLayer": "MapLayer0",
-              "SpriteRUID": "9c588920ad384d4aa4af0afa8163ab4b",
-              "StartFrameIndex": 0,
-              "Color": {
-                "r": 1,
-                "g": 1,
-                "b": 1,
-                "a": 1
-              },
-              "Enable": true
-            }
-          ],
-          "@version": 1
-        }
-      },
-      {
         "id": "0d81fc47-fce0-44cd-b43a-ddd7468fb962",
         "path": "/maps/map01/LexioTable03SessionHost",
         "componentNames": "MOD.Core.TransformComponent,script.LexioSessionCoordinator,script.LexioGameSession",
@@ -6053,7 +5294,7 @@
           "enable": true,
           "visible": true,
           "localize": false,
-          "displayOrder": 21,
+          "displayOrder": 7,
           "pathConstraints": "///",
           "revision": 1,
           "origin": {
@@ -6106,80 +5347,6 @@
         }
       },
       {
-        "id": "3199066a-84d0-4508-a166-9c919a9f2c86",
-        "path": "/maps/map01/LexioTable01",
-        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent",
-        "jsonString": {
-          "name": "LexioTable01",
-          "path": "/maps/map01/LexioTable01",
-          "nameEditable": true,
-          "enable": true,
-          "visible": true,
-          "localize": false,
-          "displayOrder": 22,
-          "pathConstraints": "///",
-          "revision": 1,
-          "origin": {
-            "type": "Model",
-            "entry_id": "lexiotable",
-            "sub_entity_id": null,
-            "root_entity_id": "559ee806-250e-46a7-a1d3-200b107a3cf0",
-            "replaced_model_id": null
-          },
-          "modelId": "lexiotable",
-          "@components": [
-            {
-              "@type": "MOD.Core.TransformComponent",
-              "Rotation": {
-                "x": 0,
-                "y": 0,
-                "z": 0
-              },
-              "Position": {
-                "x": -0.85,
-                "y": -12.110000000000001,
-                "z": 0
-              },
-              "QuaternionRotation": {
-                "x": 0,
-                "y": 0,
-                "z": 0,
-                "w": 1
-              },
-              "Scale": {
-                "x": 1.35,
-                "y": 1.05,
-                "z": 1
-              },
-              "ZRotation": 0,
-              "Enable": true
-            },
-            {
-              "@type": "MOD.Core.SpriteRendererComponent",
-              "ActionSheet": {},
-              "DrawMode": 0,
-              "EndFrameIndex": 2147483647,
-              "FlipX": false,
-              "FlipY": false,
-              "OrderInLayer": 2,
-              "PlayRate": 1,
-              "RenderSetting": 0,
-              "SortingLayer": "MapLayer0",
-              "SpriteRUID": "c043c5928edb440cbe776c07731fe79f",
-              "StartFrameIndex": 0,
-              "Color": {
-                "r": 1,
-                "g": 1,
-                "b": 1,
-                "a": 1
-              },
-              "Enable": true
-            }
-          ],
-          "@version": 1
-        }
-      },
-      {
         "id": "85142139-1a18-499a-8e3f-d5813b63cdb1",
         "path": "/maps/map01/LexioTable01SessionHost",
         "componentNames": "MOD.Core.TransformComponent,script.LexioSessionCoordinator,script.LexioGameSession",
@@ -6190,7 +5357,7 @@
           "enable": true,
           "visible": true,
           "localize": false,
-          "displayOrder": 23,
+          "displayOrder": 8,
           "pathConstraints": "///",
           "revision": 1,
           "origin": {
@@ -6253,7 +5420,7 @@
           "enable": true,
           "visible": true,
           "localize": false,
-          "displayOrder": 24,
+          "displayOrder": 9,
           "pathConstraints": "///",
           "revision": 1,
           "origin": {
@@ -6306,25 +5473,172 @@
         }
       },
       {
-        "id": "0e542dea-a212-41d9-9271-c59f7ece4def",
-        "path": "/maps/map01/HenesysHouse1F",
-        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent",
+        "id": "924a23bb-c5be-49ad-8873-91f7a65cf886",
+        "path": "/maps/map01/LexioInterior1F",
+        "componentNames": "MOD.Core.TransformComponent,MOD.Core.CustomFootholdComponent",
         "jsonString": {
-          "name": "HenesysHouse1F",
-          "path": "/maps/map01/HenesysHouse1F",
+          "name": "LexioInterior1F",
+          "path": "/maps/map01/LexioInterior1F",
           "nameEditable": true,
           "enable": true,
           "visible": true,
           "localize": false,
-          "displayOrder": 205,
+          "displayOrder": 10,
           "pathConstraints": "///",
           "revision": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "mapobject",
+            "sub_entity_id": null,
+            "root_entity_id": "924a23bb-c5be-49ad-8873-91f7a65cf886",
+            "replaced_model_id": null
+          },
           "modelId": "mapobject",
           "@components": [
             {
               "@type": "MOD.Core.TransformComponent",
+              "Rotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
               "Position": {
-                "x": 4.35,
+                "x": 0,
+                "y": -12.17,
+                "z": 0
+              },
+              "QuaternionRotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
+              },
+              "Scale": {
+                "x": 1.36,
+                "y": 1.36,
+                "z": 1
+              },
+              "ZRotation": 0,
+              "Enable": true
+            },
+            {
+              "@type": "MOD.Core.CustomFootholdComponent",
+              "edgeLists": [
+                [
+                  {
+                    "x": -6.066,
+                    "y": 0.331
+                  },
+                  {
+                    "x": -3.949,
+                    "y": 4.743
+                  }
+                ],
+                [
+                  {
+                    "x": 5.684,
+                    "y": 4.743
+                  },
+                  {
+                    "x": 3.566,
+                    "y": 9.154
+                  }
+                ],
+                [
+                  {
+                    "x": 4.338,
+                    "y": 0.331
+                  },
+                  {
+                    "x": 4.853,
+                    "y": 1.375
+                  },
+                  {
+                    "x": 6.103,
+                    "y": 1.375
+                  }
+                ],
+                [
+                  {
+                    "x": -6.103,
+                    "y": 5.787
+                  },
+                  {
+                    "x": -4.853,
+                    "y": 5.787
+                  },
+                  {
+                    "x": -4.338,
+                    "y": 4.743
+                  }
+                ],
+                [
+                  {
+                    "x": 4.338,
+                    "y": 4.743
+                  },
+                  {
+                    "x": 4.853,
+                    "y": 5.787
+                  },
+                  {
+                    "x": 6.103,
+                    "y": 5.787
+                  }
+                ],
+                [
+                  {
+                    "x": -6.103,
+                    "y": 10.199
+                  },
+                  {
+                    "x": -4.853,
+                    "y": 10.199
+                  },
+                  {
+                    "x": -4.338,
+                    "y": 9.154
+                  }
+                ]
+              ],
+              "Enable": true
+            }
+          ],
+          "@version": 1
+        }
+      },
+      {
+        "id": "3b5a01bc-c0eb-4b39-bff6-a5f6b3f2480b",
+        "path": "/maps/map01/LexioElevator1FUp",
+        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent,MOD.Core.InteractionComponent,script.LexioTravelInteractable,MOD.Core.NameTagComponent",
+        "jsonString": {
+          "name": "LexioElevator1FUp",
+          "path": "/maps/map01/LexioElevator1FUp",
+          "nameEditable": true,
+          "enable": true,
+          "visible": true,
+          "localize": false,
+          "displayOrder": 11,
+          "pathConstraints": "///",
+          "revision": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "mapobject",
+            "sub_entity_id": null,
+            "root_entity_id": "3b5a01bc-c0eb-4b39-bff6-a5f6b3f2480b",
+            "replaced_model_id": null
+          },
+          "modelId": "mapobject",
+          "@components": [
+            {
+              "@type": "MOD.Core.TransformComponent",
+              "Rotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "Position": {
+                "x": 6.35,
                 "y": -12.15,
                 "z": 0
               },
@@ -6335,63 +5649,111 @@
                 "w": 1
               },
               "Scale": {
-                "x": 0.92,
-                "y": 0.92,
+                "x": 0.78,
+                "y": 0.78,
                 "z": 1
               },
+              "ZRotation": 0,
               "Enable": true
             },
             {
               "@type": "MOD.Core.SpriteRendererComponent",
-              "SpriteRUID": "9e32f098dfbd46c28edc4efa72df63a4",
+              "ActionSheet": {},
+              "DrawMode": 0,
+              "EndFrameIndex": 2147483647,
+              "FlipX": false,
+              "FlipY": false,
+              "IgnoreMapLayerCheck": true,
+              "OrderInLayer": 3,
+              "PlayRate": 1,
+              "RenderSetting": 0,
+              "SortingLayer": "MapLayer0",
+              "SpriteRUID": "c31342761e64411381833ec285b2eaca",
+              "StartFrameIndex": 0,
               "Color": {
                 "r": 1,
                 "g": 1,
                 "b": 1,
                 "a": 1
               },
-              "DrawMode": 0,
-              "FlipX": false,
-              "FlipY": false,
-              "PlayRate": 1,
-              "OrderInLayer": -7,
-              "StartFrameIndex": 0,
-              "EndFrameIndex": 2147483647,
+              "Enable": false
+            },
+            {
+              "@type": "MOD.Core.InteractionComponent",
+              "ActionKey": 273,
+              "ActionName": "엘리베이터 ↑ 2층",
+              "BoxSize": {
+                "x": 0.9,
+                "y": 1.4
+              },
+              "IsLegacy": false,
+              "ShowActionInfo": true,
+              "Enable": true
+            },
+            {
+              "@type": "script.LexioTravelInteractable",
               "Enable": true,
-              "SortingLayer": "MapLayer0",
-              "IgnoreMapLayerCheck": true
+              "ObjectKey": "LexioElevator1FUp",
+              "RouteId": "LEXIO_ELEVATOR_1F_UP",
+              "ServerUseDistance": 1
+            },
+            {
+              "@type": "MOD.Core.NameTagComponent",
+              "Bold": true,
+              "FontColor": {
+                "r": 1,
+                "g": 0.88,
+                "b": 0.52,
+                "a": 1
+              },
+              "FontOffset": {
+                "x": 0,
+                "y": 0
+              },
+              "FontSize": 0.88,
+              "Name": "엘리베이터\n2층",
+              "NameTagRUID": {
+                "DataId": "9bf18287398c44699c20fc5123d1a1ae"
+              },
+              "OffsetY": 0,
+              "Enable": false
             }
           ],
-          "@version": 1,
-          "origin": {
-            "type": "Model",
-            "entry_id": "mapobject",
-            "sub_entity_id": null,
-            "root_entity_id": "0e542dea-a212-41d9-9271-c59f7ece4def",
-            "replaced_model_id": null
-          }
+          "@version": 1
         }
       },
       {
-        "id": "f0a39f98-f3aa-45f3-895c-f74b19dd0ff4",
-        "path": "/maps/map01/HenesysTree1F",
-        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent",
+        "id": "d9578dbb-4a26-4c44-994e-7a7b2eccfd41",
+        "path": "/maps/map01/LexioRoomDoor1F",
+        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent,MOD.Core.InteractionComponent,script.LexioBuildingDoor,MOD.Core.NameTagComponent",
         "jsonString": {
-          "name": "HenesysTree1F",
-          "path": "/maps/map01/HenesysTree1F",
+          "name": "LexioRoomDoor1F",
+          "path": "/maps/map01/LexioRoomDoor1F",
           "nameEditable": true,
           "enable": true,
           "visible": true,
           "localize": false,
-          "displayOrder": 206,
+          "displayOrder": 12,
           "pathConstraints": "///",
           "revision": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "mapobject",
+            "sub_entity_id": null,
+            "root_entity_id": "d9578dbb-4a26-4c44-994e-7a7b2eccfd41",
+            "replaced_model_id": null
+          },
           "modelId": "mapobject",
           "@components": [
             {
               "@type": "MOD.Core.TransformComponent",
+              "Rotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
               "Position": {
-                "x": -4.75,
+                "x": 0.6,
                 "y": -12.15,
                 "z": 0
               },
@@ -6402,64 +5764,110 @@
                 "w": 1
               },
               "Scale": {
-                "x": 1.12,
-                "y": 1.12,
+                "x": 0.82,
+                "y": 0.82,
                 "z": 1
               },
+              "ZRotation": 0,
               "Enable": true
             },
             {
               "@type": "MOD.Core.SpriteRendererComponent",
-              "SpriteRUID": "5cd0f21502dd41bc8db9bc933d7b609c",
+              "ActionSheet": {},
+              "DrawMode": 0,
+              "EndFrameIndex": 2147483647,
+              "FlipX": false,
+              "FlipY": false,
+              "IgnoreMapLayerCheck": true,
+              "OrderInLayer": 4,
+              "PlayRate": 1,
+              "RenderSetting": 0,
+              "SortingLayer": "MapLayer0",
+              "SpriteRUID": "aa97dbc0c8314b82a346591ad1ef03f5",
+              "StartFrameIndex": 0,
               "Color": {
                 "r": 1,
                 "g": 1,
                 "b": 1,
                 "a": 1
               },
-              "DrawMode": 0,
-              "FlipX": true,
-              "FlipY": false,
-              "PlayRate": 1,
-              "OrderInLayer": -6,
-              "StartFrameIndex": 0,
-              "EndFrameIndex": 2147483647,
+              "Enable": false
+            },
+            {
+              "@type": "MOD.Core.InteractionComponent",
+              "ActionKey": 32,
+              "ActionName": "자동 매칭 · 3·4·5인",
+              "BoxSize": {
+                "x": 1.5,
+                "y": 2.3
+              },
+              "IsLegacy": false,
+              "ShowActionInfo": true,
+              "Enable": true
+            },
+            {
+              "@type": "script.LexioBuildingDoor",
               "Enable": true,
-              "SortingLayer": "MapLayer0",
-              "IgnoreMapLayerCheck": true
+              "DoorMode": "AUTO_MATCH"
+            },
+            {
+              "@type": "MOD.Core.NameTagComponent",
+              "Bold": true,
+              "FontColor": {
+                "r": 1,
+                "g": 0.88,
+                "b": 0.52,
+                "a": 1
+              },
+              "FontOffset": {
+                "x": 0,
+                "y": 0
+              },
+              "FontSize": 0.88,
+              "Name": "자동 매칭\n3·4·5인",
+              "NameTagRUID": {
+                "DataId": "9bf18287398c44699c20fc5123d1a1ae"
+              },
+              "OffsetY": 0,
+              "Enable": false
             }
           ],
-          "@version": 1,
-          "origin": {
-            "type": "Model",
-            "entry_id": "mapobject",
-            "sub_entity_id": null,
-            "root_entity_id": "f0a39f98-f3aa-45f3-895c-f74b19dd0ff4",
-            "replaced_model_id": null
-          }
+          "@version": 1
         }
       },
       {
-        "id": "a4c19548-3487-4f64-a7b8-a97eb7ba4f79",
-        "path": "/maps/map01/FloorBench1F",
-        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent",
+        "id": "4e0e6755-d79b-47a6-acac-71cb0e07ff6e",
+        "path": "/maps/map01/LexioInterior2F",
+        "componentNames": "MOD.Core.TransformComponent",
         "jsonString": {
-          "name": "FloorBench1F",
-          "path": "/maps/map01/FloorBench1F",
+          "name": "LexioInterior2F",
+          "path": "/maps/map01/LexioInterior2F",
           "nameEditable": true,
           "enable": true,
           "visible": true,
           "localize": false,
-          "displayOrder": 207,
+          "displayOrder": 13,
           "pathConstraints": "///",
           "revision": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "mapobject",
+            "sub_entity_id": null,
+            "root_entity_id": "4e0e6755-d79b-47a6-acac-71cb0e07ff6e",
+            "replaced_model_id": null
+          },
           "modelId": "mapobject",
           "@components": [
             {
               "@type": "MOD.Core.TransformComponent",
+              "Rotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
               "Position": {
-                "x": -2.2,
-                "y": -12.13,
+                "x": 0,
+                "y": -6.17,
                 "z": 0
               },
               "QuaternionRotation": {
@@ -6469,64 +5877,559 @@
                 "w": 1
               },
               "Scale": {
-                "x": 0.72,
-                "y": 0.72,
+                "x": 1.36,
+                "y": 1.36,
                 "z": 1
               },
+              "ZRotation": 0,
+              "Enable": true
+            }
+          ],
+          "@version": 1
+        }
+      },
+      {
+        "id": "72ffc2e9-0b8b-49ed-90e2-75990dd3195a",
+        "path": "/maps/map01/LexioElevator2FUp",
+        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent,MOD.Core.InteractionComponent,script.LexioTravelInteractable,MOD.Core.NameTagComponent",
+        "jsonString": {
+          "name": "LexioElevator2FUp",
+          "path": "/maps/map01/LexioElevator2FUp",
+          "nameEditable": true,
+          "enable": true,
+          "visible": true,
+          "localize": false,
+          "displayOrder": 14,
+          "pathConstraints": "///",
+          "revision": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "mapobject",
+            "sub_entity_id": null,
+            "root_entity_id": "72ffc2e9-0b8b-49ed-90e2-75990dd3195a",
+            "replaced_model_id": null
+          },
+          "modelId": "mapobject",
+          "@components": [
+            {
+              "@type": "MOD.Core.TransformComponent",
+              "Rotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "Position": {
+                "x": 6.35,
+                "y": -6.15,
+                "z": 0
+              },
+              "QuaternionRotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
+              },
+              "Scale": {
+                "x": 0.78,
+                "y": 0.78,
+                "z": 1
+              },
+              "ZRotation": 0,
               "Enable": true
             },
             {
               "@type": "MOD.Core.SpriteRendererComponent",
-              "SpriteRUID": "960c500154b74be0b65aa94f723fe2d2",
+              "ActionSheet": {},
+              "DrawMode": 0,
+              "EndFrameIndex": 2147483647,
+              "FlipX": false,
+              "FlipY": false,
+              "IgnoreMapLayerCheck": true,
+              "OrderInLayer": 3,
+              "PlayRate": 1,
+              "RenderSetting": 0,
+              "SortingLayer": "MapLayer0",
+              "SpriteRUID": "c31342761e64411381833ec285b2eaca",
+              "StartFrameIndex": 0,
               "Color": {
                 "r": 1,
                 "g": 1,
                 "b": 1,
                 "a": 1
               },
-              "DrawMode": 0,
-              "FlipX": false,
-              "FlipY": false,
-              "PlayRate": 1,
-              "OrderInLayer": -2,
-              "StartFrameIndex": 0,
-              "EndFrameIndex": 2147483647,
+              "Enable": false
+            },
+            {
+              "@type": "MOD.Core.InteractionComponent",
+              "ActionKey": 273,
+              "ActionName": "엘리베이터 ↑ 3층",
+              "BoxSize": {
+                "x": 0.9,
+                "y": 1.4
+              },
+              "IsLegacy": false,
+              "ShowActionInfo": true,
+              "Enable": true
+            },
+            {
+              "@type": "script.LexioTravelInteractable",
               "Enable": true,
-              "SortingLayer": "MapLayer0",
-              "IgnoreMapLayerCheck": true
+              "ObjectKey": "LexioElevator2FUp",
+              "RouteId": "LEXIO_ELEVATOR_2F_UP",
+              "ServerUseDistance": 1
+            },
+            {
+              "@type": "MOD.Core.NameTagComponent",
+              "Bold": true,
+              "FontColor": {
+                "r": 1,
+                "g": 0.88,
+                "b": 0.52,
+                "a": 1
+              },
+              "FontOffset": {
+                "x": 0,
+                "y": 0
+              },
+              "FontSize": 0.88,
+              "Name": "엘리베이터\n3층",
+              "NameTagRUID": {
+                "DataId": "9bf18287398c44699c20fc5123d1a1ae"
+              },
+              "OffsetY": 0,
+              "Enable": false
             }
           ],
-          "@version": 1,
-          "origin": {
-            "type": "Model",
-            "entry_id": "mapobject",
-            "sub_entity_id": null,
-            "root_entity_id": "a4c19548-3487-4f64-a7b8-a97eb7ba4f79",
-            "replaced_model_id": null
-          }
+          "@version": 1
         }
       },
       {
-        "id": "2ee5aa00-80c1-4411-a7a5-20ade32b51b1",
-        "path": "/maps/map01/HenesysFlowerA1F",
-        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent",
+        "id": "3a739177-07a4-4d72-a697-c306851633ea",
+        "path": "/maps/map01/LexioRoomDoor2F",
+        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent,MOD.Core.InteractionComponent,script.LexioBuildingDoor,MOD.Core.NameTagComponent",
         "jsonString": {
-          "name": "HenesysFlowerA1F",
-          "path": "/maps/map01/HenesysFlowerA1F",
+          "name": "LexioRoomDoor2F",
+          "path": "/maps/map01/LexioRoomDoor2F",
           "nameEditable": true,
           "enable": true,
           "visible": true,
           "localize": false,
-          "displayOrder": 208,
+          "displayOrder": 15,
           "pathConstraints": "///",
           "revision": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "mapobject",
+            "sub_entity_id": null,
+            "root_entity_id": "3a739177-07a4-4d72-a697-c306851633ea",
+            "replaced_model_id": null
+          },
           "modelId": "mapobject",
           "@components": [
             {
               "@type": "MOD.Core.TransformComponent",
+              "Rotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
               "Position": {
-                "x": 2,
-                "y": -12.14,
+                "x": 0.6,
+                "y": -6.15,
+                "z": 0
+              },
+              "QuaternionRotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
+              },
+              "Scale": {
+                "x": 0.82,
+                "y": 0.82,
+                "z": 1
+              },
+              "ZRotation": 0,
+              "Enable": true
+            },
+            {
+              "@type": "MOD.Core.SpriteRendererComponent",
+              "ActionSheet": {},
+              "DrawMode": 0,
+              "EndFrameIndex": 2147483647,
+              "FlipX": false,
+              "FlipY": false,
+              "IgnoreMapLayerCheck": true,
+              "OrderInLayer": 4,
+              "PlayRate": 1,
+              "RenderSetting": 0,
+              "SortingLayer": "MapLayer0",
+              "SpriteRUID": "aa97dbc0c8314b82a346591ad1ef03f5",
+              "StartFrameIndex": 0,
+              "Color": {
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
+              },
+              "Enable": false
+            },
+            {
+              "@type": "MOD.Core.InteractionComponent",
+              "ActionKey": 32,
+              "ActionName": "사설방 · 목록·참가 코드",
+              "BoxSize": {
+                "x": 1.5,
+                "y": 2.3
+              },
+              "IsLegacy": false,
+              "ShowActionInfo": true,
+              "Enable": true
+            },
+            {
+              "@type": "script.LexioBuildingDoor",
+              "Enable": true,
+              "DoorMode": "PRIVATE_ROOM"
+            },
+            {
+              "@type": "MOD.Core.NameTagComponent",
+              "Bold": true,
+              "FontColor": {
+                "r": 1,
+                "g": 0.88,
+                "b": 0.52,
+                "a": 1
+              },
+              "FontOffset": {
+                "x": 0,
+                "y": 0
+              },
+              "FontSize": 0.88,
+              "Name": "사설방\n목록·참가 코드",
+              "NameTagRUID": {
+                "DataId": "9bf18287398c44699c20fc5123d1a1ae"
+              },
+              "OffsetY": 0,
+              "Enable": false
+            }
+          ],
+          "@version": 1
+        }
+      },
+      {
+        "id": "cde89a9b-9528-4071-8bad-94bd29ebe090",
+        "path": "/maps/map01/LexioInterior3F",
+        "componentNames": "MOD.Core.TransformComponent",
+        "jsonString": {
+          "name": "LexioInterior3F",
+          "path": "/maps/map01/LexioInterior3F",
+          "nameEditable": true,
+          "enable": true,
+          "visible": true,
+          "localize": false,
+          "displayOrder": 16,
+          "pathConstraints": "///",
+          "revision": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "mapobject",
+            "sub_entity_id": null,
+            "root_entity_id": "cde89a9b-9528-4071-8bad-94bd29ebe090",
+            "replaced_model_id": null
+          },
+          "modelId": "mapobject",
+          "@components": [
+            {
+              "@type": "MOD.Core.TransformComponent",
+              "Rotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "Position": {
+                "x": 0,
+                "y": -0.37,
+                "z": 0
+              },
+              "QuaternionRotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
+              },
+              "Scale": {
+                "x": 1.36,
+                "y": 1.36,
+                "z": 1
+              },
+              "ZRotation": 0,
+              "Enable": true
+            }
+          ],
+          "@version": 1
+        }
+      },
+      {
+        "id": "51adeff5-a3f0-4ab6-8430-ef5874bd113a",
+        "path": "/maps/map01/LexioElevator3FDown",
+        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent,MOD.Core.InteractionComponent,script.LexioTravelInteractable,MOD.Core.NameTagComponent",
+        "jsonString": {
+          "name": "LexioElevator3FDown",
+          "path": "/maps/map01/LexioElevator3FDown",
+          "nameEditable": true,
+          "enable": true,
+          "visible": true,
+          "localize": false,
+          "displayOrder": 17,
+          "pathConstraints": "///",
+          "revision": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "mapobject",
+            "sub_entity_id": null,
+            "root_entity_id": "51adeff5-a3f0-4ab6-8430-ef5874bd113a",
+            "replaced_model_id": null
+          },
+          "modelId": "mapobject",
+          "@components": [
+            {
+              "@type": "MOD.Core.TransformComponent",
+              "Rotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "Position": {
+                "x": 6.35,
+                "y": -0.35,
+                "z": 0
+              },
+              "QuaternionRotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
+              },
+              "Scale": {
+                "x": 0.78,
+                "y": 0.78,
+                "z": 1
+              },
+              "ZRotation": 0,
+              "Enable": true
+            },
+            {
+              "@type": "MOD.Core.SpriteRendererComponent",
+              "ActionSheet": {},
+              "DrawMode": 0,
+              "EndFrameIndex": 2147483647,
+              "FlipX": false,
+              "FlipY": false,
+              "IgnoreMapLayerCheck": true,
+              "OrderInLayer": 3,
+              "PlayRate": 1,
+              "RenderSetting": 0,
+              "SortingLayer": "MapLayer0",
+              "SpriteRUID": "c31342761e64411381833ec285b2eaca",
+              "StartFrameIndex": 0,
+              "Color": {
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
+              },
+              "Enable": false
+            },
+            {
+              "@type": "MOD.Core.InteractionComponent",
+              "ActionKey": 273,
+              "ActionName": "엘리베이터 ↓ 2층",
+              "BoxSize": {
+                "x": 0.9,
+                "y": 1.4
+              },
+              "IsLegacy": false,
+              "ShowActionInfo": true,
+              "Enable": true
+            },
+            {
+              "@type": "script.LexioTravelInteractable",
+              "Enable": true,
+              "ObjectKey": "LexioElevator3FDown",
+              "RouteId": "LEXIO_ELEVATOR_3F_DOWN",
+              "ServerUseDistance": 1
+            },
+            {
+              "@type": "MOD.Core.NameTagComponent",
+              "Bold": true,
+              "FontColor": {
+                "r": 1,
+                "g": 0.88,
+                "b": 0.52,
+                "a": 1
+              },
+              "FontOffset": {
+                "x": 0,
+                "y": 0
+              },
+              "FontSize": 0.88,
+              "Name": "엘리베이터\n1층",
+              "NameTagRUID": {
+                "DataId": "9bf18287398c44699c20fc5123d1a1ae"
+              },
+              "OffsetY": 0,
+              "Enable": false
+            }
+          ],
+          "@version": 1
+        }
+      },
+      {
+        "id": "f8fcf5cc-0e63-40f5-82fe-53dd04466924",
+        "path": "/maps/map01/LexioRoomDoor3F",
+        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent,MOD.Core.InteractionComponent,script.LexioBuildingDoor,MOD.Core.NameTagComponent",
+        "jsonString": {
+          "name": "LexioRoomDoor3F",
+          "path": "/maps/map01/LexioRoomDoor3F",
+          "nameEditable": true,
+          "enable": true,
+          "visible": true,
+          "localize": false,
+          "displayOrder": 18,
+          "pathConstraints": "///",
+          "revision": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "mapobject",
+            "sub_entity_id": null,
+            "root_entity_id": "f8fcf5cc-0e63-40f5-82fe-53dd04466924",
+            "replaced_model_id": null
+          },
+          "modelId": "mapobject",
+          "@components": [
+            {
+              "@type": "MOD.Core.TransformComponent",
+              "Rotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "Position": {
+                "x": 0.6,
+                "y": -0.35,
+                "z": 0
+              },
+              "QuaternionRotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
+              },
+              "Scale": {
+                "x": 0.82,
+                "y": 0.82,
+                "z": 1
+              },
+              "ZRotation": 0,
+              "Enable": true
+            },
+            {
+              "@type": "MOD.Core.SpriteRendererComponent",
+              "ActionSheet": {},
+              "DrawMode": 0,
+              "EndFrameIndex": 2147483647,
+              "FlipX": false,
+              "FlipY": false,
+              "IgnoreMapLayerCheck": true,
+              "OrderInLayer": 4,
+              "PlayRate": 1,
+              "RenderSetting": 0,
+              "SortingLayer": "MapLayer0",
+              "SpriteRUID": "aa97dbc0c8314b82a346591ad1ef03f5",
+              "StartFrameIndex": 0,
+              "Color": {
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
+              },
+              "Enable": false
+            },
+            {
+              "@type": "MOD.Core.InteractionComponent",
+              "ActionKey": 32,
+              "ActionName": "대회·관전 · 준비 중",
+              "BoxSize": {
+                "x": 1.5,
+                "y": 2.3
+              },
+              "IsLegacy": false,
+              "ShowActionInfo": true,
+              "Enable": true
+            },
+            {
+              "@type": "script.LexioBuildingDoor",
+              "Enable": true,
+              "DoorMode": "FUTURE"
+            },
+            {
+              "@type": "MOD.Core.NameTagComponent",
+              "Bold": true,
+              "FontColor": {
+                "r": 1,
+                "g": 0.88,
+                "b": 0.52,
+                "a": 1
+              },
+              "FontOffset": {
+                "x": 0,
+                "y": 0
+              },
+              "FontSize": 0.88,
+              "Name": "대회·관전\n준비 중",
+              "NameTagRUID": {
+                "DataId": "9bf18287398c44699c20fc5123d1a1ae"
+              },
+              "OffsetY": 0,
+              "Enable": false
+            }
+          ],
+          "@version": 1
+        }
+      },
+      {
+        "id": "ea7d6032-4023-424f-b750-3b430d69073b",
+        "path": "/maps/map01/LexioGuideNeinheart",
+        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent,MOD.Core.InteractionComponent,script.LexioGuideNpc,MOD.Core.NameTagComponent,MOD.Core.TouchReceiveComponent",
+        "jsonString": {
+          "name": "LexioGuideNeinheart",
+          "path": "/maps/map01/LexioGuideNeinheart",
+          "nameEditable": true,
+          "enable": true,
+          "visible": true,
+          "localize": false,
+          "displayOrder": 19,
+          "pathConstraints": "///",
+          "revision": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "mapobject",
+            "sub_entity_id": null,
+            "root_entity_id": "ea7d6032-4023-424f-b750-3b430d69073b",
+            "replaced_model_id": null
+          },
+          "modelId": "mapobject",
+          "@components": [
+            {
+              "@type": "MOD.Core.TransformComponent",
+              "Rotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "Position": {
+                "x": -4.7,
+                "y": -12.15,
                 "z": 0
               },
               "QuaternionRotation": {
@@ -6540,60 +6443,121 @@
                 "y": 1,
                 "z": 1
               },
+              "ZRotation": 0,
               "Enable": true
             },
             {
               "@type": "MOD.Core.SpriteRendererComponent",
-              "SpriteRUID": "22d9a90f4f1441f784c716229ed89b57",
+              "ActionSheet": {},
+              "DrawMode": 0,
+              "EndFrameIndex": 2147483647,
+              "FlipX": false,
+              "FlipY": false,
+              "OrderInLayer": 5,
+              "PlayRate": 1,
+              "RenderSetting": 0,
+              "SpriteRUID": "c2919dc57fac457c9ce94fe32f8b69d2",
+              "StartFrameIndex": 0,
               "Color": {
                 "r": 1,
                 "g": 1,
                 "b": 1,
                 "a": 1
               },
-              "DrawMode": 0,
-              "FlipX": false,
-              "FlipY": false,
-              "PlayRate": 1,
-              "OrderInLayer": -3,
-              "StartFrameIndex": 0,
-              "EndFrameIndex": 2147483647,
+              "Enable": false
+            },
+            {
+              "@type": "MOD.Core.InteractionComponent",
+              "ActionKey": 32,
+              "ActionName": "렉시오 규칙 듣기",
+              "BoxSize": {
+                "x": 2.2,
+                "y": 2
+              },
+              "IsLegacy": false,
+              "ShowActionInfo": true,
+              "Enable": true
+            },
+            {
+              "@type": "script.LexioGuideNpc",
               "Enable": true,
-              "SortingLayer": "MapLayer0",
-              "IgnoreMapLayerCheck": true
+              "DialogId": "LEXIO_GUIDE",
+              "PortraitRUID": "13b30e6f8eff4bca9ff2308bed1cd3db",
+              "dialogRegistered": false
+            },
+            {
+              "@type": "MOD.Core.NameTagComponent",
+              "Bold": true,
+              "FontColor": {
+                "r": 1,
+                "g": 0.88,
+                "b": 0.52,
+                "a": 1
+              },
+              "FontOffset": {
+                "x": 0,
+                "y": 0
+              },
+              "FontSize": 1.08,
+              "Name": "나인하트\n렉시오 담당",
+              "NameTagRUID": {
+                "DataId": "9bf18287398c44699c20fc5123d1a1ae"
+              },
+              "OffsetY": 0,
+              "Enable": false
+            },
+            {
+              "@type": "MOD.Core.TouchReceiveComponent",
+              "AutoFitOnce": false,
+              "AutoFitToSize": true,
+              "Offset": {
+                "x": 0,
+                "y": 0
+              },
+              "RelayEventToBehind": false,
+              "TouchArea": {
+                "x": 2.4,
+                "y": 2.8
+              },
+              "Enable": true
             }
           ],
-          "@version": 1,
-          "origin": {
-            "type": "Model",
-            "entry_id": "mapobject",
-            "sub_entity_id": null,
-            "root_entity_id": "2ee5aa00-80c1-4411-a7a5-20ade32b51b1",
-            "replaced_model_id": null
-          }
+          "@version": 1
         }
       },
       {
-        "id": "ed24b5e6-a2d6-4ecd-866d-ffc37aacf730",
-        "path": "/maps/map01/HenesysFlowerB1F",
-        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent",
+        "id": "c435ca7c-3efc-4e26-a531-9492eac7f5b0",
+        "path": "/maps/map01/LexioTable01Chair1",
+        "componentNames": "MOD.Core.TransformComponent",
         "jsonString": {
-          "name": "HenesysFlowerB1F",
-          "path": "/maps/map01/HenesysFlowerB1F",
+          "name": "LexioTable01Chair1",
+          "path": "/maps/map01/LexioTable01Chair1",
           "nameEditable": true,
           "enable": true,
           "visible": true,
           "localize": false,
-          "displayOrder": 209,
+          "displayOrder": 20,
           "pathConstraints": "///",
           "revision": 1,
-          "modelId": "mapobject",
+          "origin": {
+            "type": "Model",
+            "entry_id": "mapempty",
+            "sub_entity_id": null,
+            "root_entity_id": "c435ca7c-3efc-4e26-a531-9492eac7f5b0",
+            "replaced_model_id": null
+          },
+          "modelId": "mapempty",
           "@components": [
             {
               "@type": "MOD.Core.TransformComponent",
+              "Rotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
               "Position": {
-                "x": 2.7,
-                "y": -12.14,
+                "x": 0.52,
+                "y": -12.15,
                 "z": 0
               },
               "QuaternionRotation": {
@@ -6603,63 +6567,155 @@
                 "w": 1
               },
               "Scale": {
-                "x": 1.15,
-                "y": 1.15,
+                "x": 1,
+                "y": 1,
                 "z": 1
               },
+              "ZRotation": 0,
               "Enable": true
-            },
-            {
-              "@type": "MOD.Core.SpriteRendererComponent",
-              "SpriteRUID": "65730127f2ce4295a7c0a96c79073863",
-              "Color": {
-                "r": 1,
-                "g": 1,
-                "b": 1,
-                "a": 1
-              },
-              "DrawMode": 0,
-              "FlipX": false,
-              "FlipY": false,
-              "PlayRate": 1,
-              "OrderInLayer": -3,
-              "StartFrameIndex": 0,
-              "EndFrameIndex": 2147483647,
-              "Enable": true,
-              "SortingLayer": "MapLayer0",
-              "IgnoreMapLayerCheck": true
             }
           ],
-          "@version": 1,
-          "origin": {
-            "type": "Model",
-            "entry_id": "mapobject",
-            "sub_entity_id": null,
-            "root_entity_id": "ed24b5e6-a2d6-4ecd-866d-ffc37aacf730",
-            "replaced_model_id": null
-          }
+          "@version": 1
         }
       },
       {
-        "id": "9e205c61-4443-4b5c-a497-099aa005c3fb",
-        "path": "/maps/map01/HenesysHouse2F",
-        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent",
+        "id": "186a45cc-6bf1-4218-910f-1f38c2c35543",
+        "path": "/maps/map01/LexioTable01Chair2",
+        "componentNames": "MOD.Core.TransformComponent",
         "jsonString": {
-          "name": "HenesysHouse2F",
-          "path": "/maps/map01/HenesysHouse2F",
+          "name": "LexioTable01Chair2",
+          "path": "/maps/map01/LexioTable01Chair2",
           "nameEditable": true,
           "enable": true,
           "visible": true,
           "localize": false,
-          "displayOrder": 210,
+          "displayOrder": 21,
           "pathConstraints": "///",
           "revision": 1,
-          "modelId": "mapobject",
+          "origin": {
+            "type": "Model",
+            "entry_id": "mapempty",
+            "sub_entity_id": null,
+            "root_entity_id": "186a45cc-6bf1-4218-910f-1f38c2c35543",
+            "replaced_model_id": null
+          },
+          "modelId": "mapempty",
           "@components": [
             {
               "@type": "MOD.Core.TransformComponent",
+              "Rotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
               "Position": {
-                "x": -4.35,
+                "x": 0.6,
+                "y": -12.15,
+                "z": 0
+              },
+              "QuaternionRotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
+              },
+              "Scale": {
+                "x": 1,
+                "y": 1,
+                "z": 1
+              },
+              "ZRotation": 0,
+              "Enable": true
+            }
+          ],
+          "@version": 1
+        }
+      },
+      {
+        "id": "6c959483-cb1e-423f-8e26-d11937514125",
+        "path": "/maps/map01/LexioTable01Chair3",
+        "componentNames": "MOD.Core.TransformComponent",
+        "jsonString": {
+          "name": "LexioTable01Chair3",
+          "path": "/maps/map01/LexioTable01Chair3",
+          "nameEditable": true,
+          "enable": true,
+          "visible": true,
+          "localize": false,
+          "displayOrder": 22,
+          "pathConstraints": "///",
+          "revision": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "mapempty",
+            "sub_entity_id": null,
+            "root_entity_id": "6c959483-cb1e-423f-8e26-d11937514125",
+            "replaced_model_id": null
+          },
+          "modelId": "mapempty",
+          "@components": [
+            {
+              "@type": "MOD.Core.TransformComponent",
+              "Rotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "Position": {
+                "x": 0.68,
+                "y": -12.15,
+                "z": 0
+              },
+              "QuaternionRotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
+              },
+              "Scale": {
+                "x": 1,
+                "y": 1,
+                "z": 1
+              },
+              "ZRotation": 0,
+              "Enable": true
+            }
+          ],
+          "@version": 1
+        }
+      },
+      {
+        "id": "1a398f12-74f7-40aa-aa26-46cdc468f1f5",
+        "path": "/maps/map01/LexioTable02Chair1",
+        "componentNames": "MOD.Core.TransformComponent",
+        "jsonString": {
+          "name": "LexioTable02Chair1",
+          "path": "/maps/map01/LexioTable02Chair1",
+          "nameEditable": true,
+          "enable": true,
+          "visible": true,
+          "localize": false,
+          "displayOrder": 23,
+          "pathConstraints": "///",
+          "revision": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "mapempty",
+            "sub_entity_id": null,
+            "root_entity_id": "1a398f12-74f7-40aa-aa26-46cdc468f1f5",
+            "replaced_model_id": null
+          },
+          "modelId": "mapempty",
+          "@components": [
+            {
+              "@type": "MOD.Core.TransformComponent",
+              "Rotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "Position": {
+                "x": 0.48,
                 "y": -6.15,
                 "z": 0
               },
@@ -6670,61 +6726,471 @@
                 "w": 1
               },
               "Scale": {
-                "x": 0.92,
-                "y": 0.92,
+                "x": 1,
+                "y": 1,
                 "z": 1
               },
+              "ZRotation": 0,
               "Enable": true
-            },
-            {
-              "@type": "MOD.Core.SpriteRendererComponent",
-              "SpriteRUID": "9e32f098dfbd46c28edc4efa72df63a4",
-              "Color": {
-                "r": 1,
-                "g": 1,
-                "b": 1,
-                "a": 1
-              },
-              "DrawMode": 0,
-              "FlipX": true,
-              "FlipY": false,
-              "PlayRate": 1,
-              "OrderInLayer": -7,
-              "StartFrameIndex": 0,
-              "EndFrameIndex": 2147483647,
-              "Enable": true,
-              "SortingLayer": "MapLayer0",
-              "IgnoreMapLayerCheck": true
             }
           ],
-          "@version": 1,
-          "origin": {
-            "type": "Model",
-            "entry_id": "mapobject",
-            "sub_entity_id": null,
-            "root_entity_id": "9e205c61-4443-4b5c-a497-099aa005c3fb",
-            "replaced_model_id": null
-          }
+          "@version": 1
         }
       },
       {
-        "id": "7d310277-0487-481b-8b79-7c6641064375",
-        "path": "/maps/map01/HenesysTree2F",
-        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent",
+        "id": "0cb2a5b6-2ac3-4c12-9f1e-1097ec99fd52",
+        "path": "/maps/map01/LexioTable02Chair2",
+        "componentNames": "MOD.Core.TransformComponent",
         "jsonString": {
-          "name": "HenesysTree2F",
-          "path": "/maps/map01/HenesysTree2F",
+          "name": "LexioTable02Chair2",
+          "path": "/maps/map01/LexioTable02Chair2",
           "nameEditable": true,
           "enable": true,
           "visible": true,
           "localize": false,
-          "displayOrder": 211,
+          "displayOrder": 24,
           "pathConstraints": "///",
           "revision": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "mapempty",
+            "sub_entity_id": null,
+            "root_entity_id": "0cb2a5b6-2ac3-4c12-9f1e-1097ec99fd52",
+            "replaced_model_id": null
+          },
+          "modelId": "mapempty",
+          "@components": [
+            {
+              "@type": "MOD.Core.TransformComponent",
+              "Rotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "Position": {
+                "x": 0.56,
+                "y": -6.15,
+                "z": 0
+              },
+              "QuaternionRotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
+              },
+              "Scale": {
+                "x": 1,
+                "y": 1,
+                "z": 1
+              },
+              "ZRotation": 0,
+              "Enable": true
+            }
+          ],
+          "@version": 1
+        }
+      },
+      {
+        "id": "ebaae45b-e303-46e2-b9bc-f5c493fc4c26",
+        "path": "/maps/map01/LexioTable02Chair3",
+        "componentNames": "MOD.Core.TransformComponent",
+        "jsonString": {
+          "name": "LexioTable02Chair3",
+          "path": "/maps/map01/LexioTable02Chair3",
+          "nameEditable": true,
+          "enable": true,
+          "visible": true,
+          "localize": false,
+          "displayOrder": 25,
+          "pathConstraints": "///",
+          "revision": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "mapempty",
+            "sub_entity_id": null,
+            "root_entity_id": "ebaae45b-e303-46e2-b9bc-f5c493fc4c26",
+            "replaced_model_id": null
+          },
+          "modelId": "mapempty",
+          "@components": [
+            {
+              "@type": "MOD.Core.TransformComponent",
+              "Rotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "Position": {
+                "x": 0.64,
+                "y": -6.15,
+                "z": 0
+              },
+              "QuaternionRotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
+              },
+              "Scale": {
+                "x": 1,
+                "y": 1,
+                "z": 1
+              },
+              "ZRotation": 0,
+              "Enable": true
+            }
+          ],
+          "@version": 1
+        }
+      },
+      {
+        "id": "132dc6c3-b855-402a-9e5a-f30a71b8364f",
+        "path": "/maps/map01/LexioTable02Chair4",
+        "componentNames": "MOD.Core.TransformComponent",
+        "jsonString": {
+          "name": "LexioTable02Chair4",
+          "path": "/maps/map01/LexioTable02Chair4",
+          "nameEditable": true,
+          "enable": true,
+          "visible": true,
+          "localize": false,
+          "displayOrder": 26,
+          "pathConstraints": "///",
+          "revision": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "mapempty",
+            "sub_entity_id": null,
+            "root_entity_id": "132dc6c3-b855-402a-9e5a-f30a71b8364f",
+            "replaced_model_id": null
+          },
+          "modelId": "mapempty",
+          "@components": [
+            {
+              "@type": "MOD.Core.TransformComponent",
+              "Rotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "Position": {
+                "x": 0.72,
+                "y": -6.15,
+                "z": 0
+              },
+              "QuaternionRotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
+              },
+              "Scale": {
+                "x": 1,
+                "y": 1,
+                "z": 1
+              },
+              "ZRotation": 0,
+              "Enable": true
+            }
+          ],
+          "@version": 1
+        }
+      },
+      {
+        "id": "e8b6b7b5-3c35-4ce3-8b0b-b71ec4b686de",
+        "path": "/maps/map01/LexioTable03Chair1",
+        "componentNames": "MOD.Core.TransformComponent",
+        "jsonString": {
+          "name": "LexioTable03Chair1",
+          "path": "/maps/map01/LexioTable03Chair1",
+          "nameEditable": true,
+          "enable": true,
+          "visible": true,
+          "localize": false,
+          "displayOrder": 27,
+          "pathConstraints": "///",
+          "revision": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "mapempty",
+            "sub_entity_id": null,
+            "root_entity_id": "e8b6b7b5-3c35-4ce3-8b0b-b71ec4b686de",
+            "replaced_model_id": null
+          },
+          "modelId": "mapempty",
+          "@components": [
+            {
+              "@type": "MOD.Core.TransformComponent",
+              "Rotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "Position": {
+                "x": 0.44,
+                "y": -0.35,
+                "z": 0
+              },
+              "QuaternionRotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
+              },
+              "Scale": {
+                "x": 1,
+                "y": 1,
+                "z": 1
+              },
+              "ZRotation": 0,
+              "Enable": true
+            }
+          ],
+          "@version": 1
+        }
+      },
+      {
+        "id": "5fb149af-42e4-4df4-91b4-3f52ff8e25a1",
+        "path": "/maps/map01/LexioTable03Chair2",
+        "componentNames": "MOD.Core.TransformComponent",
+        "jsonString": {
+          "name": "LexioTable03Chair2",
+          "path": "/maps/map01/LexioTable03Chair2",
+          "nameEditable": true,
+          "enable": true,
+          "visible": true,
+          "localize": false,
+          "displayOrder": 28,
+          "pathConstraints": "///",
+          "revision": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "mapempty",
+            "sub_entity_id": null,
+            "root_entity_id": "5fb149af-42e4-4df4-91b4-3f52ff8e25a1",
+            "replaced_model_id": null
+          },
+          "modelId": "mapempty",
+          "@components": [
+            {
+              "@type": "MOD.Core.TransformComponent",
+              "Rotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "Position": {
+                "x": 0.52,
+                "y": -0.35,
+                "z": 0
+              },
+              "QuaternionRotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
+              },
+              "Scale": {
+                "x": 1,
+                "y": 1,
+                "z": 1
+              },
+              "ZRotation": 0,
+              "Enable": true
+            }
+          ],
+          "@version": 1
+        }
+      },
+      {
+        "id": "4e3ae755-f75b-4c8b-a6a5-425d842dc642",
+        "path": "/maps/map01/LexioTable03Chair3",
+        "componentNames": "MOD.Core.TransformComponent",
+        "jsonString": {
+          "name": "LexioTable03Chair3",
+          "path": "/maps/map01/LexioTable03Chair3",
+          "nameEditable": true,
+          "enable": true,
+          "visible": true,
+          "localize": false,
+          "displayOrder": 29,
+          "pathConstraints": "///",
+          "revision": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "mapempty",
+            "sub_entity_id": null,
+            "root_entity_id": "4e3ae755-f75b-4c8b-a6a5-425d842dc642",
+            "replaced_model_id": null
+          },
+          "modelId": "mapempty",
+          "@components": [
+            {
+              "@type": "MOD.Core.TransformComponent",
+              "Rotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "Position": {
+                "x": 0.6,
+                "y": -0.35,
+                "z": 0
+              },
+              "QuaternionRotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
+              },
+              "Scale": {
+                "x": 1,
+                "y": 1,
+                "z": 1
+              },
+              "ZRotation": 0,
+              "Enable": true
+            }
+          ],
+          "@version": 1
+        }
+      },
+      {
+        "id": "099c9910-a5b4-4596-b08e-2283025bc934",
+        "path": "/maps/map01/LexioTable03Chair4",
+        "componentNames": "MOD.Core.TransformComponent",
+        "jsonString": {
+          "name": "LexioTable03Chair4",
+          "path": "/maps/map01/LexioTable03Chair4",
+          "nameEditable": true,
+          "enable": true,
+          "visible": true,
+          "localize": false,
+          "displayOrder": 30,
+          "pathConstraints": "///",
+          "revision": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "mapempty",
+            "sub_entity_id": null,
+            "root_entity_id": "099c9910-a5b4-4596-b08e-2283025bc934",
+            "replaced_model_id": null
+          },
+          "modelId": "mapempty",
+          "@components": [
+            {
+              "@type": "MOD.Core.TransformComponent",
+              "Rotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "Position": {
+                "x": 0.68,
+                "y": -0.35,
+                "z": 0
+              },
+              "QuaternionRotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
+              },
+              "Scale": {
+                "x": 1,
+                "y": 1,
+                "z": 1
+              },
+              "ZRotation": 0,
+              "Enable": true
+            }
+          ],
+          "@version": 1
+        }
+      },
+      {
+        "id": "11f9cad4-9a41-472d-84fb-c0d28277ac20",
+        "path": "/maps/map01/LexioTable03Chair5",
+        "componentNames": "MOD.Core.TransformComponent",
+        "jsonString": {
+          "name": "LexioTable03Chair5",
+          "path": "/maps/map01/LexioTable03Chair5",
+          "nameEditable": true,
+          "enable": true,
+          "visible": true,
+          "localize": false,
+          "displayOrder": 31,
+          "pathConstraints": "///",
+          "revision": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "mapempty",
+            "sub_entity_id": null,
+            "root_entity_id": "11f9cad4-9a41-472d-84fb-c0d28277ac20",
+            "replaced_model_id": null
+          },
+          "modelId": "mapempty",
+          "@components": [
+            {
+              "@type": "MOD.Core.TransformComponent",
+              "Rotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "Position": {
+                "x": 0.76,
+                "y": -0.35,
+                "z": 0
+              },
+              "QuaternionRotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
+              },
+              "Scale": {
+                "x": 1,
+                "y": 1,
+                "z": 1
+              },
+              "ZRotation": 0,
+              "Enable": true
+            }
+          ],
+          "@version": 1
+        }
+      },
+      {
+        "id": "8fd93d97-803d-4e21-ba7c-a5dedbfdabe6",
+        "path": "/maps/map01/LexioElevator2FDown",
+        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent,MOD.Core.InteractionComponent,script.LexioTravelInteractable,MOD.Core.NameTagComponent",
+        "jsonString": {
+          "name": "LexioElevator2FDown",
+          "path": "/maps/map01/LexioElevator2FDown",
+          "nameEditable": true,
+          "enable": true,
+          "visible": true,
+          "localize": false,
+          "displayOrder": 32,
+          "pathConstraints": "///",
+          "revision": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "mapobject",
+            "sub_entity_id": null,
+            "root_entity_id": "8fd93d97-803d-4e21-ba7c-a5dedbfdabe6",
+            "replaced_model_id": null
+          },
           "modelId": "mapobject",
           "@components": [
             {
               "@type": "MOD.Core.TransformComponent",
+              "Rotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
               "Position": {
                 "x": 4.75,
                 "y": -6.15,
@@ -6737,577 +7203,77 @@
                 "w": 1
               },
               "Scale": {
-                "x": 1.12,
-                "y": 1.12,
+                "x": 0.78,
+                "y": 0.78,
                 "z": 1
               },
+              "ZRotation": 0,
               "Enable": true
             },
             {
               "@type": "MOD.Core.SpriteRendererComponent",
-              "SpriteRUID": "5cd0f21502dd41bc8db9bc933d7b609c",
-              "Color": {
-                "r": 1,
-                "g": 1,
-                "b": 1,
-                "a": 1
-              },
+              "ActionSheet": {},
               "DrawMode": 0,
+              "EndFrameIndex": 2147483647,
               "FlipX": false,
               "FlipY": false,
+              "IgnoreMapLayerCheck": true,
+              "OrderInLayer": 3,
               "PlayRate": 1,
-              "OrderInLayer": -6,
-              "StartFrameIndex": 0,
-              "EndFrameIndex": 2147483647,
-              "Enable": true,
+              "RenderSetting": 0,
               "SortingLayer": "MapLayer0",
-              "IgnoreMapLayerCheck": true
-            }
-          ],
-          "@version": 1,
-          "origin": {
-            "type": "Model",
-            "entry_id": "mapobject",
-            "sub_entity_id": null,
-            "root_entity_id": "7d310277-0487-481b-8b79-7c6641064375",
-            "replaced_model_id": null
-          }
-        }
-      },
-      {
-        "id": "445eaaf6-9327-4bb4-b4b2-8f2dc661d848",
-        "path": "/maps/map01/FloorBench2F",
-        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent",
-        "jsonString": {
-          "name": "FloorBench2F",
-          "path": "/maps/map01/FloorBench2F",
-          "nameEditable": true,
-          "enable": true,
-          "visible": true,
-          "localize": false,
-          "displayOrder": 212,
-          "pathConstraints": "///",
-          "revision": 1,
-          "modelId": "mapobject",
-          "@components": [
-            {
-              "@type": "MOD.Core.TransformComponent",
-              "Position": {
-                "x": 2.15,
-                "y": -6.130000000000001,
-                "z": 0
-              },
-              "QuaternionRotation": {
-                "x": 0,
-                "y": 0,
-                "z": 0,
-                "w": 1
-              },
-              "Scale": {
-                "x": 0.72,
-                "y": 0.72,
-                "z": 1
-              },
-              "Enable": true
-            },
-            {
-              "@type": "MOD.Core.SpriteRendererComponent",
-              "SpriteRUID": "960c500154b74be0b65aa94f723fe2d2",
+              "SpriteRUID": "c31342761e64411381833ec285b2eaca",
+              "StartFrameIndex": 0,
               "Color": {
                 "r": 1,
                 "g": 1,
                 "b": 1,
                 "a": 1
               },
-              "DrawMode": 0,
-              "FlipX": true,
-              "FlipY": false,
-              "PlayRate": 1,
-              "OrderInLayer": -2,
-              "StartFrameIndex": 0,
-              "EndFrameIndex": 2147483647,
-              "Enable": true,
-              "SortingLayer": "MapLayer0",
-              "IgnoreMapLayerCheck": true
-            }
-          ],
-          "@version": 1,
-          "origin": {
-            "type": "Model",
-            "entry_id": "mapobject",
-            "sub_entity_id": null,
-            "root_entity_id": "445eaaf6-9327-4bb4-b4b2-8f2dc661d848",
-            "replaced_model_id": null
-          }
-        }
-      },
-      {
-        "id": "57079b35-aa95-4ab8-b385-6251b3afc087",
-        "path": "/maps/map01/HenesysFlowerA2F",
-        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent",
-        "jsonString": {
-          "name": "HenesysFlowerA2F",
-          "path": "/maps/map01/HenesysFlowerA2F",
-          "nameEditable": true,
-          "enable": true,
-          "visible": true,
-          "localize": false,
-          "displayOrder": 213,
-          "pathConstraints": "///",
-          "revision": 1,
-          "modelId": "mapobject",
-          "@components": [
+              "Enable": false
+            },
             {
-              "@type": "MOD.Core.TransformComponent",
-              "Position": {
-                "x": -1.9,
-                "y": -6.140000000000001,
-                "z": 0
+              "@type": "MOD.Core.InteractionComponent",
+              "ActionKey": 273,
+              "ActionName": "엘리베이터 ↓ 1층",
+              "BoxSize": {
+                "x": 0.9,
+                "y": 1.4
               },
-              "QuaternionRotation": {
-                "x": 0,
-                "y": 0,
-                "z": 0,
-                "w": 1
-              },
-              "Scale": {
-                "x": 1,
-                "y": 1,
-                "z": 1
-              },
+              "IsLegacy": false,
+              "ShowActionInfo": true,
               "Enable": true
             },
             {
-              "@type": "MOD.Core.SpriteRendererComponent",
-              "SpriteRUID": "22d9a90f4f1441f784c716229ed89b57",
-              "Color": {
-                "r": 1,
-                "g": 1,
-                "b": 1,
-                "a": 1
-              },
-              "DrawMode": 0,
-              "FlipX": true,
-              "FlipY": false,
-              "PlayRate": 1,
-              "OrderInLayer": -3,
-              "StartFrameIndex": 0,
-              "EndFrameIndex": 2147483647,
+              "@type": "script.LexioTravelInteractable",
               "Enable": true,
-              "SortingLayer": "MapLayer0",
-              "IgnoreMapLayerCheck": true
-            }
-          ],
-          "@version": 1,
-          "origin": {
-            "type": "Model",
-            "entry_id": "mapobject",
-            "sub_entity_id": null,
-            "root_entity_id": "57079b35-aa95-4ab8-b385-6251b3afc087",
-            "replaced_model_id": null
-          }
-        }
-      },
-      {
-        "id": "2f2e6feb-892b-431a-897d-ff193a7249ed",
-        "path": "/maps/map01/HenesysFlowerB2F",
-        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent",
-        "jsonString": {
-          "name": "HenesysFlowerB2F",
-          "path": "/maps/map01/HenesysFlowerB2F",
-          "nameEditable": true,
-          "enable": true,
-          "visible": true,
-          "localize": false,
-          "displayOrder": 214,
-          "pathConstraints": "///",
-          "revision": 1,
-          "modelId": "mapobject",
-          "@components": [
-            {
-              "@type": "MOD.Core.TransformComponent",
-              "Position": {
-                "x": -2.5999999999999996,
-                "y": -6.140000000000001,
-                "z": 0
-              },
-              "QuaternionRotation": {
-                "x": 0,
-                "y": 0,
-                "z": 0,
-                "w": 1
-              },
-              "Scale": {
-                "x": 1.15,
-                "y": 1.15,
-                "z": 1
-              },
-              "Enable": true
+              "ObjectKey": "LexioElevator2FDown",
+              "RouteId": "LEXIO_ELEVATOR_2F_DOWN",
+              "ServerUseDistance": 1
             },
             {
-              "@type": "MOD.Core.SpriteRendererComponent",
-              "SpriteRUID": "65730127f2ce4295a7c0a96c79073863",
-              "Color": {
+              "@type": "MOD.Core.NameTagComponent",
+              "Bold": true,
+              "FontColor": {
                 "r": 1,
-                "g": 1,
-                "b": 1,
+                "g": 0.88,
+                "b": 0.52,
                 "a": 1
               },
-              "DrawMode": 0,
-              "FlipX": false,
-              "FlipY": false,
-              "PlayRate": 1,
-              "OrderInLayer": -3,
-              "StartFrameIndex": 0,
-              "EndFrameIndex": 2147483647,
-              "Enable": true,
-              "SortingLayer": "MapLayer0",
-              "IgnoreMapLayerCheck": true
-            }
-          ],
-          "@version": 1,
-          "origin": {
-            "type": "Model",
-            "entry_id": "mapobject",
-            "sub_entity_id": null,
-            "root_entity_id": "2f2e6feb-892b-431a-897d-ff193a7249ed",
-            "replaced_model_id": null
-          }
-        }
-      },
-      {
-        "id": "6684b68d-7a60-4980-b7f1-9007cbb14d5f",
-        "path": "/maps/map01/HenesysHouse3F",
-        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent",
-        "jsonString": {
-          "name": "HenesysHouse3F",
-          "path": "/maps/map01/HenesysHouse3F",
-          "nameEditable": true,
-          "enable": true,
-          "visible": true,
-          "localize": false,
-          "displayOrder": 215,
-          "pathConstraints": "///",
-          "revision": 1,
-          "modelId": "mapobject",
-          "@components": [
-            {
-              "@type": "MOD.Core.TransformComponent",
-              "Position": {
-                "x": 4.15,
-                "y": -0.35,
-                "z": 0
-              },
-              "QuaternionRotation": {
+              "FontOffset": {
                 "x": 0,
-                "y": 0,
-                "z": 0,
-                "w": 1
+                "y": 0
               },
-              "Scale": {
-                "x": 0.92,
-                "y": 0.92,
-                "z": 1
+              "FontSize": 0.88,
+              "Name": "엘리베이터\n3층",
+              "NameTagRUID": {
+                "DataId": "9bf18287398c44699c20fc5123d1a1ae"
               },
-              "Enable": true
-            },
-            {
-              "@type": "MOD.Core.SpriteRendererComponent",
-              "SpriteRUID": "9e32f098dfbd46c28edc4efa72df63a4",
-              "Color": {
-                "r": 1,
-                "g": 1,
-                "b": 1,
-                "a": 1
-              },
-              "DrawMode": 0,
-              "FlipX": false,
-              "FlipY": false,
-              "PlayRate": 1,
-              "OrderInLayer": -7,
-              "StartFrameIndex": 0,
-              "EndFrameIndex": 2147483647,
-              "Enable": true,
-              "SortingLayer": "MapLayer0",
-              "IgnoreMapLayerCheck": true
+              "OffsetY": 0,
+              "Enable": false
             }
           ],
-          "@version": 1,
-          "origin": {
-            "type": "Model",
-            "entry_id": "mapobject",
-            "sub_entity_id": null,
-            "root_entity_id": "6684b68d-7a60-4980-b7f1-9007cbb14d5f",
-            "replaced_model_id": null
-          }
-        }
-      },
-      {
-        "id": "957d28a0-f053-4c69-a8ae-b45d17073c10",
-        "path": "/maps/map01/HenesysTree3F",
-        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent",
-        "jsonString": {
-          "name": "HenesysTree3F",
-          "path": "/maps/map01/HenesysTree3F",
-          "nameEditable": true,
-          "enable": true,
-          "visible": true,
-          "localize": false,
-          "displayOrder": 216,
-          "pathConstraints": "///",
-          "revision": 1,
-          "modelId": "mapobject",
-          "@components": [
-            {
-              "@type": "MOD.Core.TransformComponent",
-              "Position": {
-                "x": -4.6,
-                "y": -0.35,
-                "z": 0
-              },
-              "QuaternionRotation": {
-                "x": 0,
-                "y": 0,
-                "z": 0,
-                "w": 1
-              },
-              "Scale": {
-                "x": 1.12,
-                "y": 1.12,
-                "z": 1
-              },
-              "Enable": true
-            },
-            {
-              "@type": "MOD.Core.SpriteRendererComponent",
-              "SpriteRUID": "5cd0f21502dd41bc8db9bc933d7b609c",
-              "Color": {
-                "r": 1,
-                "g": 1,
-                "b": 1,
-                "a": 1
-              },
-              "DrawMode": 0,
-              "FlipX": true,
-              "FlipY": false,
-              "PlayRate": 1,
-              "OrderInLayer": -6,
-              "StartFrameIndex": 0,
-              "EndFrameIndex": 2147483647,
-              "Enable": true,
-              "SortingLayer": "MapLayer0",
-              "IgnoreMapLayerCheck": true
-            }
-          ],
-          "@version": 1,
-          "origin": {
-            "type": "Model",
-            "entry_id": "mapobject",
-            "sub_entity_id": null,
-            "root_entity_id": "957d28a0-f053-4c69-a8ae-b45d17073c10",
-            "replaced_model_id": null
-          }
-        }
-      },
-      {
-        "id": "978d8363-99f3-4db0-8592-da6c8536fd6b",
-        "path": "/maps/map01/FloorBench3F",
-        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent",
-        "jsonString": {
-          "name": "FloorBench3F",
-          "path": "/maps/map01/FloorBench3F",
-          "nameEditable": true,
-          "enable": true,
-          "visible": true,
-          "localize": false,
-          "displayOrder": 217,
-          "pathConstraints": "///",
-          "revision": 1,
-          "modelId": "mapobject",
-          "@components": [
-            {
-              "@type": "MOD.Core.TransformComponent",
-              "Position": {
-                "x": -1.75,
-                "y": -0.32999999999999996,
-                "z": 0
-              },
-              "QuaternionRotation": {
-                "x": 0,
-                "y": 0,
-                "z": 0,
-                "w": 1
-              },
-              "Scale": {
-                "x": 0.72,
-                "y": 0.72,
-                "z": 1
-              },
-              "Enable": true
-            },
-            {
-              "@type": "MOD.Core.SpriteRendererComponent",
-              "SpriteRUID": "960c500154b74be0b65aa94f723fe2d2",
-              "Color": {
-                "r": 1,
-                "g": 1,
-                "b": 1,
-                "a": 1
-              },
-              "DrawMode": 0,
-              "FlipX": false,
-              "FlipY": false,
-              "PlayRate": 1,
-              "OrderInLayer": -2,
-              "StartFrameIndex": 0,
-              "EndFrameIndex": 2147483647,
-              "Enable": true,
-              "SortingLayer": "MapLayer0",
-              "IgnoreMapLayerCheck": true
-            }
-          ],
-          "@version": 1,
-          "origin": {
-            "type": "Model",
-            "entry_id": "mapobject",
-            "sub_entity_id": null,
-            "root_entity_id": "978d8363-99f3-4db0-8592-da6c8536fd6b",
-            "replaced_model_id": null
-          }
-        }
-      },
-      {
-        "id": "10e3179f-6690-4918-9b97-1ad5210c468b",
-        "path": "/maps/map01/HenesysFlowerA3F",
-        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent",
-        "jsonString": {
-          "name": "HenesysFlowerA3F",
-          "path": "/maps/map01/HenesysFlowerA3F",
-          "nameEditable": true,
-          "enable": true,
-          "visible": true,
-          "localize": false,
-          "displayOrder": 218,
-          "pathConstraints": "///",
-          "revision": 1,
-          "modelId": "mapobject",
-          "@components": [
-            {
-              "@type": "MOD.Core.TransformComponent",
-              "Position": {
-                "x": 1.8,
-                "y": -0.33999999999999997,
-                "z": 0
-              },
-              "QuaternionRotation": {
-                "x": 0,
-                "y": 0,
-                "z": 0,
-                "w": 1
-              },
-              "Scale": {
-                "x": 1,
-                "y": 1,
-                "z": 1
-              },
-              "Enable": true
-            },
-            {
-              "@type": "MOD.Core.SpriteRendererComponent",
-              "SpriteRUID": "22d9a90f4f1441f784c716229ed89b57",
-              "Color": {
-                "r": 1,
-                "g": 1,
-                "b": 1,
-                "a": 1
-              },
-              "DrawMode": 0,
-              "FlipX": false,
-              "FlipY": false,
-              "PlayRate": 1,
-              "OrderInLayer": -3,
-              "StartFrameIndex": 0,
-              "EndFrameIndex": 2147483647,
-              "Enable": true,
-              "SortingLayer": "MapLayer0",
-              "IgnoreMapLayerCheck": true
-            }
-          ],
-          "@version": 1,
-          "origin": {
-            "type": "Model",
-            "entry_id": "mapobject",
-            "sub_entity_id": null,
-            "root_entity_id": "10e3179f-6690-4918-9b97-1ad5210c468b",
-            "replaced_model_id": null
-          }
-        }
-      },
-      {
-        "id": "f14e628b-ffd8-4944-ae8a-6a1e592c0060",
-        "path": "/maps/map01/HenesysFlowerB3F",
-        "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpriteRendererComponent",
-        "jsonString": {
-          "name": "HenesysFlowerB3F",
-          "path": "/maps/map01/HenesysFlowerB3F",
-          "nameEditable": true,
-          "enable": true,
-          "visible": true,
-          "localize": false,
-          "displayOrder": 219,
-          "pathConstraints": "///",
-          "revision": 1,
-          "modelId": "mapobject",
-          "@components": [
-            {
-              "@type": "MOD.Core.TransformComponent",
-              "Position": {
-                "x": 2.5,
-                "y": -0.33999999999999997,
-                "z": 0
-              },
-              "QuaternionRotation": {
-                "x": 0,
-                "y": 0,
-                "z": 0,
-                "w": 1
-              },
-              "Scale": {
-                "x": 1.15,
-                "y": 1.15,
-                "z": 1
-              },
-              "Enable": true
-            },
-            {
-              "@type": "MOD.Core.SpriteRendererComponent",
-              "SpriteRUID": "65730127f2ce4295a7c0a96c79073863",
-              "Color": {
-                "r": 1,
-                "g": 1,
-                "b": 1,
-                "a": 1
-              },
-              "DrawMode": 0,
-              "FlipX": false,
-              "FlipY": false,
-              "PlayRate": 1,
-              "OrderInLayer": -3,
-              "StartFrameIndex": 0,
-              "EndFrameIndex": 2147483647,
-              "Enable": true,
-              "SortingLayer": "MapLayer0",
-              "IgnoreMapLayerCheck": true
-            }
-          ],
-          "@version": 1,
-          "origin": {
-            "type": "Model",
-            "entry_id": "mapobject",
-            "sub_entity_id": null,
-            "root_entity_id": "f14e628b-ffd8-4944-ae8a-6a1e592c0060",
-            "replaced_model_id": null
-          }
+          "@version": 1
         }
       }
     ]
