@@ -1,0 +1,41 @@
+{
+  "Id": "",
+  "GameId": "",
+  "EntryKey": "model://bd6d7b90-2c4e-4dc1-b076-3a1420f52f48",
+  "ContentType": "x-mod/model",
+  "Content": "",
+  "Usage": 0,
+  "UsePublish": 1,
+  "UseService": 0,
+  "CoreVersion": "26.11.0.0",
+  "StudioVersion": "0.1.0.0",
+  "DynamicLoading": 0,
+  "ContentProto": {
+    "Use": "Json",
+    "Json": {
+      "Version": 1,
+      "Name": "LexioRoomSession",
+      "BaseModelId": null,
+      "Id": "bd6d7b90-2c4e-4dc1-b076-3a1420f52f48",
+      "Components": [
+        "MOD.Core.TransformComponent",
+        "script.LexioGameSession",
+        "script.LexioSessionCoordinator"
+      ],
+      "Properties": [],
+      "Values": [
+        {
+          "TargetType": "script.LexioSessionCoordinator",
+          "Name": "TableId",
+          "ValueType": {
+            "$type": "MODNativeType",
+            "type": "System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+          },
+          "Value": "unassigned"
+        }
+      ],
+      "EventLinks": [],
+      "Children": []
+    }
+  }
+}

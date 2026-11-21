@@ -22,13 +22,12 @@ script LexioTravelMapController extends Component
 		        local interiorNames = { "LexioInterior1F", "LexioInterior2F", "LexioInterior3F" }
 		        for index, interiorName in ipairs(interiorNames) do
 		            local interior = self.Entity.CurrentMap:GetChildByName(interiorName)
-		            if interior ~= nil and interior.SpriteRendererComponent ~= nil and interior.TransformComponent ~= nil then
-		                interior.SpriteRendererComponent.OrderInLayer = -20
+		            if interior ~= nil and interior.TransformComponent ~= nil then
+		                -- Retired world artwork must remain invisible even in a cached Maker map.
+		                if interior.SpriteRendererComponent ~= nil then interior.SpriteRendererComponent.Enable = false end
 		                if index == 1 then
 		                    -- One continuous three-floor building image. The non-uniform scale
 		                    -- aligns its painted floor decks with the map's six-unit floor spacing.
-		                    interior.SpriteRendererComponent.Enable = true
-		                    interior.SpriteRendererComponent.SpriteRUID = "a848687eb24a4e99b536c62a39407e94"
 		                    -- The sprite pivot is centered. Place the center of the three-floor
 		                    -- artwork on floor 2 so its bottom, middle, and top rooms line up
 		                    -- with gameplay floors 1, 2, and 3 respectively.
@@ -38,7 +37,6 @@ script LexioTravelMapController extends Component
 		                else
 		                    -- Keep the existing entities for foothold ownership, but do not
 		                    -- render repeated background copies on floors two and three.
-		                    interior.SpriteRendererComponent.Enable = false
 		                    interior.TransformComponent.Scale = Vector3(0.76, 0.76, 1)
 		                    self:ConfigureInteriorStairs(interior, index, 0.76, 0.76)
 		                end

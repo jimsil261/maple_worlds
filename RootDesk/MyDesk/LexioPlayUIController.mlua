@@ -123,6 +123,13 @@ script LexioPlayUIController extends Logic
 
 	@ExecSpace("ClientOnly")
 	method void OnBeginPlay()
+		self._T.PresentationEnabled = true
+		_InputService:SetCursor("3930c5d2e85b4bff8467aada64fda7f5", Vector2(0, 0))
+		log("[VRF] OFFICIAL CURSOR applied=true")
+		self._T.SoundEnabled = true
+		self._T.UiAnimations = {}
+		self._T.FeedbackClock = 0
+		log("[VRF] PRESENTATION ready=true")
 		        self._T.UIReady = false
 		        self._T.ResolveAttempts = 0
 		        self._T.HandlerGeneration = 0
@@ -166,6 +173,8 @@ script LexioPlayUIController extends Logic
 
 	@ExecSpace("ClientOnly")
 	method void OnUpdate(number delta)
+		self:ConnectConnectionButtons()
+		self:UpdatePresentation(delta)
 		        -- Refresh the browser after map arrival and while other users create or leave rooms.
 		        self._T.RoomListRefreshElapsed = (self._T.RoomListRefreshElapsed or 0) + delta
 		        if self._T.StaticLobbyOpen and self._T.RoomListRefreshElapsed >= 2 then
@@ -180,6 +189,8 @@ script LexioPlayUIController extends Logic
 		            if self._T.ResolveAttempts < 30 then self:ResolveUI() end
 		            return
 		        end
+		        self:ConnectConnectionButtons()
+		        if self:UpdateConnectionScreens() then return end
 		        self._T.MatchDotsElapsed = (self._T.MatchDotsElapsed or 0) + delta
 		        if self._T.MatchDotsElapsed >= 0.4 then
 		            self._T.MatchDotsElapsed = 0
@@ -190,6 +201,7 @@ script LexioPlayUIController extends Logic
 		        self:UpdateMapActivation()
 		        if not self._T.PrivateUIReady then self:ResolvePrivateRoomUI() end
 		        self:UpdatePrivateRoomUI()
+		        self:UpdateMatchFoundScreen()
 		        local chat = _EntityService:GetEntityByPath("/ui/DefaultGroup/UIChat")
 		        if chat ~= nil and chat.UITransformComponent ~= nil then
 		            chat.Enable = false
@@ -209,7 +221,10 @@ script LexioPlayUIController extends Logic
 		            roomChat.Enable = inRoom
 		            if not inRoom then chatControls._T.RoomChatLines = {} end
 		            local bubbles = chatControls._T.RoomChatBubbles or {}
-		            if not inRoom then bubbles = {}; chatControls._T.RoomChatBubbles = bubbles end
+		            if not inRoom then
+		                bubbles = {}
+		                chatControls._T.RoomChatBubbles = bubbles
+		            end
 		            for _, bubble in pairs(bubbles) do bubble.remaining = math.max(0, bubble.remaining - delta) end
 		            local roomSnapshot = chatControls._T.PrivateRoomSnapshot
 		            local chatBridge = self:GetLocalBridge()
@@ -217,25 +232,36 @@ script LexioPlayUIController extends Logic
 		            for seat = 1, 5 do
 		                local speaker = ""
 		                if roomSnapshot ~= nil then
-		                    for _, member in ipairs(roomSnapshot.members) do if member.seatIndex == seat then speaker = member.userId end end
+		                    for _, roomParticipant in ipairs(roomSnapshot.members) do if roomParticipant.seatIndex == seat then speaker = roomParticipant.userId end end
 		                elseif gameSnapshot ~= nil and gameSnapshot.seatUserIds ~= nil then speaker = gameSnapshot.seatUserIds[seat] or "" end
 		                local bubble = bubbles[speaker]
+				if self._T.PreviewActive and seat <= (self._T.PreviewPlayerCount or 0) then bubble = { text="말풍선 위치 확인", remaining=1 } end
 		                for _, prefix in ipairs({ "/ui/LexioPrivateRoom/Waiting/Slot", "/ui/LexioPlayHUD/ContentRoot/Seat" }) do
-		                    local suffix = prefix == "/ui/LexioPrivateRoom/Waiting/Slot" and "/ChatBubble" or "Panel/ChatBubble"
-		                    local entity = _EntityService:GetEntityByPath(prefix .. tostring(seat) .. suffix)
-		                    if entity ~= nil then
-		                        local ownerPanel = entity.Parent
-		                        local side = ownerPanel.UITransformComponent.anchoredPosition.x > 0 and -1 or 1
-		                        entity.UITransformComponent.anchoredPosition = Vector2(side * 85, 200)
-		                        entity.UITransformComponent.RectSize = Vector2(270, 90)
+		                    local waitingBubble = prefix == "/ui/LexioPrivateRoom/Waiting/Slot"
+		                    local ownerPanel = _EntityService:GetEntityByPath(prefix .. tostring(seat) .. (waitingBubble and "" or "Panel"))
+		                    local overlayPath = waitingBubble and "/ui/LexioPrivateRoom/Waiting/ChatBubbles" or "/ui/LexioPlayHUD/ContentRoot/ChatBubbles"
+		                    local overlay = _EntityService:GetEntityByPath(overlayPath)
+		                    local entity = _EntityService:GetEntityByPath(overlayPath .. "/Seat" .. tostring(seat))
+		                    if entity ~= nil and ownerPanel ~= nil and overlay ~= nil then
+		                        local avatar = ownerPanel:GetChildByName("Avatar")
+		                        local avatarTransform = avatar ~= nil and avatar.UITransformComponent or nil
+		                        local avatarX = avatarTransform ~= nil and avatarTransform.anchoredPosition.x or 0
+		                        local headTop = avatarTransform ~= nil and (avatarTransform.anchoredPosition.y + avatarTransform.RectSize.y * 0.32) or 118
+		                        local statusBadge = ownerPanel:GetChildByName("StatusBadge")
+		                        local badgeGap = statusBadge ~= nil and statusBadge.Enable and 42 or 0
+		                        local ownerTransform = ownerPanel.UITransformComponent
+		                        local ownerLocal = Vector2(avatarX + (0.5 - ownerTransform.Pivot.x) * ownerTransform.RectSize.x, headTop + 62 + badgeGap + (0.5 - ownerTransform.Pivot.y) * ownerTransform.RectSize.y)
+		                        local world = _UILogic:LocalUIToWorldPosition(ownerLocal, ownerTransform)
+		                        local screen = _UILogic:WorldToScreenPosition(world)
+		                        entity.UITransformComponent.anchoredPosition = _UILogic:ScreenToLocalUIPosition(screen, overlay.UITransformComponent)
+		                        entity.UITransformComponent.RectSize = Vector2(240, 76)
 		                        local tail = entity:GetChildByName("Tail")
-		                        local avatarOffsetX = prefix == "/ui/LexioPrivateRoom/Waiting/Slot" and 16 or 0
-		                        if tail ~= nil then tail.UITransformComponent.anchoredPosition = Vector2(avatarOffsetX - (side * 85), -53) end
+		                        if tail ~= nil then tail.UITransformComponent.anchoredPosition = Vector2(0, -43) end
 		                        entity.Enable = bubble ~= nil and bubble.remaining > 0
 		                        if entity.Enable then
 		                            entity:GetChildByName("Text").TextGUIRendererComponent.Text = bubble.text
-		                            -- Sibling seat groups paint over each other's descendants; raise the owner too.
-		                            _UILogic:SetSiblingIndex(ownerPanel.UITransformComponent, 999)
+		                            -- All speech balloons share a foreground layer above every seat.
+		                            _UILogic:SetSiblingIndex(overlay.UITransformComponent, 999)
 		                            _UILogic:SetSiblingIndex(entity.UITransformComponent, 999)
 		                        end
 		                    end
@@ -257,7 +283,7 @@ script LexioPlayUIController extends Logic
                     if string.match(message, "%S") ~= nil then chatControls:RequestRoomChat(message) end
                     input.TextGUIRendererInputComponent.Text = ""
                 end)
-                table.insert(self._T.PrivateEventConnections, {entity=input, connection=enterConnection})
+                table.insert(self._T.PrivateEventConnections, {entity=input, connection=enterConnection, eventType=TextInputSubmitEvent})
 		                self._T.RoomChatConnected = true
 		            end
 		        end
@@ -306,6 +332,12 @@ script LexioPlayUIController extends Logic
 
 	@ExecSpace("ClientOnly")
 	method void OnEndPlay()
+		_InputService:ResetCursor()
+		if self._T.AudioStarted then _SoundService:StopBGM(true) end
+		for node, connection in pairs(self._T.ButtonSoundConnections or {}) do
+			if isvalid(node) then node:DisconnectEvent(ButtonClickEvent, connection) end
+		end
+		self._T.ButtonSoundConnections = {}
 		        self:DisconnectButtons()
 		        self._T.UIReady = false
 		        self:RestoreDefaultUI()
@@ -315,6 +347,7 @@ script LexioPlayUIController extends Logic
 	method void ResolveUI()
 		        self._T.ResolveAttempts = (self._T.ResolveAttempts or 0) + 1
 		        local paths = {
+
 		            MapNameText="/ui/LexioPlayHUD/MapNamePanel", ContentRoot="/ui/LexioPlayHUD/ContentRoot", Seat1Panel="/ui/LexioPlayHUD/ContentRoot/Seat1Panel", Seat1Text="/ui/LexioPlayHUD/ContentRoot/Seat1Panel/Text", Seat2Panel="/ui/LexioPlayHUD/ContentRoot/Seat2Panel", Seat2Text="/ui/LexioPlayHUD/ContentRoot/Seat2Panel/Text", Seat3Panel="/ui/LexioPlayHUD/ContentRoot/Seat3Panel", Seat3Text="/ui/LexioPlayHUD/ContentRoot/Seat3Panel/Text", Seat4Panel="/ui/LexioPlayHUD/ContentRoot/Seat4Panel", Seat4Text="/ui/LexioPlayHUD/ContentRoot/Seat4Panel/Text", Seat5Panel="/ui/LexioPlayHUD/ContentRoot/Seat5Panel", Seat5Text="/ui/LexioPlayHUD/ContentRoot/Seat5Panel/Text",
 		            PhaseText="/ui/LexioPlayHUD/ContentRoot/PhaseText", TurnText="/ui/LexioPlayHUD/ContentRoot/TurnText", PublicPlayText="/ui/LexioPlayHUD/ContentRoot/PublicPlayPanel/Text",
 		            PublicCard1="/ui/LexioPlayHUD/ContentRoot/PublicPlayPanel/Card1", PublicCard2="/ui/LexioPlayHUD/ContentRoot/PublicPlayPanel/Card2", PublicCard3="/ui/LexioPlayHUD/ContentRoot/PublicPlayPanel/Card3", PublicCard4="/ui/LexioPlayHUD/ContentRoot/PublicPlayPanel/Card4", PublicCard5="/ui/LexioPlayHUD/ContentRoot/PublicPlayPanel/Card5",
@@ -329,7 +362,11 @@ script LexioPlayUIController extends Logic
 		        local required = {"MapNameText","ContentRoot","Seat1Panel","Seat1Text","Seat2Panel","Seat2Text","Seat3Panel","Seat3Text","Seat4Panel","Seat4Text","Seat5Panel","Seat5Text","PhaseText","TurnText","PublicPlayText","ErrorText","HandPanelPC","HandPanelMobile","ActionPanel","SortPanel","MobileActionPanel","MobileSortPanel","SubmitButton","PassButton","RankSortButton","SuitSortButton","MobileRankSortButton","MobileSuitSortButton","MobileSubmitButton","MobilePassButton","FinishPanel","FinishCountdownText","ReplayButton","ExitButton","FinishScoreText","MatchPanel","QueueButton","QueueStatusText","Watch1Button","Watch2Button","Watch3Button","StopWatchButton","MatchBackButton","PublicCard1","PublicCard2","PublicCard3","PublicCard4","PublicCard5"}
 		        for _, key in ipairs(required) do
 		            local entity = _EntityService:GetEntityByPath(paths[key])
-		            if entity == nil then log("[LexioPlayUI] RESOLVE_MISSING path=" .. paths[key]); self._T.UIReady = false; return end
+		            if entity == nil then
+		                log("[LexioPlayUI] RESOLVE_MISSING path=" .. paths[key])
+		                self._T.UIReady = false
+		                return
+		            end
 		            self[key] = entity
 		        end
 		        self._T.UIReady = true
@@ -416,13 +453,14 @@ script LexioPlayUIController extends Logic
 		        self.QueueButton.TextGUIRendererComponent.Text = queued and "매칭 취소 (Q)" or "선택 닫기 (Q)"
 		        self.QueueButton.ButtonComponent.Enable = true
 		        if choosing then
-		            self.QueueStatusText.TextGUIRendererComponent.Text = "희망 인원 선택"
+		            local errors = { registry_unavailable = "게임 서버에 연결 중입니다. 잠시 후 다시 시도해 주세요.", already_in_room = "참가 중인 방에서 먼저 나와 주세요.", queue_rejected = "매칭에 참가하지 못했습니다. 다시 시도해 주세요." }
+		            self.QueueStatusText.TextGUIRendererComponent.Text = errors[controls._T.QueueError or ""] or "희망 인원 선택"
 		        else
 		            local required = controls._T.QueueRequired or 0
 		            local label = required == 0 and "인원 상관없음" or (tostring(required) .. "인")
 		            local dots = {"", ".", "..", "..."}
 		            local dotText = dots[(self._T.MatchDotsFrame or 0) + 1]
-		            self.QueueStatusText.TextGUIRendererComponent.Text = label .. " 매칭 상대를 찾는 중" .. dotText .. "  ·  대기 순번 " .. tostring(controls._T.QueuePosition or 0)
+		            self.QueueStatusText.TextGUIRendererComponent.Text = label .. " 공개방과 상대를 찾는 중" .. dotText .. "  ·  대기 순번 " .. tostring(controls._T.QueuePosition or 0)
 		        end
 	end
 
@@ -553,6 +591,7 @@ script LexioPlayUIController extends Logic
 
 	@ExecSpace("ClientOnly")
 	method void ToggleGamePreview()
+		        if not Environment:IsMakerPlay() then return end
 		        local player = _UserService.LocalPlayer
 		        if not self._T.UIReady or self:IsLocalPlayerSeated() then return end
 		        local wasPreviewActive = self._T.PreviewActive == true
@@ -614,8 +653,24 @@ script LexioPlayUIController extends Logic
 
 	@ExecSpace("ClientOnly")
 	method void ConnectButtons()
+		        self:ConnectConnectionButtons()
 		        self._T.HandlerGeneration = (self._T.HandlerGeneration or 0) + 1
 		        local generation = self._T.HandlerGeneration
+		        for seat = 1, 5 do
+		            local voteSeat = seat
+		            local badge = _EntityService:GetEntityByPath("/ui/LexioPlayHUD/ContentRoot/Seat" .. tostring(seat) .. "Panel/StatusBadge")
+		            if badge ~= nil then
+		                local voteConnection = badge:ConnectEvent(ButtonClickEvent, function(event)
+		                    local snapshot = self._T.RenderedPublicSnapshot
+		                    local bridge = self:GetLocalBridge()
+		                    if self._T.HandlerGeneration == generation and snapshot ~= nil and bridge ~= nil then
+		                        self._T.DisconnectVoteSeat = voteSeat
+		                        self._T.DisconnectVoteOpen = true
+		                    end
+		                end)
+		                table.insert(self._T.EventConnections, { entity = badge, connection = voteConnection })
+		            end
+		        end
 		        for index = 1, 12 do
 		            self:ConnectTileButton(self.HandPanelPC:GetChildByName("Tile" .. tostring(index)), index, generation)
 		            self:ConnectTileButton(self.HandPanelMobile:GetChildByName("Tile" .. tostring(index)), index, generation)
@@ -661,6 +716,7 @@ script LexioPlayUIController extends Logic
 		            if record.entity ~= nil and record.connection ~= nil and isvalid(record.entity) then record.entity:DisconnectEvent(ButtonClickEvent, record.connection) end
 		        end
 		        self._T.EventConnections = {}
+		        self._T.ConnectionButtonsBound = {}
 	end
 
 	@ExecSpace("ClientOnly")
@@ -805,7 +861,7 @@ script LexioPlayUIController extends Logic
 		            monsterName.TextGUIRendererComponent.Underlay = false
 		            monsterName.TextGUIRendererComponent.FaceDilate = 0
 		            monsterName.TextGUIRendererComponent.FontSize = cardSize.x >= 130 and 15 or 13
-		            monsterName.TextGUIRendererComponent.HorizontalAlignment = 1
+		            monsterName.TextGUIRendererComponent.HorizontalAlignment = TextHorizontalAlignmentOption.Left
 		            local nameWidth = cardSize.x - 50
 		            local namePosition = monsterName.UITransformComponent.anchoredPosition
 		            namePosition.x = -(cardSize.x / 2) + 8 + (nameWidth / 2)
@@ -860,6 +916,19 @@ script LexioPlayUIController extends Logic
 	@ExecSpace("ClientOnly")
 	method void RenderSnapshot(table privateHand, table publicSnapshot)
 		        if publicSnapshot.stateVersion == nil then return end
+		        local previousSnapshot = self._T.RenderedPublicSnapshot
+		local selectionBridge = self:GetLocalBridge()
+		local selectionSeat = selectionBridge ~= nil and selectionBridge._T.Seat or 0
+		if previousSnapshot ~= nil and previousSnapshot.currentPlayerIndex == selectionSeat then
+			local turnChanged = publicSnapshot.currentPlayerIndex ~= selectionSeat or publicSnapshot.turnNumber ~= previousSnapshot.turnNumber
+			local passed = publicSnapshot.passed ~= nil and publicSnapshot.passed[selectionSeat] == true
+			if turnChanged or passed or publicSnapshot.phase == "Finished" then
+				self._T.SelectedById = {}
+				self._T.SelectedTileIds = {}
+				log("[VRF] SELECTION cleared turn_ended=true")
+			end
+		end
+		self._T.RenderedPublicSnapshot = publicSnapshot
 		        self._T.RenderedVersion = publicSnapshot.stateVersion
 		        self._T.RenderedHand = privateHand
 		        self:SortRenderedHand()
@@ -875,6 +944,8 @@ script LexioPlayUIController extends Logic
 		        self:RenderPhase(publicSnapshot)
 		        self:RenderPublicPlay(publicSnapshot)
 		        self:RenderFinish(publicSnapshot)
+		self:ClearPreviousTurnMessage(publicSnapshot)
+		self:PresentSnapshot(publicSnapshot)
 		        local bridge = self:GetLocalBridge()
 		        if bridge ~= nil and bridge._T.Role == "Spectator" then
 		            self.PhaseText.TextGUIRendererComponent.Text = "관전 중 · " .. self.PhaseText.TextGUIRendererComponent.Text
@@ -893,10 +964,10 @@ script LexioPlayUIController extends Logic
 		            self.MobileRankSortButton.Enable = false
 		            self.MobileSuitSortButton.Enable = false
 		        else
-		            self.HandPanelPC.Enable = not isMobile
+		            self.HandPanelPC.Enable = not isMobile and publicSnapshot.phase ~= "Finished"
 		            self.HandPanelMobile.Enable = isMobile
-		            self.ActionPanel.Enable = not isMobile
-		            self.SortPanel.Enable = not isMobile
+		            self.ActionPanel.Enable = not isMobile and publicSnapshot.phase ~= "Finished"
+		            self.SortPanel.Enable = not isMobile and publicSnapshot.phase ~= "Finished"
 		            self.MobileActionPanel.Enable = isMobile
 		            self.MobileSortPanel.Enable = isMobile
 		            self.SubmitButton.Enable = not isMobile
@@ -963,7 +1034,7 @@ script LexioPlayUIController extends Logic
 		        local bridge = self:GetLocalBridge()
 		        local localSeat = bridge ~= nil and bridge._T.Seat or 1
 		        if localSeat < 1 or localSeat > playerCount then localSeat = 1 end
-		
+
 		        -- Maple Card Battle-style seating: me at the bottom, opponents around the table.
 		        local visualPositions = {
 		            [3] = { Vector2(-740, -780), Vector2(-740, -280), Vector2(740, -280) },
@@ -977,7 +1048,7 @@ script LexioPlayUIController extends Logic
 		        local positionBySeat = {}
 		        for visualIndex, seat in ipairs(seatOrder) do positionBySeat[seat] = visualPositions[playerCount][visualIndex] end
                 local panelWidth = playerCount >= 4 and 260 or 330
-		        local fontSize = playerCount == 5 and 20 or 22
+		        local fontSize = 20
 		        if playerCount == 4 then
 		            -- Two aligned seat rows leave a dedicated 50-unit gap for 44-unit controls.
 		            self.SortPanel.UITransformComponent.Pivot = Vector2(0.5, 0.5)
@@ -994,7 +1065,7 @@ script LexioPlayUIController extends Logic
 		            self.SortPanel.UITransformComponent.anchoredPosition = Vector2(-740, 0)
 		            self.ActionPanel.UITransformComponent.anchoredPosition = Vector2(740, 0)
 		        end
-		
+
 		        -- Shared action row below the two-row hand, clear of both avatar columns and chat.
 		        self.SortPanel.UITransformComponent.AnchorsMin = Vector2(0.5, 0)
 		        self.SortPanel.UITransformComponent.AnchorsMax = Vector2(0.5, 0)
@@ -1039,8 +1110,8 @@ script LexioPlayUIController extends Logic
 		                        avatar.UITransformComponent.RectSize = Vector2(160, 160)
 		                    end
 		                else
-		                    targets[seat].UITransformComponent.anchoredPosition = Vector2(0, -101)
-		                    targets[seat].UITransformComponent.RectSize = Vector2(220, 54)
+		                    targets[seat].UITransformComponent.anchoredPosition = Vector2(0, playerCount == 4 and -94 or -101)
+		                    targets[seat].UITransformComponent.RectSize = Vector2(panelWidth - 20, 54)
 		                    if avatar ~= nil then
 		                        avatar.UITransformComponent.anchoredPosition = Vector2(0, 28)
 		                        avatar.UITransformComponent.RectSize = Vector2(180, 180)
@@ -1048,25 +1119,73 @@ script LexioPlayUIController extends Logic
 		                end
 		                -- Match the warm board-game cafe palette: walnut for idle seats,
 		                -- bright brass-gold for the player whose turn is active.
-		                panels[seat].SpriteGUIRendererComponent.Color = snapshot.currentPlayerIndex == seat and Color(0.7, 0.92, 0.8, 0.98) or Color(0.87, 0.79, 0.95, 0.94)
-		
+		                local playing = snapshot.phase == "Playing" or snapshot.phase == "LeadPending"
+		                local replayReady = snapshot.phase == "Finished" and snapshot.finishReplayBySeat ~= nil and snapshot.finishReplayBySeat[seat] == true
+		                panels[seat].SpriteGUIRendererComponent.Color = (replayReady or (playing and snapshot.currentPlayerIndex == seat)) and Color(0.7, 0.92, 0.8, 0.98) or Color(0.87, 0.79, 0.95, 0.94)
+
 		                local name = self:SeatDisplayName(snapshot, seat)
 		                local remaining = 0
 		                if snapshot.remainingCounts ~= nil and snapshot.remainingCounts[seat] ~= nil then remaining = snapshot.remainingCounts[seat] end
 		                local passed = snapshot.passed ~= nil and snapshot.passed[seat] == true
 		                local status = passed and "PASS" or "대기"
 		                if snapshot.currentPlayerIndex == seat then status = "MY TURN!" end
+		                local score = snapshot.scoreLedger ~= nil and snapshot.scoreLedger[seat] or 64
 		                targets[seat].TextGUIRendererComponent.Text = name .. "\n남은 카드 " .. tostring(remaining) .. "장"
+		                self:RenderScoreWallet(panels[seat], score, position.x < 0, panelWidth)
 		                local badge = panels[seat]:GetChildByName("StatusBadge")
 		                if badge ~= nil then
 		                    badge.UITransformComponent.anchoredPosition = Vector2(0, 110)
 		                    badge.UITransformComponent.RectSize = Vector2(210, 44)
-		                    badge.Enable = passed or snapshot.currentPlayerIndex == seat
-		                    badge.TextGUIRendererComponent.Text = snapshot.currentPlayerIndex == seat and "MY TURN!" or "PASS"
-		                    badge.SpriteGUIRendererComponent.Color = passed and Color(0.9, 0.79, 0.94, 1) or Color(0.7, 0.92, 0.8, 1)
+		                    badge.Enable = replayReady or (playing and (passed or snapshot.currentPlayerIndex == seat))
+		                    badge.TextGUIRendererComponent.Text = replayReady and "한 판 더" or (snapshot.currentPlayerIndex == seat and "MY TURN!" or "PASS")
+		                    badge.SpriteGUIRendererComponent.Color = (passed and not replayReady) and Color(1, 0.77, 0.22, 1) or Color(0.7, 0.92, 0.8, 1)
+		                    badge.TextGUIRendererComponent.FontColor = Color(1, 1, 1, 1)
+		                    local disconnected = snapshot.disconnectedSeconds ~= nil and snapshot.disconnectedSeconds[seat] or -1
+		                    local ai = snapshot.aiBySeat ~= nil and snapshot.aiBySeat[seat] == true
+		                    local kicked = snapshot.kickedBySeat ~= nil and snapshot.kickedBySeat[seat] == true
+		                    local canVote = playing and disconnected >= 0 and not ai and not kicked and seat ~= localSeat
+		                    if playing and ai then
+		                        badge.Enable = true
+		                        badge.TextGUIRendererComponent.Text = snapshot.currentPlayerIndex == seat and "AI · MY TURN!" or "AI 진행 중"
+		                        badge.SpriteGUIRendererComponent.Color = Color(0.4, 0.7, 0.9, 1)
+		                    elseif playing and disconnected >= 0 then
+		                        badge.Enable = true
+		                        badge.SpriteGUIRendererComponent.Color = Color(0.95, 0.65, 0.25, 1)
+		                        badge.TextGUIRendererComponent.Text = "대행 투표 " .. tostring(snapshot.disconnectVoteCounts[seat]) .. "/" .. tostring(snapshot.disconnectVoteThresholds[seat])
+		                    end
+		                    if badge.ButtonComponent ~= nil then badge.ButtonComponent.Enable = canVote end
 		                end
 		            end
 		        end
+	end
+
+	@ExecSpace("ClientOnly")
+	method void RenderScoreWallet(Entity seatPanel, integer score, boolean leftSide, number panelWidth)
+		        -- Draw a separate wallet beside the avatar frame using 10/5/1-point meso piles.
+		        local wallet = seatPanel:GetChildByName("ScoreWallet")
+		        if wallet == nil then return end
+		        wallet.UITransformComponent.anchoredPosition = Vector2((leftSide and 1 or -1) * (panelWidth / 2 + 70), 0)
+		        local amount = math.abs(score)
+		        local counts = { math.floor(amount / 10), math.floor((amount % 10) / 5), amount % 5 }
+		        for index, kind in ipairs({ "Gold", "Silver", "Bronze" }) do
+		            local pile = wallet:GetChildByName(kind)
+		            if pile ~= nil then
+		                local count = counts[index]
+		                local countText = pile:GetChildByName("Count")
+		                if countText ~= nil then countText.TextGUIRendererComponent.Text = "×" .. tostring(count) end
+		                for level = 1, 6 do
+		                    local coin = pile:GetChildByName("Coin" .. tostring(level))
+		                    if coin ~= nil then
+		                        coin.Enable = level <= math.max(1, math.min(6, count))
+		                        local tint = coin.SpriteGUIRendererComponent.Color
+		                        tint.a = count == 0 and 0.25 or 1
+		                        coin.SpriteGUIRendererComponent.Color = tint
+		                    end
+		                end
+		            end
+		        end
+		        local total = wallet:GetChildByName("Total")
+		        if total ~= nil then total.TextGUIRendererComponent.Text = (score < 0 and "빚 " or "") .. tostring(amount) .. "점" end
 	end
 
 	@ExecSpace("ClientOnly")
@@ -1087,6 +1206,18 @@ script LexioPlayUIController extends Logic
 		        else
 		            self.PhaseText.TextGUIRendererComponent.Text = "진행 중"
 		            self.TurnText.TextGUIRendererComponent.Text = "현재 차례: " .. self:SeatDisplayName(snapshot, snapshot.currentPlayerIndex)
+		        end
+		        if snapshot.connectionPaused then self.PhaseText.TextGUIRendererComponent.Text = "재접속 대기 · 게임 일시정지" end
+		        local timer = self.TurnText:GetChildByName("TurnTimer")
+		        if timer ~= nil then
+		            timer.Enable = snapshot.phase == "Playing" or snapshot.phase == "LeadPending"
+		            local seconds = snapshot.turnSecondsRemaining
+		            if seconds == nil then
+		                timer.TextGUIRendererComponent.Text = "남은시간 : --초"
+		            else
+		                timer.TextGUIRendererComponent.Text = "남은시간 : " .. tostring(seconds) .. "초"
+		                timer.TextGUIRendererComponent.FontColor = seconds <= 5 and Color(0.78, 0.18, 0.24, 1) or Color(0.2, 0.12, 0.32, 1)
+		            end
 		        end
 	end
 
@@ -1129,16 +1260,33 @@ script LexioPlayUIController extends Logic
 		            self._T.PendingFinishId = ""
 		            return
 		        end
-		        local seconds = snapshot.finishCountdown or 10
+		        _UILogic:SetSiblingIndex(self.FinishPanel.UITransformComponent, 999)
+		        self.ErrorText.TextGUIRendererComponent.Text = ""
+		        local seconds = snapshot.finishCountdown or 30
 		        local replayCount = snapshot.finishReplayCount or 0
-		        self.FinishCountdownText.TextGUIRendererComponent.Text = tostring(seconds) .. "초 후 로비로 이동  |  한 판 더 " .. tostring(replayCount) .. "/3"
+		        if snapshot.finishedWithAI then
+		            self.FinishCountdownText.TextGUIRendererComponent.Text = "AI가 남아 있어 방을 종료합니다. " .. tostring(seconds) .. "초 후 로비로 이동"
+		        else
+		            self.FinishCountdownText.TextGUIRendererComponent.Text = tostring(seconds) .. "초 후 로비로 이동  |  한 판 더 " .. tostring(replayCount) .. "/" .. tostring(snapshot.playerCount or 3)
+		        end
+		        self.ReplayButton.Enable = not snapshot.finishedWithAI
+		        self.ExitButton.UITransformComponent.anchoredPosition = snapshot.finishedWithAI and Vector2(0, -175) or Vector2(160, -175)
 		        local bridge = self:GetLocalBridge()
 		        local seat = bridge ~= nil and bridge._T.Seat or 0
 		        local score = snapshot.scoreLedger ~= nil and snapshot.scoreLedger[seat] or 64
 		        local delta = snapshot.scoreDeltas ~= nil and snapshot.scoreDeltas[seat] or 0
-		        local prefix = score < 0 and "렉시오 칩 빚 " or "렉시오 칩 "
-		        local deltaText = delta >= 0 and ("+" .. tostring(delta)) or tostring(delta)
-		        self.FinishScoreText.TextGUIRendererComponent.Text = prefix .. tostring(math.abs(score)) .. "  (" .. deltaText .. ")"
+		        local rows = {}
+		        for index = 1, snapshot.playerCount or 3 do
+		            local points = snapshot.scoreLedger ~= nil and snapshot.scoreLedger[index] or 64
+		            local change = snapshot.scoreDeltas ~= nil and snapshot.scoreDeltas[index] or 0
+		            local sign = change >= 0 and "+" or ""
+		            table.insert(rows, self:SeatDisplayName(snapshot, index) .. "   " .. tostring(points) .. "점  (" .. sign .. tostring(change) .. ")")
+		        end
+		        self.FinishScoreText.TextGUIRendererComponent.Text = table.concat(rows, "\n")
+		        if self._T.LastResultVersion ~= snapshot.stateVersion then
+		            self._T.LastResultVersion = snapshot.stateVersion
+		            log("[VRF] RESULT UI players=" .. tostring(snapshot.playerCount) .. " score=" .. tostring(score))
+		        end
 		        self:UpdateFinishButtons()
 	end
 
@@ -1147,7 +1295,7 @@ script LexioPlayUIController extends Logic
 		        local bridge = self:GetLocalBridge()
 		        local snapshot = bridge ~= nil and bridge:GetMatchedPublicSnapshot() or nil
 		        local enabled = snapshot ~= nil and snapshot.phase == "Finished" and self._T.PendingFinishId == "" and bridge ~= nil and bridge._T.Role == "Player"
-		        self.ReplayButton.ButtonComponent.Enable = enabled
+		        self.ReplayButton.ButtonComponent.Enable = enabled and not (snapshot ~= nil and snapshot.finishedWithAI)
 		        self.ExitButton.ButtonComponent.Enable = enabled
 	end
 
@@ -1181,6 +1329,7 @@ script LexioPlayUIController extends Logic
 		        self:RenderHandPanel(self.HandPanelPC, self._T.RenderedHand)
 		        self:RenderHandPanel(self.HandPanelMobile, self._T.RenderedHand)
 		        self:UpdateActionButtons()
+		self:PulseUI(self.HandPanelPC:GetChildByName("Tile" .. tostring(slotIndex)), 0.04, 0.12)
 	end
 
 	@ExecSpace("ClientOnly")
@@ -1192,8 +1341,8 @@ script LexioPlayUIController extends Logic
 		        local count = #self._T.SelectedTileIds
 		        local allowedCount = count == 1 or count == 2 or count == 3 or count == 5
 		        local ownTurn = snapshot ~= nil and snapshot.currentPlayerIndex == ownSeat
-		        local submitEnabled = snapshot ~= nil and ownTurn and allowedCount and not pending and (snapshot.phase == "Playing" or snapshot.phase == "LeadPending")
-		        local passEnabled = snapshot ~= nil and snapshot.phase == "Playing" and ownTurn and snapshot.hasCurrentPlay == true and snapshot.winningPlayerIndex ~= ownSeat and not snapshot.passed[ownSeat] and not pending
+		        local submitEnabled = snapshot ~= nil and not snapshot.connectionPaused and ownTurn and allowedCount and not pending and (snapshot.phase == "Playing" or snapshot.phase == "LeadPending")
+		        local passEnabled = snapshot ~= nil and not snapshot.connectionPaused and snapshot.phase == "Playing" and ownTurn and snapshot.hasCurrentPlay == true and snapshot.winningPlayerIndex ~= ownSeat and not snapshot.passed[ownSeat] and not pending
 		        self.SubmitButton.ButtonComponent.Enable = submitEnabled
 		        self.PassButton.ButtonComponent.Enable = passEnabled
 		        self.MobileSubmitButton.ButtonComponent.Enable = submitEnabled
@@ -1225,20 +1374,45 @@ script LexioPlayUIController extends Logic
 	end
 
 	@ExecSpace("ClientOnly")
+	method void ClearPreviousTurnMessage(table snapshot)
+		-- Keep current-turn feedback, but discard it when a new local turn begins.
+		local bridge = self:GetLocalBridge()
+		local seat = bridge ~= nil and bridge._T.Seat or 0
+		if seat <= 0 or snapshot.currentPlayerIndex ~= seat then return end
+		if snapshot.phase ~= "Playing" and snapshot.phase ~= "LeadPending" then return end
+		local key = tostring(snapshot.tableId or snapshot.privateRoomCode or "") .. ":" .. tostring(snapshot.turnNumber) .. ":" .. tostring(snapshot.trickNumber)
+		if self._T.ActionMessageTurnKey == key then return end
+		self._T.ActionMessageTurnKey = key
+		if isvalid(self.ErrorText) then self.ErrorText.TextGUIRendererComponent.Text = "" end
+		log("[VRF] ACTION MESSAGE cleared new_local_turn=true")
+	end
+
+	@ExecSpace("ClientOnly")
 	method void HandleActionResult(table result)
 		        if result == nil then return end
 		        if result.requestId == self._T.PendingSubmitId then self._T.PendingSubmitId = "" end
 		        if result.requestId == self._T.PendingPassId then self._T.PendingPassId = "" end
 		        if result.ok then
-		            self.ErrorText.TextGUIRendererComponent.Text = result.action .. " 성공"
+		            local messages = { Submit = "제출 완료", Pass = "패스 완료" }
+		            self.ErrorText.TextGUIRendererComponent.Text = messages[result.action] or "처리 완료"
+		            self.ErrorText.TextGUIRendererComponent.FontColor = Color(0.18, 0.42, 0.28, 1)
 		            if result.action == "Submit" then self._T.SelectedById = {} self._T.SelectedTileIds = {} end
 		        else
 		            self.ErrorText.TextGUIRendererComponent.Text = self:ReasonText(result.reason)
+		            self.ErrorText.TextGUIRendererComponent.FontColor = Color(0.72, 0.12, 0.2, 1)
 		        end
-		        self:UpdateActionButtons()
+		        if result.action == "Submit" or (result.ok and result.action == "Pass") then
+			self._T.SelectedById = {}
+			self._T.SelectedTileIds = {}
+			self:RenderHandPanel(self.HandPanelPC, self._T.RenderedHand)
+			self:RenderHandPanel(self.HandPanelMobile, self._T.RenderedHand)
+			log("[VRF] SELECTION cleared action=" .. tostring(result.action) .. " ok=" .. tostring(result.ok))
+		end
+		self:UpdateActionButtons()
 	end
 
 	method string ReasonText(string reason)
+		        if reason == "connection_paused" then return "재접속 대기 중에는 게임이 일시정지됩니다." end
 		        if reason == "not_turn" then return "현재 당신의 차례가 아닙니다." end
 		        if reason == "already_passed" then return "이 트릭에서는 이미 패스했습니다." end
 		        if reason == "illegal_play" then return "낼 수 없는 타일 조합입니다." end
@@ -1280,7 +1454,7 @@ script LexioPlayUIController extends Logic
 	method void ConnectPrivateRoomButtons()
 		        self._T.RoomChatConnected = false
 		        -- Connects browser, creation, join, ready, and leave buttons to the local room controls.
-		        for _, record in ipairs(self._T.PrivateEventConnections) do if record.entity ~= nil and isvalid(record.entity) then record.entity:DisconnectEvent(record.connection) end end
+		        for _, record in ipairs(self._T.PrivateEventConnections) do if record.entity ~= nil and isvalid(record.entity) then record.entity:DisconnectEvent(record.eventType or ButtonClickEvent, record.connection) end end
 		        self._T.PrivateEventConnections = {}
 		        local controls = _UserService.LocalPlayer ~= nil and _UserService.LocalPlayer:GetComponent("script.LexioManualTestControls") or nil
 		        if controls == nil then
@@ -1317,6 +1491,10 @@ script LexioPlayUIController extends Logic
 		                capacity5.TextGUIRendererComponent.Text = "● 5인"
 		            end) },
 		            { entity=createButton, connection=createButton:ConnectEvent(ButtonClickEvent, function(event)
+		                if self._T.JoinPopupCode ~= nil then
+		                    controls:JoinPrivateRoom(self._T.JoinPopupCode, self.PrivatePasswordInput.TextGUIRendererInputComponent.Text or "")
+		                    return
+		                end
 		                local title = self.PrivateTitleInput.TextGUIRendererInputComponent.Text or ""
 		                local password = self.PrivatePasswordInput.TextGUIRendererInputComponent.Text or ""
 		                if title == "" or string.match(title, "%S") == nil then
@@ -1329,7 +1507,7 @@ script LexioPlayUIController extends Logic
 		                controls:CreatePrivateRoom(title, self._T.PrivateCapacity, password)
 		            end) },
 		            { entity=joinButton, connection=joinButton:ConnectEvent(ButtonClickEvent, function(event)
-		                controls:JoinPrivateRoom(self.PrivateCodeInput.TextGUIRendererInputComponent.Text or "", self.PrivatePasswordInput.TextGUIRendererInputComponent.Text or "")
+		                self:OpenJoinRoomPopup(self.PrivateCodeInput.TextGUIRendererInputComponent.Text or "")
 		            end) },
 		            { entity=filterAll, connection=filterAll:ConnectEvent(ButtonClickEvent, function(event) self._T.PrivateRoomFilter = 0 end) },
 		            { entity=filter3, connection=filter3:ConnectEvent(ButtonClickEvent, function(event) self._T.PrivateRoomFilter = 3 end) },
@@ -1347,6 +1525,7 @@ script LexioPlayUIController extends Logic
 		            local roomConnection = roomButton:ConnectEvent(ButtonClickEvent, function(event) self:JoinListedPrivateRoom(roomIndex) end)
 		            table.insert(self._T.PrivateEventConnections, { entity=roomButton, connection=roomConnection })
 		        end
+		        self:ConnectRoomSettingsButtons()
 		        controls:RefreshPrivateRooms()
 		        for _, entry in ipairs({ { "PagePrev", -1 }, { "PageNext", 1 } }) do
 		            local pageButton = _EntityService:GetEntityByPath("/ui/LexioPrivateRoom/Browser/" .. entry[1])
@@ -1364,6 +1543,7 @@ script LexioPlayUIController extends Logic
 	method void SetCreatePopupVisible(boolean visible)
 		        -- Shows or hides the complete creation form as one modal layer.
 		        self._T.CreatePopupOpen = visible
+		        self._T.JoinPopupCode = nil
 		        local paths = {
 		            "/ui/LexioPrivateRoom/Browser/CreatePopupDim",
 		            "/ui/LexioPrivateRoom/Browser/CreatePopup",
@@ -1393,6 +1573,13 @@ script LexioPlayUIController extends Logic
 		            if pageEntity ~= nil then pageEntity.Enable = not visible end
 		        end
 		        if visible then
+		            local player = _UserService.LocalPlayer
+		            local controls = player ~= nil and player:GetComponent("script.LexioManualTestControls") or nil
+		            if controls ~= nil then controls._T.PrivateRoomError = "" end
+		            local title = _EntityService:GetEntityByPath("/ui/LexioPrivateRoom/Browser/CreatePopupTitle")
+		            if title ~= nil then title.TextGUIRendererComponent.Text = "방 만들기" end
+		            local confirm = _EntityService:GetEntityByPath("/ui/LexioPrivateRoom/Browser/CreateButton")
+		            if confirm ~= nil then confirm.TextGUIRendererComponent.Text = "확인" end
 		            self.PrivateErrorText.TextGUIRendererComponent.Text = ""
 		            local hint = _EntityService:GetEntityByPath("/ui/LexioPrivateRoom/Browser/CreatePopupHint")
 		            if hint ~= nil then hint.TextGUIRendererComponent.Text = "방 이름과 인원을 정한 뒤 확인을 눌러주세요." end
@@ -1404,6 +1591,33 @@ script LexioPlayUIController extends Logic
 	end
 
 	@ExecSpace("ClientOnly")
+	method void OpenJoinRoomPopup(string code)
+		        code = string.upper(string.match(code or "", "^%s*(.-)%s*$"))
+		        if code == "" then
+		            self.PrivateErrorText.TextGUIRendererComponent.Text = "초대 코드를 입력해 주세요."
+		            return
+		        end
+		        self:SetCreatePopupVisible(true)
+		        self._T.JoinPopupCode = code
+		        local player = _UserService.LocalPlayer
+		        local controls = player ~= nil and player:GetComponent("script.LexioManualTestControls") or nil
+		        if controls ~= nil then controls._T.PrivateRoomError = "" end
+		        for _, name in ipairs({ "RoomTitleInput", "CapacityLabel", "Capacity3", "Capacity4", "Capacity5" }) do
+		            local entity = _EntityService:GetEntityByPath("/ui/LexioPrivateRoom/Browser/" .. name)
+		            if entity ~= nil then entity.Enable = false end
+		        end
+		        local title = _EntityService:GetEntityByPath("/ui/LexioPrivateRoom/Browser/CreatePopupTitle")
+		        local hint = _EntityService:GetEntityByPath("/ui/LexioPrivateRoom/Browser/CreatePopupHint")
+		        local confirm = _EntityService:GetEntityByPath("/ui/LexioPrivateRoom/Browser/CreateButton")
+		        if title ~= nil then title.TextGUIRendererComponent.Text = "방 입장" end
+		        if hint ~= nil then hint.TextGUIRendererComponent.Text = "초대 코드: " .. code .. "\n비밀방은 비밀번호를 입력해 주세요." end
+		        if confirm ~= nil then confirm.TextGUIRendererComponent.Text = "입장" end
+		        self.PrivatePasswordInput.TextGUIRendererInputComponent.Text = ""
+		        self.PrivatePasswordInput.TextGUIRendererInputComponent:ActivateInputField()
+		        log("[VRF] JOIN ROOM POPUP opened=true")
+	end
+
+	@ExecSpace("ClientOnly")
 	method void JoinListedPrivateRoom(integer index)
 		        -- Joins an unlocked listed room or prepares the invite-code field for a locked room.
 		        local player = _UserService.LocalPlayer
@@ -1411,9 +1625,10 @@ script LexioPlayUIController extends Logic
 		        local rooms = self._T.FilteredPrivateRooms or {}
 		        local room = rooms[((self._T.RoomPage or 1) - 1) * 6 + index]
 		        if controls == nil or room == nil then return end
+		        if room.canJoin == false then return end
 		        if room.hasPassword then
 		            self.PrivateCodeInput.TextGUIRendererInputComponent.Text = room.code
-		            self.PrivateErrorText.TextGUIRendererComponent.Text = "잠긴 방입니다. 비밀번호를 입력한 뒤 코드로 입장하세요."
+		            self:OpenJoinRoomPopup(room.code)
 		            return
 		        end
 		        controls:JoinPrivateRoom(room.code, "")
@@ -1426,15 +1641,17 @@ script LexioPlayUIController extends Logic
 		        local controls = player ~= nil and player:GetComponent("script.LexioManualTestControls") or nil
 		        local onSecondFloor = player ~= nil and self:IsLexioGameRoom(player) and player.TransformComponent.WorldPosition.y >= -9 and player.TransformComponent.WorldPosition.y < -3
 		        local snapshot = controls ~= nil and controls._T.PrivateRoomSnapshot or nil
+		        self:UpdateRoomSettings(snapshot)
 		        local bridge = self:GetLocalBridge()
 		        local publicSnapshot = bridge ~= nil and bridge:GetMatchedPublicSnapshot() or nil
-		        local playing = publicSnapshot ~= nil and publicSnapshot.phase ~= "WaitingPlayers"
+		        local roomJoined = controls ~= nil and (controls:IsSeated() or snapshot ~= nil)
+		        local playing = roomJoined and publicSnapshot ~= nil and publicSnapshot.phase ~= "WaitingPlayers"
 		        local handGuideButton = _EntityService:GetEntityByPath("/ui/LexioPlayHUD/HandGuideButton")
 		        if handGuideButton ~= nil then handGuideButton.Enable = playing end
 		        local gameGroup = _EntityService:GetEntityByPath("/ui/LexioPlayHUD")
 		        if gameGroup ~= nil then
 		            gameGroup.Enable = true
-		            if gameGroup.UIGroupComponent ~= nil then gameGroup.UIGroupComponent.GroupOrder = 110 end
+		            if gameGroup.UIGroupComponent ~= nil then gameGroup.UIGroupComponent.GroupOrder = self._T.SoundSettingsOpen and 600 or (self._T.DisconnectVoteOpen and 500 or (self._T.MatchFoundVisible and 400 or 110)) end
 		        end
 		        -- Promote the game above the persistent menu background, which remains visible in every screen.
                 local guide = _EntityService:GetEntityByPath("/ui/LexioMainMenu/HandGuide")
@@ -1455,11 +1672,15 @@ script LexioPlayUIController extends Logic
 		                    already_in_room = "이미 참가 중인 방에서 먼저 나와 주세요.",
 		                    already_queued = "자동 매칭을 취소한 뒤 방을 만들어 주세요.",
 		                    capacity_busy = "해당 인원의 방이 사용 중입니다. 다른 인원을 선택해 주세요.",
-		                    invalid_request = "방 이름은 20자, 비밀번호는 8자 이내로 입력해 주세요."
+		                    invalid_request = "입력한 방 정보와 인원을 확인해 주세요.",
+		                    wrong_password = "비밀번호가 맞지 않습니다. 다시 입력해 주세요.",
+		                    room_not_found = "종료되었거나 존재하지 않는 방입니다.",
+		                    room_full = "빈자리가 없습니다.",
+		                    room_in_progress = "이미 게임을 시작한 방입니다."
 		                }
 		                local reason = controls ~= nil and controls._T.PrivateRoomError or ""
 		                local hint = _EntityService:GetEntityByPath("/ui/LexioPrivateRoom/Browser/CreatePopupHint")
-		                if hint ~= nil and reason ~= "" then hint.TextGUIRendererComponent.Text = reasons[reason] or ("방 생성 실패: " .. tostring(reason)) end
+		                if hint ~= nil and reason ~= "" then hint.TextGUIRendererComponent.Text = reasons[reason] or ("요청 실패: " .. tostring(reason)) end
 		            end
 		            local rooms = controls ~= nil and controls._T.PrivateRoomList or {}
 		            local filteredRooms = {}
@@ -1488,7 +1709,16 @@ script LexioPlayUIController extends Logic
 		            for index = 1, 6 do
 		                local button = _EntityService:GetEntityByPath("/ui/LexioPrivateRoom/Browser/Room" .. tostring(index))
 		                local room = filteredRooms[((self._T.RoomPage - 1) * 6) + index]
-		                button.TextGUIRendererComponent.Text = room ~= nil and (room.title .. "  " .. tostring(room.playerCount) .. "/" .. tostring(room.capacity) .. (room.hasPassword and "  [잠금]" or "")) or "빈 방"
+		                local roomStatus = "대기 중"
+		                if room ~= nil then
+		                    if room.phase == "Playing" or room.phase == "LeadPending" then roomStatus = "게임 중"
+		                    elseif room.phase == "Finished" then roomStatus = "결과 확인 중"
+		                    elseif room.phase == "Countdown" then roomStatus = "시작 준비 중"
+		                    elseif room.phase == "Unavailable" then roomStatus = "입장 불가"
+		                    elseif room.playerCount >= room.capacity then roomStatus = "만석" end
+		                end
+		                button.TextGUIRendererComponent.Text = room ~= nil and (room.title .. "  " .. tostring(room.playerCount) .. "/" .. tostring(room.capacity) .. "  [" .. roomStatus .. "]" .. (room.hasPassword and "  [잠금]" or "")) or "빈 방"
+		                button.ButtonComponent.Enable = room ~= nil and room.canJoin ~= false
 		            end
 		            return
 		        end
@@ -1507,8 +1737,8 @@ script LexioPlayUIController extends Logic
 		        self.PrivateRoomCodeText.TextGUIRendererComponent.Text = "초대 코드: " .. snapshot.code .. "  ·  " .. tostring(#snapshot.members) .. "/" .. tostring(snapshot.capacity)
 		        local localReady = false
 		        local viewerSeat = 1
-		        for _, member in ipairs(snapshot.members) do
-		            if member.userId == snapshot.viewerUserId then viewerSeat = member.seatIndex end
+		        for _, roomParticipant in ipairs(snapshot.members) do
+		            if roomParticipant.userId == snapshot.viewerUserId then viewerSeat = roomParticipant.seatIndex end
 		        end
 		        local waitingPositions = {
 		            [3] = { Vector2(-720, -200), Vector2(-720, 160), Vector2(720, 160) },
@@ -1519,11 +1749,19 @@ script LexioPlayUIController extends Logic
 		            local slot = self.PrivateWaiting:GetChildByName("Slot" .. tostring(seatIndex))
 		            local waitingAvatar = slot:GetChildByName("Avatar")
 		            local occupied = false
-		            for _, member in ipairs(snapshot.members) do
-		                if member.seatIndex == seatIndex then occupied = true end
+		            local ready = false
+		            for _, roomParticipant in ipairs(snapshot.members) do
+		                if roomParticipant.seatIndex == seatIndex then
+		                    occupied = true
+		                    ready = roomParticipant.ready == true
+		                end
 		            end
-		            -- Keep occupied renderers enabled across frames so their asynchronous avatar load can finish.
-		            if waitingAvatar ~= nil and waitingAvatar.Enable ~= occupied then waitingAvatar.Enable = occupied end
+		            self:SetWaitingSeatState(slot, occupied, ready)
+		            local ownerBadge = slot:GetChildByName("OwnerBadge")
+		            if ownerBadge ~= nil then
+		                ownerBadge.Enable = false
+		                for _, roomParticipant in ipairs(snapshot.members) do if roomParticipant.seatIndex == seatIndex and roomParticipant.userId == snapshot.ownerUserId then ownerBadge.Enable = true end end
+		            end
 		            slot.Enable = seatIndex <= snapshot.capacity
 		            local visualIndex = ((seatIndex - viewerSeat + snapshot.capacity) % snapshot.capacity) + 1
 		            if seatIndex <= snapshot.capacity then slot.UITransformComponent.anchoredPosition = waitingPositions[snapshot.capacity][visualIndex] end
@@ -1540,7 +1778,7 @@ script LexioPlayUIController extends Logic
 		                if roomMember.seatIndex == seatIndex then
 		                    local nickname = roomMember.nickname or "플레이어"
 		                    label.TextGUIRendererComponent.Text = nickname .. (roomMember.ready and "\nREADY" or "\nWAITING")
-		                    if slot.SpriteGUIRendererComponent ~= nil then slot.SpriteGUIRendererComponent.Color = roomMember.ready and Color(0.7, 0.92, 0.8, 0.96) or Color(0.87, 0.79, 0.95, 0.94) end
+
 		                    if waitingAvatar ~= nil and waitingAvatar.AvatarGUIRendererComponent ~= nil then
 		                        waitingAvatar.Enable = true
 		                        local avatarRoot = waitingAvatar
@@ -1568,6 +1806,511 @@ script LexioPlayUIController extends Logic
 		self._T.RoomListRefreshElapsed = 2
 		self._T.StaticLobbyOpen = open
 		log("[VRF] STATIC LOBBY open=" .. tostring(open))
+	end
+
+
+	@ExecSpace("ClientOnly")
+	method void ConnectConnectionButtons()
+		self._T.ConnectionButtonsBound = self._T.ConnectionButtonsBound or {}
+		local bindings = {
+			{ path = "/ui/LexioCommonMenu/SoundButton", action = "Audio" },
+			{ path = "/ui/LexioCommonMenu/ExitConfirm/Window/CancelButton", action = "CancelExit" },
+			{ path = "/ui/LexioCommonMenu/SoundSettings/Window/CloseButton", action = "CloseAudio" },
+			{ path = "/ui/LexioPlayHUD/RoomChat/LeaveGameButton", action = "Leave" },
+			{ path = "/ui/LexioPlayHUD/ReconnectScreen/ReconnectButton", action = "Reconnect" },
+			{ path = "/ui/LexioPlayHUD/ReconnectScreen/LobbyButton", action = "Lobby" },
+			{ path = "/ui/LexioPlayHUD/VotePopup/Window/RejectButton", action = "Reject" },
+			{ path = "/ui/LexioPlayHUD/VotePopup/Window/AgreeButton", action = "Agree" }
+		}
+		for _, binding in ipairs(bindings) do
+			local button = _EntityService:GetEntityByPath(binding.path)
+			local action = binding.action
+			if button ~= nil and not self._T.ConnectionButtonsBound[binding.path] then
+				self._T.ConnectionButtonsBound[binding.path] = true
+				local connection = button:ConnectEvent(ButtonClickEvent, function(event)
+					local player = _UserService.LocalPlayer
+					local controls = player ~= nil and player:GetComponent("script.LexioManualTestControls") or nil
+					if action == "Audio" then
+						self:SetSoundSettingsOpen(true)
+					elseif action == "OpenExit" then
+						self:SetExitConfirmOpen(true)
+					elseif action == "CancelExit" then
+						self:SetExitConfirmOpen(false)
+					elseif action == "ConfirmExit" and controls ~= nil then
+						log("[VRF] EXIT uses platform menu")
+						self:SetExitConfirmOpen(false)
+					elseif action == "CloseAudio" then
+						self:SetSoundSettingsOpen(false)
+					elseif action == "Leave" and controls ~= nil then
+						controls:RequestSuspendGame()
+					elseif action == "Reconnect" and controls ~= nil then
+						controls:RequestResumeGame(true)
+					elseif action == "Lobby" and controls ~= nil then
+						controls:RequestAbandonGame()
+					elseif action == "Agree" or action == "Reject" then
+						local bridge = self:GetLocalBridge()
+						local snapshot = bridge ~= nil and bridge:GetMatchedPublicSnapshot() or nil
+						local seat = self._T.DisconnectVoteSeat
+						if snapshot ~= nil and seat ~= nil then
+							bridge:RequestDisconnectVote(seat, snapshot.disconnectGenerations[seat], action == "Agree")
+						end
+						self._T.DisconnectVoteOpen = false
+					end
+				end)
+				table.insert(self._T.EventConnections, { entity = button, connection = connection })
+			end
+		end
+	end
+
+	@ExecSpace("ClientOnly")
+	method boolean UpdateConnectionScreens()
+		local player = _UserService.LocalPlayer
+		local controls = player ~= nil and player:GetComponent("script.LexioManualTestControls") or nil
+		local reconnect = _EntityService:GetEntityByPath("/ui/LexioPlayHUD/ReconnectScreen")
+		local popup = _EntityService:GetEntityByPath("/ui/LexioPlayHUD/VotePopup")
+		local suspended = controls ~= nil and controls._T.ReconnectOnly == true
+		if reconnect ~= nil then reconnect.Enable = suspended end
+		if suspended then
+			self._T.MatchFoundVisible = false
+			local matchFound = _EntityService:GetEntityByPath("/ui/LexioPlayHUD/MatchFound")
+			if matchFound ~= nil then matchFound.Enable = false end
+			self._T.Active = false
+			self._T.DisconnectVoteOpen = false
+			if popup ~= nil then popup.Enable = false end
+			self.ContentRoot.Enable = false
+			if self.PrivateUIRoot ~= nil then self.PrivateUIRoot.Enable = false end
+			if self.MatchPanel ~= nil then self.MatchPanel.Enable = false end
+			local guide = _EntityService:GetEntityByPath("/ui/LexioPlayHUD/HandGuideButton")
+			if guide ~= nil then guide.Enable = false end
+			if reconnect ~= nil then
+				local group = reconnect.Parent
+				if group ~= nil and group.UIGroupComponent ~= nil then group.UIGroupComponent.GroupOrder = 700 end
+			end
+			local roomChat = _EntityService:GetEntityByPath("/ui/LexioPlayHUD/RoomChat")
+			if roomChat ~= nil then roomChat.Enable = false end
+			return true
+		end
+		local bridge = self:GetLocalBridge()
+		local snapshot = bridge ~= nil and bridge:GetMatchedPublicSnapshot() or nil
+		local active = controls ~= nil and controls:IsSeated() and snapshot ~= nil and (snapshot.phase == "Playing" or snapshot.phase == "LeadPending")
+		local leave = _EntityService:GetEntityByPath("/ui/LexioPlayHUD/RoomChat/LeaveGameButton")
+		if leave ~= nil then leave.Enable = active end
+		self._T.DisconnectVoteSeen = self._T.DisconnectVoteSeen or {}
+		local eligible = {}
+		if active then
+			for seat = 1, snapshot.playerCount do
+				if seat ~= bridge._T.Seat and (snapshot.disconnectedSeconds[seat] or -1) >= 0 and not (snapshot.aiBySeat ~= nil and snapshot.aiBySeat[seat]) and not (snapshot.kickedBySeat ~= nil and snapshot.kickedBySeat[seat]) then
+					eligible[seat] = true
+					local key = (snapshot.tableId or snapshot.privateRoomCode or "") .. ":" .. tostring(snapshot.disconnectGenerations[seat])
+					if not self._T.DisconnectVoteSeen[key] and not self._T.DisconnectVoteOpen then
+						self._T.DisconnectVoteSeen[key] = true
+						self._T.DisconnectVoteSeat = seat
+						self._T.DisconnectVoteOpen = true
+						log("[VRF] DISCONNECT VOTE popup seat=" .. tostring(seat))
+					end
+				end
+			end
+		end
+		local seat = self._T.DisconnectVoteSeat
+		if not active or not eligible[seat] then self._T.DisconnectVoteOpen = false end
+		if popup ~= nil then
+			popup.Enable = self._T.DisconnectVoteOpen == true
+			if popup.Enable then
+				local voteKey = (snapshot.tableId or snapshot.privateRoomCode or "") .. ":" .. tostring(snapshot.disconnectGenerations[seat])
+				self._T.DisconnectVoteSeen[voteKey] = true
+				local timer = popup:GetChildByName("Window"):GetChildByName("Timer")
+				if timer ~= nil then timer.TextGUIRendererComponent.Text = "남은시간 : " .. tostring(snapshot.disconnectVoteSecondsRemaining or 30) .. "초" end
+				local count = snapshot.disconnectVoteCounts[seat] or 0
+				local required = snapshot.disconnectVoteThresholds[seat] or 1
+				local missing = 0
+				for index = 1, snapshot.playerCount do if eligible[index] then missing = missing + 1 end end
+				local no = snapshot.disconnectNoCounts ~= nil and snapshot.disconnectNoCounts[seat] or 0
+				local total = snapshot.disconnectVoterCount or (snapshot.playerCount - missing)
+				local message = tostring(missing) .. "명 이탈 · 남은 사람 " .. tostring(total) .. "명\nAI 대행으로 계속할까요?\n찬성 " .. tostring(count) .. "/" .. tostring(required) .. "표 · 반대 " .. tostring(no) .. "표\n이탈자는 AI 대행 중에도 재접속할 수 있습니다.\n찬성 기준을 채우지 못하면 방이 종료됩니다.\n미투표는 30초 후 반대표로 처리됩니다."
+				popup:GetChildByName("Window"):GetChildByName("Message").TextGUIRendererComponent.Text = message
+			end
+		end
+		return false
+	end
+
+
+	@ExecSpace("ClientOnly")
+	method void SetRoomSettingsVisible(boolean visible)
+		local player = _UserService.LocalPlayer
+		local controls = player ~= nil and player:GetComponent("script.LexioManualTestControls") or nil
+		local snapshot = controls ~= nil and controls._T.PrivateRoomSnapshot or nil
+		if visible and (snapshot == nil or snapshot.ownerUserId ~= snapshot.viewerUserId) then return end
+		self._T.RoomSettingsOpen = visible
+		if visible then
+			self._T.SettingsCapacity = snapshot.capacity
+			self._T.SettingsPasswordEnabled = snapshot.hasPassword == true
+			controls._T.RoomSettingsError = ""
+			local input = _EntityService:GetEntityByPath("/ui/LexioPrivateRoom/Waiting/SettingsPopup/Window/PasswordInput")
+			if input ~= nil then input.TextGUIRendererInputComponent.Text = "" end
+		end
+		self:UpdateRoomSettings(snapshot)
+	end
+
+	@ExecSpace("ClientOnly")
+	method void ConnectRoomSettingsButtons()
+		local bindings = {
+			{ name = "RoomSettingsButton", action = "Open" },
+			{ name = "SettingsPopup/Window/CancelButton", action = "Close" },
+			{ name = "SettingsPopup/Window/SaveButton", action = "Save" },
+			{ name = "SettingsPopup/Window/PublicButton", action = "Public" },
+			{ name = "SettingsPopup/Window/PasswordButton", action = "Password" },
+			{ name = "SettingsPopup/Window/Capacity3", action = "3" },
+			{ name = "SettingsPopup/Window/Capacity4", action = "4" },
+			{ name = "SettingsPopup/Window/Capacity5", action = "5" }
+		}
+		for _, binding in ipairs(bindings) do
+			local button = _EntityService:GetEntityByPath("/ui/LexioPrivateRoom/Waiting/" .. binding.name)
+			local action = binding.action
+			if button ~= nil then
+				local connection = button:ConnectEvent(ButtonClickEvent, function(event)
+					if action == "Open" then self:SetRoomSettingsVisible(true)
+					elseif action == "Close" then self:SetRoomSettingsVisible(false)
+					elseif action == "Public" then self._T.SettingsPasswordEnabled = false
+					elseif action == "Password" then self._T.SettingsPasswordEnabled = true
+					elseif action == "Save" then
+						local player = _UserService.LocalPlayer
+						local controls = player ~= nil and player:GetComponent("script.LexioManualTestControls") or nil
+						local input = _EntityService:GetEntityByPath("/ui/LexioPrivateRoom/Waiting/SettingsPopup/Window/PasswordInput")
+						if controls ~= nil and input ~= nil then
+							controls._T.RoomSettingsError = "saving"
+							controls:RequestUpdatePrivateRoomSettings(self._T.SettingsCapacity, self._T.SettingsPasswordEnabled == true, input.TextGUIRendererInputComponent.Text or "")
+						end
+					else self._T.SettingsCapacity = tonumber(action) end
+				end)
+				table.insert(self._T.PrivateEventConnections, { entity = button, connection = connection })
+			end
+		end
+	end
+
+	@ExecSpace("ClientOnly")
+	method void UpdateRoomSettings(table snapshot)
+		local owner = snapshot ~= nil and snapshot.ownerUserId == snapshot.viewerUserId
+		local button = _EntityService:GetEntityByPath("/ui/LexioPrivateRoom/Waiting/RoomSettingsButton")
+		if button ~= nil then button.Enable = owner end
+		if not owner then self._T.RoomSettingsOpen = false end
+		local popup = _EntityService:GetEntityByPath("/ui/LexioPrivateRoom/Waiting/SettingsPopup")
+		local root = _EntityService:GetEntityByPath("/ui/LexioPrivateRoom")
+		if root ~= nil and root.UIGroupComponent ~= nil then root.UIGroupComponent.GroupOrder = self._T.RoomSettingsOpen and 300 or 100 end
+		if popup == nil then return end
+		popup.Enable = self._T.RoomSettingsOpen == true
+		if not popup.Enable then return end
+		_UILogic:SetSiblingIndex(popup.UITransformComponent, 999)
+		local window = popup:GetChildByName("Window")
+		for capacity = 3, 5 do
+			window:GetChildByName("Capacity" .. tostring(capacity)).TextGUIRendererComponent.Text = (self._T.SettingsCapacity == capacity and "● " or "") .. tostring(capacity) .. "인"
+		end
+		window:GetChildByName("PublicButton").TextGUIRendererComponent.Text = not self._T.SettingsPasswordEnabled and "● 공개방" or "공개방"
+		window:GetChildByName("PasswordButton").TextGUIRendererComponent.Text = self._T.SettingsPasswordEnabled and "● 비밀번호 사용" or "비밀번호 사용"
+		local input = window:GetChildByName("PasswordInput")
+		input.Enable = self._T.SettingsPasswordEnabled == true
+		input.TextGUIRendererInputComponent.PlaceHolder = snapshot.hasPassword and "비워두면 기존 비밀번호 유지" or "새 비밀번호 (최대 8자)"
+		local player = _UserService.LocalPlayer
+		local controls = player ~= nil and player:GetComponent("script.LexioManualTestControls") or nil
+		local reasons = { saving = "변경 중입니다...", not_owner = "방장만 변경할 수 있습니다.", capacity_too_small = "현재 참가 인원보다 줄일 수 없습니다.", capacity_busy = "해당 인원의 방이 사용 중입니다.", password_required = "비밀번호를 입력해 주세요.", invalid_password = "비밀번호는 최대 8자입니다.", room_in_progress = "게임 시작 후에는 변경할 수 없습니다.", participant_unavailable = "참가자의 연결 상태를 확인해 주세요.", settings_failed = "변경하지 못했습니다. 다시 시도해 주세요." }
+		local reason = controls ~= nil and controls._T.RoomSettingsError or ""
+		window:GetChildByName("Error").TextGUIRendererComponent.Text = reasons[reason] or (reason ~= "" and "방 설정을 변경할 수 없습니다." or "")
+	end
+
+
+	@ExecSpace("ClientOnly")
+	method void SetWaitingSeatState(Entity slot, boolean occupied, boolean ready)
+		if slot.SpriteGUIRendererComponent ~= nil then
+			slot.SpriteGUIRendererComponent.Color = occupied and ready and Color(0.7, 0.92, 0.8, 0.96) or Color(0.87, 0.79, 0.95, 0.94)
+		end
+		-- Only toggle on occupancy changes so avatar loading can complete across frames.
+		local avatar = slot:GetChildByName("Avatar")
+		if avatar ~= nil and avatar.Enable ~= occupied then avatar.Enable = occupied end
+		if not occupied then
+			local owner = slot:GetChildByName("OwnerBadge")
+			local bubble = slot:GetChildByName("ChatBubble")
+			if owner ~= nil then owner.Enable = false end
+			if bubble ~= nil then bubble.Enable = false end
+		end
+	end
+
+
+	@ExecSpace("ClientOnly")
+	method void UpdateMatchFoundScreen()
+		local overlay = _EntityService:GetEntityByPath("/ui/LexioPlayHUD/MatchFound")
+		if overlay == nil then return end
+		local player = _UserService.LocalPlayer
+		local controls = player ~= nil and player:GetComponent("script.LexioManualTestControls") or nil
+		local bridge = self:GetLocalBridge()
+		local snapshot = bridge ~= nil and bridge:GetMatchedPublicSnapshot() or nil
+		local seated = controls ~= nil and controls:IsSeated() and not controls._T.ReconnectOnly
+		local seconds = snapshot ~= nil and snapshot.startCountdown or 0
+		local automatic = snapshot ~= nil and (snapshot.privateRoomCode == nil or snapshot.privateRoomCode == "")
+		local visible = seated and snapshot ~= nil and snapshot.phase == "WaitingPlayers" and (automatic or seconds > 0)
+		self._T.MatchFoundVisible = visible
+		overlay.Enable = visible
+		if not visible then self._T.PresentationCountdownKey = nil return end
+		local countdownKey = tostring(snapshot.tableId or "") .. ":" .. tostring(seconds)
+		if self._T.PresentationCountdownKey ~= countdownKey then
+			self._T.PresentationCountdownKey = countdownKey
+			if seconds > 0 then
+				self:PlayFeedback("Countdown" .. tostring(seconds))
+				self:PulseUI(overlay:GetChildByName("Window"):GetChildByName("Countdown"), 0.18, 0.25)
+			end
+		end
+		local group = overlay.Parent
+		if group ~= nil and group.UIGroupComponent ~= nil then group.UIGroupComponent.GroupOrder = 400 end
+		_UILogic:SetSiblingIndex(overlay.UITransformComponent, 999)
+		local window = overlay:GetChildByName("Window")
+		local matched = 0
+		for _, userId in pairs(snapshot.seatUserIds or {}) do if userId ~= "" then matched = matched + 1 end end
+		local capacity = snapshot.playerCount or 3
+		window:GetChildByName("Title").TextGUIRendererComponent.Text = automatic and "매칭 완료!" or "모두 준비 완료!"
+		window:GetChildByName("Players").TextGUIRendererComponent.Text = tostring(capacity) .. "인 게임  ·  " .. tostring(matched) .. "/" .. tostring(capacity) .. "명"
+		window:GetChildByName("Countdown").TextGUIRendererComponent.Text = seconds > 0 and tostring(seconds) or "준비 중"
+		window:GetChildByName("Countdown").TextGUIRendererComponent.FontSize = seconds > 0 and 76 or 42
+		window:GetChildByName("Hint").TextGUIRendererComponent.Text = seconds > 0 and "잠시 후 게임을 시작합니다." or "참가자의 연결 상태를 확인하고 있습니다."
+	end
+
+	@ExecSpace("ClientOnly")
+	method void PlayFeedback(string kind)
+		if not self._T.PresentationEnabled or self._T.SoundEnabled == false then return end
+		local sounds = { Click="972843e759204d3e9ad84e7d3fa94f83", Select="972843e759204d3e9ad84e7d3fa94f83", Pass="972843e759204d3e9ad84e7d3fa94f83", Submit="21600ec9d3a04cfeb69c6fe0c50e197c", Turn="2401bc5b40bd46c5b5ac2aaab89b1f19", Start="e5ea5b8f39a4433a85271d02425b97ba", Countdown="7ca9fa1a7b384c1caae2449eee77d3ba", Countdown3="1f9ddd61cc804456b339dc0f11f5b6e1", Countdown2="f678555bf91d4274894dea12a25e7df0", Countdown1="84edc9f81da9404daae62466d2e0753f", Result="7ca9fa1a7b384c1caae2449eee77d3ba", Win="c198d87b06b24707864b1ac73345cca8" }
+		local ruid = sounds[kind]
+		if ruid == nil then return end
+		self._T.SoundTimes = self._T.SoundTimes or {}
+		local now = self._T.FeedbackClock or 0
+		local previous = self._T.SoundTimes[kind]
+		if previous ~= nil and now - previous < 0.06 then return end
+		self._T.SoundTimes[kind] = now
+		local volume = 1
+		volume = volume * (self._T.EffectsVolume or 1)
+		if volume <= 0 then return end
+		_SoundService:PlaySound(ruid, volume)
+		self._T.LastEffectVolume = volume
+		log("[VRF] UI SOUND kind=" .. kind .. " volume=" .. tostring(volume))
+	end
+
+	@ExecSpace("ClientOnly")
+	method void ToggleAudio()
+		self._T.SoundEnabled = self._T.SoundEnabled == false
+		if self._T.SoundEnabled then
+			_SoundService:PlayBGM("877280f8701844378acfa6cee83dfede", self._T.BgmVolume or 0.18)
+			self:PlayFeedback("Select")
+		else
+			_SoundService:StopBGM(true)
+			for _, ruid in ipairs({ "972843e759204d3e9ad84e7d3fa94f83", "21600ec9d3a04cfeb69c6fe0c50e197c", "3b79d37626de4023a600e90d7e1595f8", "7ca9fa1a7b384c1caae2449eee77d3ba", "c198d87b06b24707864b1ac73345cca8", "2401bc5b40bd46c5b5ac2aaab89b1f19", "e5ea5b8f39a4433a85271d02425b97ba", "1f9ddd61cc804456b339dc0f11f5b6e1", "f678555bf91d4274894dea12a25e7df0", "84edc9f81da9404daae62466d2e0753f" }) do _SoundService:StopSound(ruid) end
+		end
+		log("[VRF] AUDIO enabled=" .. tostring(self._T.SoundEnabled))
+	end
+
+	@ExecSpace("ClientOnly")
+	method void PulseUI(Entity node, number strength, number duration)
+		if not self._T.PresentationEnabled or not isvalid(node) or node.UITransformComponent == nil then return end
+		self._T.UiAnimations = self._T.UiAnimations or {}
+		local scale = node.UITransformComponent.UIScale
+		local base = Vector3(scale.x, scale.y, scale.z)
+		for i = #self._T.UiAnimations, 1, -1 do
+			if self._T.UiAnimations[i].node == node then
+				base = self._T.UiAnimations[i].base
+				table.remove(self._T.UiAnimations, i)
+			end
+		end
+		table.insert(self._T.UiAnimations, { node=node, base=base, strength=strength, elapsed=0, duration=math.max(0.01, duration) })
+		node.UITransformComponent.UIScale = Vector3(base.x * (1 + strength), base.y * (1 + strength), base.z)
+		log("[VRF] UI FX start node=" .. node.Name)
+	end
+
+	@ExecSpace("ClientOnly")
+	method void UpdatePresentation(number delta)
+		if not self._T.PresentationEnabled then return end
+		self._T.FeedbackClock = (self._T.FeedbackClock or 0) + delta
+		local pendingVoice = self._T.PendingTurnVoice
+		if pendingVoice ~= nil and self._T.FeedbackClock >= pendingVoice.due then
+			self._T.PendingTurnVoice = nil
+			if self._T.PresentationTurn == pendingVoice.key then self:PlayFeedback("Turn") end
+		end
+		self._T.ButtonSoundScanElapsed = (self._T.ButtonSoundScanElapsed or 1) + delta
+		if self._T.ButtonSoundScanElapsed >= 1 then
+			self._T.ButtonSoundScanElapsed = 0
+			for _, path in ipairs({ "/ui/LexioMainMenu", "/ui/LexioPrivateRoom", "/ui/LexioPlayHUD", "/ui/LexioCommonMenu" }) do
+				self:BindButtonSounds(_EntityService:GetEntityByPath(path))
+			end
+		end
+		if not self._T.AudioStarted then
+			self._T.AudioStarted = true
+			if self._T.SoundEnabled ~= false then _SoundService:PlayBGM("877280f8701844378acfa6cee83dfede", self._T.BgmVolume or 0.18) end
+			log("[VRF] BGM started volume=0.18")
+		end
+		local button = _EntityService:GetEntityByPath("/ui/LexioCommonMenu/SoundButton")
+		if button ~= nil and button.TextGUIRendererComponent ~= nil then button.TextGUIRendererComponent.Text = "소리 설정 열기" end
+		self:UpdateSoundSettings()
+		local queue = self._T.UiAnimations or {}
+		for i = #queue, 1, -1 do
+			local item = queue[i]
+			if not isvalid(item.node) or item.node.UITransformComponent == nil then
+				table.remove(queue, i)
+			else
+				item.elapsed = item.elapsed + delta
+				local remaining = 1 - math.min(1, item.elapsed / item.duration)
+				local factor = 1 + item.strength * remaining * remaining
+				item.node.UITransformComponent.UIScale = Vector3(item.base.x * factor, item.base.y * factor, item.base.z)
+				if remaining <= 0 then
+					log("[VRF] UI FX end node=" .. item.node.Name)
+					table.remove(queue, i)
+				end
+			end
+		end
+	end
+
+	@ExecSpace("ClientOnly")
+	method void PresentSnapshot(table snapshot)
+		if not self._T.PresentationEnabled then return end
+		local room = snapshot.tableId or snapshot.privateRoomCode or "preview"
+		if self._T.PresentationRoom ~= room or (snapshot.stateVersion or 0) < (self._T.PresentationVersion or 0) then
+			self._T.PendingTurnVoice = nil
+			self._T.PresentationPhase = nil
+			self._T.PresentationPlay = nil
+			self._T.PresentationTurn = nil
+			self._T.PresentationPassed = {}
+			self._T.PresentationResult = false
+		end
+		self._T.PresentationRoom = room
+		self._T.PresentationVersion = snapshot.stateVersion or 0
+		local phase = snapshot.phase
+		local playing = phase == "Playing" or phase == "LeadPending"
+		local previous = self._T.PresentationPhase
+		local starting = playing and (previous == nil or previous == "WaitingPlayers" or previous == "Finished")
+		if starting then
+			self._T.PresentationResult = false
+			self._T.PresentationPlay = nil
+			self:PlayFeedback("Start")
+			if self.HandPanelPC ~= nil then
+				for i = 1, 12 do self:PulseUI(self.HandPanelPC:GetChildByName("Tile" .. tostring(i)), -0.06, 0.16 + i * 0.02) end
+			end
+		end
+		local bridge = self:GetLocalBridge()
+		local seat = bridge ~= nil and bridge._T.Seat or 0
+		if playing and not snapshot.connectionPaused and snapshot.currentPlayerIndex == seat then
+			local key = tostring(snapshot.turnNumber) .. ":" .. tostring(snapshot.trickNumber) .. ":" .. tostring(phase)
+			if self._T.PresentationTurn ~= key then
+				self._T.PresentationTurn = key
+				if starting then
+					self._T.PendingTurnVoice = { key=key, due=(self._T.FeedbackClock or 0) + 1.05 }
+				else
+					self._T.PendingTurnVoice = nil
+					self:PlayFeedback("Turn")
+				end
+			end
+		else
+			self._T.PendingTurnVoice = nil
+			self._T.PresentationTurn = nil
+		end
+		local ids = {}
+		for _, tile in ipairs(snapshot.lastPlay or {}) do table.insert(ids, tostring(tile.id or (tostring(tile.rank) .. ":" .. tostring(tile.suit)))) end
+		local signature = table.concat(ids, ",")
+		if playing and phase ~= "LeadPending" and signature ~= "" and self._T.PresentationPlay ~= signature then
+			self:PlayFeedback("Submit")
+			for _, card in ipairs({ self.PublicCard1, self.PublicCard2, self.PublicCard3, self.PublicCard4, self.PublicCard5 }) do
+				if card.Enable then self:PulseUI(card, -0.10, 0.2) end
+			end
+		end
+		self._T.PresentationPlay = phase == "LeadPending" and "" or signature
+		local oldPassed = self._T.PresentationPassed or {}
+		local nextPassed = {}
+		local passChanged = false
+		for playerSeat, passed in pairs(snapshot.passed or {}) do
+			if passed and not oldPassed[playerSeat] then passChanged = true end
+			nextPassed[playerSeat] = passed
+		end
+		self._T.PresentationPassed = nextPassed
+		if passChanged then self:PlayFeedback("Pass") end
+		if phase == "Finished" and not self._T.PresentationResult then
+			self._T.PresentationResult = true
+			self:PlayFeedback(snapshot.winnerIndex == seat and "Win" or "Result")
+			self:PulseUI(self.FinishPanel, -0.05, 0.3)
+		end
+		self._T.PresentationPhase = phase
+	end
+
+	@ExecSpace("ClientOnly")
+	method void BindButtonSounds(Entity node)
+		if not isvalid(node) then return end
+		self._T.ButtonSoundConnections = self._T.ButtonSoundConnections or {}
+		if node.ButtonComponent ~= nil and node.Name ~= "SoundButton" and node.Name ~= "PassButton" and self._T.ButtonSoundConnections[node] == nil then
+			self._T.ButtonSoundConnections[node] = node:ConnectEvent(ButtonClickEvent, function(event)
+				self:PlayFeedback("Click")
+			end)
+			log("[VRF] CLICK SOUND bound=" .. node.Name)
+		end
+		if node.Children ~= nil then
+			for _, child in ipairs(node.Children) do self:BindButtonSounds(child) end
+		end
+	end
+
+	@ExecSpace("ClientOnly")
+	method void SetExitConfirmOpen(boolean opened)
+		-- Confirms an explicit user-requested departure from this world.
+		local popup = _EntityService:GetEntityByPath("/ui/LexioCommonMenu/ExitConfirm")
+		if not isvalid(popup) then return end
+		if opened then self:SetSoundSettingsOpen(false) end
+		popup.Enable = opened
+		log("[VRF] EXIT CONFIRM open=" .. tostring(opened))
+	end
+
+	@ExecSpace("ClientOnly")
+	method void SetSoundSettingsOpen(boolean opened)
+		local popup = _EntityService:GetEntityByPath("/ui/LexioCommonMenu/SoundSettings")
+		if not isvalid(popup) then return end
+		local group = popup.Parent
+		if opened and not self._T.SoundSettingsOpen then
+			self._T.SoundSettingsPreviousOrder = group.UIGroupComponent.GroupOrder
+			group.UIGroupComponent.GroupOrder = 500
+			_UILogic:SetSiblingIndex(popup.UITransformComponent, 999)
+			local window = popup:GetChildByName("Window")
+			window:GetChildByName("BgmSlider").SliderComponent.Value = math.floor((self._T.BgmVolume or 0.18) * 100 + 0.5)
+			window:GetChildByName("EffectsSlider").SliderComponent.Value = math.floor((self._T.EffectsVolume or 1) * 100 + 0.5)
+			self:PlayFeedback("Click")
+		elseif not opened and self._T.SoundSettingsOpen then
+			group.UIGroupComponent.GroupOrder = self._T.SoundSettingsPreviousOrder or 0
+		end
+		self._T.SoundSettingsOpen = opened
+		popup.Enable = opened
+		self:UpdateSoundSettings()
+		log("[VRF] SOUND SETTINGS open=" .. tostring(opened))
+	end
+
+	@ExecSpace("ClientOnly")
+	method void SetSoundLevel(string kind, number percent)
+		local value = math.max(0, math.min(100, math.floor(percent + 0.5))) / 100
+		if kind == "Bgm" then
+			self._T.BgmVolume = value
+			_SoundService:SetBGMVolume(value)
+		elseif kind == "Effects" then
+			self._T.EffectsVolume = value
+		else
+			return
+		end
+		log("[VRF] SOUND LEVEL kind=" .. kind .. " percent=" .. tostring(math.floor(value * 100 + 0.5)))
+	end
+
+	@ExecSpace("ClientOnly")
+	method void UpdateSoundSettings()
+		if not self._T.SoundSettingsOpen then return end
+		local window = _EntityService:GetEntityByPath("/ui/LexioCommonMenu/SoundSettings/Window")
+		if not isvalid(window) then return end
+		for _, kind in ipairs({ "Bgm", "Effects" }) do
+			local slider = window:GetChildByName(kind .. "Slider")
+			local percent = math.floor(slider.SliderComponent.Value + 0.5)
+			local previous = kind == "Bgm" and self._T.BgmVolume or self._T.EffectsVolume
+			if previous == nil or math.abs(previous * 100 - percent) > 0.5 then
+				self:SetSoundLevel(kind, percent)
+				if kind == "Effects" and (self._T.FeedbackClock or 0) - (self._T.LastVolumePreview or -1) >= 0.15 then
+					self._T.LastVolumePreview = self._T.FeedbackClock or 0
+					self:PlayFeedback("Click")
+				end
+			end
+			window:GetChildByName(kind .. "Value").TextGUIRendererComponent.Text = tostring(percent) .. "%"
+		end
 	end
 
 end

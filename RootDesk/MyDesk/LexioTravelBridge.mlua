@@ -238,14 +238,19 @@ script LexioTravelBridge extends Component
 		        if self.Entity == nil or not isvalid(self.Entity) or self.Entity.PlayerComponent == nil then return false end
 		        if self.Entity.PlayerComponent.UserId ~= callerUserId or self.Entity.CurrentMapName ~= "map01" then return false end
 		        if self.inFlight then return false end
-		        self.inFlight = true
-		        self.destinationMapName = "boardgame_cafe"
-		        self.flightElapsed = 0
-		        self.cooldownRemaining = self.requestCooldown
 		        local controls = self.Entity:GetComponent("script.LexioManualTestControls")
-		        if controls ~= nil then controls:ForceStandForLobby(callerUserId) end
-		        log("[LexioTravel] FINISHED RETURN userId=" .. callerUserId .. " generation=" .. tostring(finishGeneration))
-		        _TeleportService:TeleportToMapPosition(self.Entity, Vector3(0, 0, 0), "boardgame_cafe")
+		        local host = self.Entity.CurrentMap:GetChildByName("LexioManualSessionHost")
+		        local registry = host ~= nil and host:GetComponent("script.LexioTableRegistry") or nil
+		        if registry == nil then return false end
+		        local released = false
+		        if registry.privateRoomCodeByUserId[callerUserId] ~= nil then
+		            released = registry:LeavePrivateRoom(callerUserId, "finished_return")
+		        else
+		            released = registry:ReleasePlayer(callerUserId, "finished_return")
+		        end
+		        if not released then return false end
+		        if controls ~= nil then controls:ShowFinishedLobby(callerUserId) end
+		        log("[VRF] FINISHED RETURN browser=true user=" .. callerUserId .. " generation=" .. tostring(finishGeneration))
 		        return true
 	end
 

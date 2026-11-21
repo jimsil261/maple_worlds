@@ -81,7 +81,9 @@ script LexioGameSession extends Component
 		            return a.seat < b.seat
 		        end)
 		        local orderedDeltas = _LexioRules:CalculateScoreDeltas(standings)
-		        self.scoreLedger = _LexioRules:CreateScoreLedger(self.playerCount)
+		        if self.scoreLedger == nil or #self.scoreLedger ~= self.playerCount then
+		            self.scoreLedger = _LexioRules:CreateScoreLedger(self.playerCount)
+		        end
 		        self.scoreDeltas = {}
 		        if orderedDeltas == nil then return end
 		        for index, entry in ipairs(standings) do self.scoreDeltas[entry.seat] = orderedDeltas[index] end
@@ -89,14 +91,7 @@ script LexioGameSession extends Component
 		        local total = 0
 		        for seat = 1, self.playerCount do total = total + (self.scoreDeltas[seat] or 0) end
 		        log("[VRF] SCORE SETTLED winner=" .. tostring(self.winnerIndex) .. " delta_sum=" .. tostring(total))
-		        if self.persistentRewardsEligible and not self.persistentRewardSettled then
-		            self.persistentRewardSettled = true
-		            _LexioRewardService:GrantMatchRewards(self.userIds, self.winnerIndex)
-		        elseif self.persistentRewardSettled then
-		            log("[VRF] REWARD SKIP reason=already_settled players=" .. tostring(#self.userIds))
-		        else
-		            log("[VRF] REWARD SKIP reason=ineligible_session players=" .. tostring(#self.userIds))
-		        end
+		        -- Match chips are room-local; the retired cosmetic reward system is not paid here.
 	end
 
 	@ExecSpace("ServerOnly")
@@ -175,7 +170,7 @@ script LexioGameSession extends Component
 
 	@ExecSpace("ServerOnly")
 	method table StartGame(table registeredUserIds, table fixedDeck)
-		        -- Starts one three-player game using server RNG or an injected deterministic deck.
+		        -- Deals exactly twelve tiles per player for every supported player count.
 		        if self.phase ~= "WaitingPlayers" then return self:Reject("phase") end
 		        if registeredUserIds == nil or #registeredUserIds < 3 or #registeredUserIds > 5 then return self:Reject("player_count") end
 		        local playerCount = #registeredUserIds
@@ -187,15 +182,19 @@ script LexioGameSession extends Component
 		        local deck = nil
 		        if fixedDeck ~= nil then deck = self:CopyDeck(fixedDeck) else deck = self:ShuffleDeck(self:BuildOrderedDeck(playerCount)) end
 		        if not self:ValidateDeck(deck, playerCount) then return self:Reject("invalid_deck") end
+		        local dealtCount = playerCount * 12
+		        -- This project uses complete 36/48/60-tile decks; every tile is dealt.
 		
 		        local newHands = {}
 		        for index = 1, playerCount do newHands[index] = {} end
 		        local newTilesById = {}
 		        for deckIndex, tile in ipairs(deck) do
+		            if deckIndex > dealtCount then break end
 		            local playerIndex = ((deckIndex - 1) % playerCount) + 1
 		            table.insert(newHands[playerIndex], tile)
 		            newTilesById[tile.id] = tile
 		        end
+		        log("[VRF] DEAL players=" .. tostring(playerCount) .. " each=12 unused=" .. tostring(#deck - dealtCount))
 		        local leaderIndex = _LexioRules:FindInitialLeader(newHands)
 		        if leaderIndex == 0 then return self:Reject("leader_not_found") end
 		

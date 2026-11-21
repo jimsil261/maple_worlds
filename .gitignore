@@ -18,3 +18,15 @@ Thumbs.db
 # Python cache
 __pycache__/
 *.pyc
+
+# Local validation and generated previews
+Temp/
+tmp/
+Mislocated/
+**/node_modules/
+.mswai/
+output/*
+!output/pdf/
+output/pdf/*
+!output/pdf/김재렬_메이플렉시오_포트폴리오.pdf
+!output/pdf/김재렬_서버개발_포트폴리오_베타출시본.pdf

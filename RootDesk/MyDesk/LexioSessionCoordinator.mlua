@@ -59,6 +59,21 @@ script LexioSessionCoordinator extends Component
 
 	@ExecSpace("ServerOnly")
 	method void OnBeginPlay()
+		if self._T.BootInitialized then return end
+		self._T.BootInitialized = true
+		        -- Reset the turn clock for each Maker play session.
+		        self._T.FinishedWithAI = false
+		        self._T.ClockVersion = nil
+		        self._T.TurnSecondsRemaining = 0
+		        self._T.TurnCountdown = 0
+		        self._T.DisconnectedSeconds = {}
+		        self._T.DisconnectGeneration = {}
+		        self._T.AIBySeat = {}
+		        self._T.KickedBySeat = {}
+		        self._T.DisconnectVotes = {}
+		        self._T.DisconnectBallotVotes = {}
+		        self._T.DisconnectBallotGeneration = 0
+		        self._T.SeatNames = {}
 		        self.SessionEntity = self.Entity
 		        if self.Entity.CurrentMapName == "lexio_session_tests" then
 		            local runner = self.Entity.Parent
@@ -102,6 +117,10 @@ script LexioSessionCoordinator extends Component
 
 	@ExecSpace("ServerOnly")
 	method void OnUpdate(number delta)
+		        -- Advance the server-owned turn clock independently of client input.
+		        self:RecycleAbandonedGame()
+		        self:UpdateConnections(delta)
+		        self:UpdateTurnClock(delta)
 		        if self.startCountdownActive then
 		            if not self:CanStartFromSeats() then
 		                self:CancelStartCountdown("seat_changed")
@@ -150,9 +169,10 @@ script LexioSessionCoordinator extends Component
 	method void BeginFinishedDecision()
 		        local session = self.SessionEntity:GetComponent("script.LexioGameSession")
 		        if session == nil or session.phase ~= "Finished" or not self.finishedResultsPublished then return end
+		        self._T.FinishedWithAI = self:HasAISeat()
 		        self.finishGeneration = self.finishGeneration + 1
-		        self.finishCountdown = 10
-		        self.finishCountdownSecond = 10
+		        self.finishCountdown = 30
+		        self.finishCountdownSecond = 30
 		        self.finishDecisionByUserId = {}
 		        self.finishReturnStarted = false
 		        self.finishDecisionActive = true
@@ -160,6 +180,171 @@ script LexioSessionCoordinator extends Component
 		            self.winsBySeat[session.winnerIndex] = (self.winsBySeat[session.winnerIndex] or 0) + 1
 		        end
 		        log("[LexioSessionCoordinator] FINISHED generation=" .. tostring(self.finishGeneration) .. " winner=" .. tostring(session.winnerIndex))
+	end
+
+	@ExecSpace("ServerOnly")
+	method void UpdateTurnClock(number delta)
+		        -- Reset for each committed turn; publish seconds and resolve expiry on the server.
+		        if self.SessionEntity == nil then return end
+		        local session = self.SessionEntity:GetComponent("script.LexioGameSession")
+		        if session == nil then return end
+		        if session.phase ~= "Playing" and session.phase ~= "LeadPending" then
+		            self._T.ClockVersion = nil
+		            self._T.TurnSecondsRemaining = 0
+		            return
+		        end
+		        if self:HasPendingDisconnect() then return end
+		        if self._T.ClockVersion ~= session.stateVersion then
+		            self._T.ClockVersion = session.stateVersion
+		            self._T.TurnCountdown = self._T.AIBySeat[session.currentPlayerIndex] and 1.5 or 15
+		            self._T.TurnSecondsRemaining = math.ceil(self._T.TurnCountdown)
+		            log("[VRF] TURN CLOCK start seat=" .. tostring(session.currentPlayerIndex) .. " seconds=15")
+		            self:BroadcastSnapshots()
+		            return
+		        end
+		        if self._T.DisconnectedSeconds[session.currentPlayerIndex] ~= nil and not self._T.AIBySeat[session.currentPlayerIndex] then return end
+		        if self._T.AIBySeat[session.currentPlayerIndex] then self._T.TurnCountdown = math.min(self._T.TurnCountdown, 1.5) end
+		        self._T.TurnCountdown = math.max(0, self._T.TurnCountdown - delta)
+		        local seconds = math.ceil(self._T.TurnCountdown)
+		        if seconds ~= self._T.TurnSecondsRemaining then
+		            self._T.TurnSecondsRemaining = seconds
+		            self:BroadcastSnapshots()
+		        end
+		        if seconds > 0 then return end
+		        local seat = session.currentPlayerIndex
+		        local userId = session.userIds[seat]
+		        if userId == nil then return end
+		        local result = nil
+		        if session.phase == "Playing" and session.currentPlay ~= nil and seat ~= session.winningPlayerIndex then
+		            local tileIds = self._T.AIBySeat[seat] and self:FindAIPlay(seat) or nil
+		            if tileIds ~= nil then
+		                result = session:SubmitForUser(userId, tileIds, session.stateVersion)
+		            else
+		                result = session:PassForUser(userId, session.stateVersion)
+		            end
+		        else
+		            -- A leading player cannot pass: submit the weakest legal single.
+		            local weakest = nil
+		            for _, tile in ipairs(session.hands[seat] or {}) do
+		                local strength = tile.rank <= 2 and tile.rank + 15 or tile.rank
+		                local prior = weakest ~= nil and (weakest.rank <= 2 and weakest.rank + 15 or weakest.rank) or 99
+		                if weakest == nil or strength < prior or (strength == prior and tile.suit < weakest.suit) then weakest = tile end
+		            end
+		            if weakest ~= nil then result = session:SubmitForUser(userId, { weakest.id }, session.stateVersion) end
+		        end
+		        log("[VRF] TURN CLOCK expired seat=" .. tostring(seat) .. " ok=" .. tostring(result ~= nil and result.ok))
+		        if result ~= nil and result.ok then
+		            self._T.ClockVersion = nil
+		            self._T.TurnSecondsRemaining = 15
+		            self:BroadcastSnapshots()
+		        else
+		            self._T.TurnCountdown = 15
+		        end
+	end
+
+	@ExecSpace("ServerOnly")
+	method void MarkDisconnected(string userId)
+		        local seat = self.seatByUserId[userId]
+		        if seat == nil or self._T.KickedBySeat[seat] then return end
+		        local session = self.SessionEntity:GetComponent("script.LexioGameSession")
+		        if session == nil or (session.phase ~= "Playing" and session.phase ~= "LeadPending") then return end
+		        if self._T.DisconnectedSeconds[seat] == nil then
+		            local player = self.playerEntityBySeat[seat]
+		            if player ~= nil and isvalid(player) and player.NameTagComponent ~= nil then self._T.SeatNames[seat] = player.NameTagComponent.Name end
+		            self._T.DisconnectedSeconds[seat] = 0
+		            self._T.DisconnectGeneration[seat] = (self._T.DisconnectGeneration[seat] or 0) + 1
+		            self._T.DisconnectVotes[seat] = {}
+		            local bridge = self.bridgeByUserId[userId]
+		            if bridge ~= nil then bridge.role = "Disconnected" end
+		            self.bridgeByUserId[userId] = nil
+		            self.playerEntityBySeat[seat] = nil
+		            self:ResetDisconnectBallot()
+		            log("[VRF] DISCONNECT vote_pending=true seat=" .. tostring(seat))
+		            self:BroadcastSnapshots()
+		        end
+	end
+
+	@ExecSpace("ServerOnly")
+	method void UpdateConnections(number delta)
+		        local session = self.SessionEntity:GetComponent("script.LexioGameSession")
+		        if session == nil or (session.phase ~= "Playing" and session.phase ~= "LeadPending") then return end
+		        local changed = false
+		        for seat = 1, self.RequiredPlayerCount do
+		            local player = self.playerEntityBySeat[seat]
+		            if self._T.DisconnectedSeconds[seat] == nil and (player == nil or not isvalid(player) or player.CurrentMap ~= self.Entity.CurrentMap) then self:MarkDisconnected(self.userIdBySeat[seat]) end
+		            local elapsed = self._T.DisconnectedSeconds[seat]
+		            if elapsed ~= nil and elapsed < 30 then
+		                local nextElapsed = math.min(30, elapsed + delta)
+		                self._T.DisconnectedSeconds[seat] = nextElapsed
+		                if math.floor(elapsed) ~= math.floor(nextElapsed) then changed = true end
+		                -- AI takeover requires a majority vote; elapsed time never overrides the decision.
+		            end
+		        end
+		        if self:HasPendingDisconnect() then
+		            local prior = math.ceil(self._T.DisconnectBallotRemaining or 30)
+		            self._T.DisconnectBallotRemaining = math.max(0, (self._T.DisconnectBallotRemaining or 30) - delta)
+		            if prior ~= math.ceil(self._T.DisconnectBallotRemaining) then changed = true end
+		            if self._T.DisconnectBallotRemaining <= 0 then
+		                self:ResolveDisconnectBallotTimeout()
+		                return
+		            end
+		        end
+		        if changed then self:BroadcastSnapshots() end
+	end
+
+	@ExecSpace("ServerOnly")
+	method void EnableSeatAI(integer seat, string reason)
+		        self._T.AIBySeat[seat] = true
+		        local session = self.SessionEntity:GetComponent("script.LexioGameSession")
+		        if session ~= nil then session:SetPersistentRewardsEligible(false, "ai_substitution") end
+		        log("[VRF] SEAT AI enabled=true seat=" .. tostring(seat) .. " reason=" .. reason)
+	end
+
+	method integer GetDisconnectVoteThreshold(integer targetSeat)
+		return self:GetDisconnectBallotCounts().required
+	end
+
+	@ExecSpace("ServerOnly")
+	method table VoteDisconnectedSeat(string userId, Entity playerEntity, integer targetSeat, integer generation, boolean agree)
+		local session = self.SessionEntity:GetComponent("script.LexioGameSession")
+		if session == nil or (session.phase ~= "Playing" and session.phase ~= "LeadPending") then return { ok = false, reason = "phase" } end
+		local voterSeat = self.seatByUserId[userId]
+		if voterSeat == nil or voterSeat == targetSeat or self.playerEntityBySeat[voterSeat] ~= playerEntity then return { ok = false, reason = "voter" } end
+		if playerEntity == nil or not isvalid(playerEntity) or playerEntity.CurrentMap ~= self.Entity.CurrentMap or playerEntity.PlayerComponent == nil or playerEntity.PlayerComponent.UserId ~= userId then return { ok = false, reason = "voter" } end
+		if targetSeat < 1 or targetSeat > self.RequiredPlayerCount or self._T.KickedBySeat[targetSeat] then return { ok = false, reason = "target" } end
+		if generation ~= self._T.DisconnectGeneration[targetSeat] or self._T.DisconnectedSeconds[targetSeat] == nil then return { ok = false, reason = "stale_disconnect" } end
+		if self._T.AIBySeat[targetSeat] then return { ok = true, reason = "already_resolved" } end
+		self._T.DisconnectBallotVotes = self._T.DisconnectBallotVotes or {}
+		if self._T.DisconnectBallotVotes[userId] ~= nil then return { ok = true, reason = "duplicate" } end
+		self._T.DisconnectBallotVotes[userId] = agree ~= false
+		local votes = self:GetDisconnectBallotCounts()
+		log("[VRF] AI CONTINUE VOTE yes=" .. tostring(votes.yes) .. " no=" .. tostring(votes.no) .. " required=" .. tostring(votes.required))
+		if votes.yes >= votes.required then
+			for seat = 1, self.RequiredPlayerCount do
+				if self._T.DisconnectedSeconds[seat] ~= nil and not self._T.KickedBySeat[seat] and not self._T.AIBySeat[seat] then self:EnableSeatAI(seat, "continuation_vote") end
+			end
+			self:BroadcastSnapshots()
+		elseif votes.total - votes.no < votes.required then
+			self:AbortRoomForRejectedAI()
+		else self:BroadcastSnapshots() end
+		return { ok = true, reason = "" }
+	end
+
+	@ExecSpace("ServerOnly")
+	method boolean ReconnectTablePlayer(string userId, Entity playerEntity)
+		        local seat = self.seatByUserId[userId]
+		        if seat == nil or self._T.KickedBySeat[seat] or self._T.DisconnectedSeconds[seat] == nil then return false end
+		        if playerEntity == nil or not isvalid(playerEntity) or playerEntity.PlayerComponent == nil or playerEntity.PlayerComponent.UserId ~= userId or playerEntity.CurrentMap ~= self.Entity.CurrentMap then return false end
+		        self.playerEntityBySeat[seat] = playerEntity
+		        self._T.DisconnectedSeconds[seat] = nil
+		        self._T.AIBySeat[seat] = nil
+		        self._T.DisconnectVotes[seat] = nil
+		        self._T.DisconnectGeneration[seat] = (self._T.DisconnectGeneration[seat] or 0) + 1
+		        if self._T.SuspendedPlayers ~= nil then self._T.SuspendedPlayers[seat] = nil end
+		        self:ResetDisconnectBallot()
+		        self:AttachBridge(playerEntity, userId, seat, "Player")
+		        log("[VRF] RECONNECT restored seat=" .. tostring(seat))
+		        return true
 	end
 
 	@ExecSpace("ServerOnly")
@@ -171,6 +356,7 @@ script LexioSessionCoordinator extends Component
 		        if seat == nil or self.playerEntityBySeat[seat] ~= playerEntity then return { ok = false, reason = "player_mismatch" } end
 		        if playerEntity.PlayerComponent == nil or playerEntity.PlayerComponent.UserId ~= userId then return { ok = false, reason = "player_mismatch" } end
 		        if decision ~= "Replay" and decision ~= "Exit" then return { ok = false, reason = "invalid_decision" } end
+		        if decision == "Replay" and self._T.FinishedWithAI then return { ok = false, reason = "ai_match_finished" } end
 		        if self.finishDecisionByUserId[userId] ~= nil then return { ok = true, reason = "duplicate" } end
 		        self.finishDecisionByUserId[userId] = decision
 		        log("[LexioSessionCoordinator] FINISH DECISION userId=" .. userId .. " decision=" .. decision .. " generation=" .. tostring(generation))
@@ -186,10 +372,13 @@ script LexioSessionCoordinator extends Component
 
 	@ExecSpace("ServerOnly")
 	method void StartReplayRound()
+		if self._T.FinishedWithAI or self:HasAISeat() then return end
 		        local session = self.SessionEntity:GetComponent("script.LexioGameSession")
 		        if session == nil or session.phase ~= "Finished" or self.finishReturnStarted then return end
 		        local users = self:BuildRequiredUsers()
 		        if #users ~= self.RequiredPlayerCount then self:ReturnAllFinishedPlayers("missing_player") return end
+		        local previousScores = {}
+		        for seat = 1, self.RequiredPlayerCount do previousScores[seat] = session.scoreLedger[seat] or 64 end
 		        session:ResetSession()
 		        self.startRequested = true
 		        self.finishedResultsPublished = false
@@ -199,13 +388,21 @@ script LexioSessionCoordinator extends Component
 		        self.finishDecisionActive = false
 		        local result = session:StartGame(users, nil)
 		        log("[LexioSessionCoordinator] REPLAY START generation=" .. tostring(self.finishGeneration) .. " ok=" .. tostring(result.ok) .. " reason=" .. result.reason)
-		        if result.ok then self:BroadcastSnapshots() else self:ReturnAllFinishedPlayers("replay_failed") end
+		        if result.ok then
+		            session.scoreLedger = previousScores
+		            log("[VRF] REPLAY SCORE CARRY players=" .. tostring(#previousScores))
+		            self:BroadcastSnapshots()
+		        else
+		            self:ReturnAllFinishedPlayers("replay_failed")
+		        end
 	end
 
 	@ExecSpace("ServerOnly")
 	method void ReturnAllFinishedPlayers(string reason)
+		        -- Release every player into the static public browser, then recycle the table.
 		        if self.finishReturnStarted then return end
 		        self.finishReturnStarted = true
+		        self.startRequested = false
 		        self.finishDecisionActive = false
 		        local generation = self.finishGeneration
 		        local users = self:BuildRequiredUsers()
@@ -215,10 +412,65 @@ script LexioSessionCoordinator extends Component
 		            local player = players[seat]
 		            local userId = users[seat]
 		            if player ~= nil and isvalid(player) and userId ~= nil and player.PlayerComponent ~= nil and player.PlayerComponent.UserId == userId then
-		                local travel = player:GetComponent("script.LexioTravelBridge")
-		                if travel ~= nil then travel:ReturnFinishedPlayerToLobby(userId, generation) end
+		                self:ReleaseFinishedParticipant(userId, player)
 		            end
 		        end
+		        self:ReleaseDisconnectedSeats()
+		        if next(self.seatByUserId) == nil then
+		            local session = self.SessionEntity:GetComponent("script.LexioGameSession")
+		            if session ~= nil then session:ResetSession() end
+		            self.finishedResultsPublished = false
+		            self.finishCountdown = 0
+		            self._T.ClockVersion = nil
+		            log("[VRF] FINISHED TABLE recycled=true table=" .. self.TableId)
+		        end
+	end
+
+	@ExecSpace("ServerOnly")
+	method void ReleaseDisconnectedSeats()
+		        local session = self.SessionEntity:GetComponent("script.LexioGameSession")
+		        if session == nil or (session.phase ~= "WaitingPlayers" and session.phase ~= "Finished") then return end
+		        local host = self.Entity.CurrentMap:GetChildByName("LexioManualSessionHost")
+		        local registry = host ~= nil and host:GetComponent("script.LexioTableRegistry") or nil
+		        for seat = 1, self.RequiredPlayerCount do
+		            local userId = self.userIdBySeat[seat]
+		            local player = self.playerEntityBySeat[seat]
+		            if userId ~= nil and (player == nil or not isvalid(player) or player.CurrentMap ~= self.Entity.CurrentMap) then
+		                if registry ~= nil then
+		                    if not self._T.KickedBySeat[seat] then
+		                        self:ReleaseFinishedParticipant(userId, registry.playerByUserId[userId])
+		                    end
+		                    registry:ReleaseReplacedSeat(userId, self.TableId, seat)
+		                    if self.seatByUserId[userId] ~= nil then self:RemovePlayer(userId) end
+		                else
+		                    self:RemovePlayer(userId)
+		                end
+		                log("[VRF] DISCONNECTED SEAT released table=" .. self.TableId .. " seat=" .. tostring(seat))
+		            end
+		        end
+	end
+
+	@ExecSpace("ServerOnly")
+	method void RecycleAbandonedGame()
+		        if self.TableId == "" or not self.startRequested or self.SessionEntity == nil then return end
+		        local session = self.SessionEntity:GetComponent("script.LexioGameSession")
+		        if session == nil or (session.phase ~= "Playing" and session.phase ~= "LeadPending") then return end
+		        for seat = 1, self.RequiredPlayerCount do
+		            local player = self.playerEntityBySeat[seat]
+		            if player ~= nil and isvalid(player) and player.CurrentMap == self.Entity.CurrentMap then return end
+		        end
+		        for _, player in pairs(self._T.SuspendedPlayers or {}) do
+		            if player ~= nil and isvalid(player) and player.CurrentMap == self.Entity.CurrentMap then return end
+		        end
+		        -- Nobody can receive a result: release ownership without awarding a fabricated win.
+		        session:ResetSession()
+		        self.startRequested = false
+		        self.finishDecisionActive = false
+		        self.finishedResultsPublished = false
+		        self.finishReturnStarted = true
+		        self._T.ClockVersion = nil
+		        self:ReleaseDisconnectedSeats()
+		        log("[VRF] ABANDONED TABLE recycled=true table=" .. self.TableId)
 	end
 
 	@ExecSpace("ServerOnly")
@@ -257,11 +509,12 @@ script LexioSessionCoordinator extends Component
 	end
 
 	method boolean AreAllPlayersReplaying()
-		        for seat = 1, self.RequiredPlayerCount do
-		            local userId = self.userIdBySeat[seat]
-		            if userId == nil or self.finishDecisionByUserId[userId] ~= "Replay" then return false end
-		        end
-		        return true
+		if self._T.FinishedWithAI or self:HasAISeat() then return false end
+		for seat = 1, self.RequiredPlayerCount do
+			local userId = self.userIdBySeat[seat]
+			if userId == nil or self.finishDecisionByUserId[userId] ~= "Replay" then return false end
+		end
+		return true
 	end
 
 	method table BuildWinsSnapshot()
@@ -284,7 +537,7 @@ script LexioSessionCoordinator extends Component
 		        if bridge == nil then return nil end
 		        bridge:BindServer(self.SessionEntity, self.Entity, playerEntity, userId, seat, role)
 		        self.bridgeByUserId[userId] = bridge
-		
+
 		        -- Test-only controls are runtime-attached on map01 and absent from DefaultPlayer.model.
 		        local controls = playerEntity:GetComponent("script.LexioManualTestControls")
 		        if controls == nil then playerEntity:AddComponent("script.LexioManualTestControls") end
@@ -298,7 +551,7 @@ script LexioSessionCoordinator extends Component
 		        if playerEntity.PlayerComponent.UserId ~= userId then return false end
 		        if playerEntity.CurrentMap ~= self.Entity.CurrentMap then return false end
 		        self.registrationRetryByUserId[userId] = nil
-		
+
 		        local existingSeat = self.seatByUserId[userId]
 		        if existingSeat ~= nil then
 		            local existingBridge = self.bridgeByUserId[userId]
@@ -307,7 +560,7 @@ script LexioSessionCoordinator extends Component
 		            self:AttachBridge(playerEntity, userId, existingSeat, "Player")
 		            return true
 		        end
-		
+
 		        local session = self.SessionEntity:GetComponent("script.LexioGameSession")
 		        local seat = 0
 		        if session ~= nil and session.phase == "WaitingPlayers" and not self.startRequested then seat = self:FindOpenSeat() end
@@ -317,7 +570,7 @@ script LexioSessionCoordinator extends Component
 		            log("[LexioSessionCoordinator] SPECTATOR userId=" .. userId)
 		            return true
 		        end
-		
+
 		        self.userIdBySeat[seat] = userId
 		        self.seatByUserId[userId] = seat
 		        self.playerEntityBySeat[seat] = playerEntity
@@ -350,6 +603,11 @@ script LexioSessionCoordinator extends Component
 		        local owner = self.userIdBySeat[seatIndex]
 		        if owner ~= nil and owner ~= userId then return false end
 		        self.userIdBySeat[seatIndex] = userId
+		        self._T.DisconnectedSeconds[seatIndex] = nil
+		        self._T.AIBySeat[seatIndex] = nil
+		        self._T.KickedBySeat[seatIndex] = nil
+		        self._T.DisconnectVotes[seatIndex] = nil
+		        self._T.SeatNames[seatIndex] = playerEntity.NameTagComponent ~= nil and playerEntity.NameTagComponent.Name or playerEntity.Name
 		        self.seatByUserId[userId] = seatIndex
 		        self.playerEntityBySeat[seatIndex] = playerEntity
 		        self.readyBySeat[seatIndex] = false
@@ -368,10 +626,18 @@ script LexioSessionCoordinator extends Component
 		        if self.TableId ~= tableId then return false end
 		        local seat = self.seatByUserId[userId]
 		        if seat == nil then return true end
-		        if self.playerEntityBySeat[seat] ~= playerEntity then return false end
+		        if self.playerEntityBySeat[seat] ~= playerEntity and self._T.DisconnectedSeconds[seat] == nil then return false end
 		        local session = self.SessionEntity:GetComponent("script.LexioGameSession")
 		        if session ~= nil and (session.phase == "Playing" or session.phase == "LeadPending") then return false end
 		        self:RemovePlayer(userId)
+		        if next(self.seatByUserId) == nil and session ~= nil and session.phase == "Finished" then
+		            session:ResetSession()
+		            self.startRequested = false
+		            self.finishedResultsPublished = false
+		            self.finishDecisionActive = false
+		            self.finishCountdown = 0
+		            self._T.ClockVersion = nil
+		        end
 		        self:BroadcastSnapshots()
 		        return true
 	end
@@ -589,6 +855,7 @@ script LexioSessionCoordinator extends Component
 
 	@ExecSpace("ServerOnly")
 	method void CompleteStartCountdown()
+		        -- Clear the previous finished-room lifecycle before starting a newly occupied table.
 		        if not self.startCountdownActive or not self:CanStartFromSeats() then return end
 		        local session = self.SessionEntity:GetComponent("script.LexioGameSession")
 		        if session == nil then return end
@@ -598,6 +865,9 @@ script LexioSessionCoordinator extends Component
 		        -- Lock before invoking StartGame so the countdown cannot complete twice.
 		        self.startRequested = true
 		        local users = self:BuildRequiredUsers()
+		        self.finishReturnStarted = false
+		        self.finishedResultsPublished = false
+		        self.finishDecisionActive = false
 		        local result = session:StartGame(users, nil)
 		        log("[LexioSessionCoordinator] START invoked ok=" .. tostring(result.ok) .. " reason=" .. result.reason)
 		        if result.ok then self:BroadcastSnapshots() end
@@ -608,7 +878,7 @@ script LexioSessionCoordinator extends Component
 		        local session = self.SessionEntity:GetComponent("script.LexioGameSession")
 		        if session ~= nil and session.phase == "Finished" then
 		            self.finishedResultsPublished = true
-		            if not self.finishDecisionActive then self:BeginFinishedDecision() end
+		            if not self.finishDecisionActive and not self.finishReturnStarted then self:BeginFinishedDecision() end
 		        end
 		        for _, bridge in pairs(self.bridgeByUserId) do
 		            if bridge ~= nil and isvalid(bridge.Entity) then bridge:PushCurrentSnapshot() end
@@ -650,12 +920,41 @@ script LexioSessionCoordinator extends Component
 		            end
 		        end
 		        snapshot.seatNames = seatNames
+		        snapshot.disconnectedSeconds = {}
+		        snapshot.disconnectGenerations = {}
+		        snapshot.disconnectVoteCounts = {}
+		        snapshot.disconnectNoCounts = {}
+		        snapshot.disconnectVoterCount = self:GetDisconnectBallotCounts().total
+		        snapshot.disconnectVoteSecondsRemaining = math.ceil(self._T.DisconnectBallotRemaining or 30)
+		        snapshot.tableId = self.TableId
+		        snapshot.disconnectVoteThresholds = {}
+		        snapshot.aiBySeat = {}
+		        snapshot.kickedBySeat = {}
+		        for seat = 1, self.RequiredPlayerCount do
+		            if seatNames[seat] == nil then seatNames[seat] = self._T.SeatNames[seat] end
+		            snapshot.disconnectedSeconds[seat] = self._T.DisconnectedSeconds[seat] ~= nil and math.floor(self._T.DisconnectedSeconds[seat]) or -1
+		            snapshot.disconnectGenerations[seat] = self._T.DisconnectGeneration[seat] or 0
+		            snapshot.aiBySeat[seat] = self._T.AIBySeat[seat] == true
+		            snapshot.kickedBySeat[seat] = self._T.KickedBySeat[seat] == true
+		            snapshot.disconnectVoteThresholds[seat] = self:GetDisconnectVoteThreshold(seat)
+		            local ballot = self:GetDisconnectBallotCounts()
+		            snapshot.disconnectVoteCounts[seat] = ballot.yes
+		            snapshot.disconnectNoCounts[seat] = ballot.no
+		        end
 		        snapshot.seatUserIds = seatUserIds
 		        snapshot.hasCurrentPlay = session.currentPlay ~= nil
+		        snapshot.turnSecondsRemaining = self._T.TurnSecondsRemaining or 15
+		        snapshot.connectionPaused = self:HasPendingDisconnect()
+		        snapshot.finishedWithAI = self._T.FinishedWithAI == true
 		        snapshot.finishGeneration = self.finishGeneration
 		        snapshot.finishCountdown = math.ceil(self.finishCountdown)
 		        snapshot.finishReplayCount = 0
-		        for _, decision in pairs(self.finishDecisionByUserId) do if decision == "Replay" then snapshot.finishReplayCount = snapshot.finishReplayCount + 1 end end
+		        snapshot.finishReplayBySeat = {}
+		        for seat = 1, self.RequiredPlayerCount do
+		            local userId = self.userIdBySeat[seat]
+		            snapshot.finishReplayBySeat[seat] = not self._T.FinishedWithAI and userId ~= nil and self.finishDecisionByUserId[userId] == "Replay"
+		        end
+		        for seat = 1, self.RequiredPlayerCount do if snapshot.finishReplayBySeat[seat] then snapshot.finishReplayCount = snapshot.finishReplayCount + 1 end end
 		        snapshot.winsBySeat = self:BuildWinsSnapshot()
 		        snapshot.playerCount = self.RequiredPlayerCount
 		        snapshot.privateRoomCode = self.privateRoomCode
@@ -681,6 +980,189 @@ script LexioSessionCoordinator extends Component
 		        self.registrationRetryByUserId[event.UserId] = nil
 		        self.registrationGenerationByUserId[event.UserId] = (self.registrationGenerationByUserId[event.UserId] or 0) + 1
 		        self:RemovePlayer(event.UserId)
+	end
+
+
+	@ExecSpace("ServerOnly")
+	method boolean HasPendingDisconnect()
+		for seat = 1, self.RequiredPlayerCount do
+			if self._T.DisconnectedSeconds[seat] ~= nil and not self._T.AIBySeat[seat] then return true end
+		end
+		return false
+	end
+
+
+	@ExecSpace("ServerOnly")
+	method table FindAIPlay(integer seat)
+		local session = self.SessionEntity:GetComponent("script.LexioGameSession")
+		if session == nil or session.currentPlayerIndex ~= seat then return nil end
+		local hand = session.hands[seat] or {}
+		local previous = session.phase == "Playing" and session.currentPlay or nil
+		local count = previous ~= nil and previous.count or 1
+		if (count ~= 1 and count ~= 2 and count ~= 3 and count ~= 5) or #hand < count then return nil end
+		local indices = {}
+		for index = 1, count do indices[index] = index end
+		local best = nil
+		local bestIds = nil
+		-- Enumerate only the required size (at most 792 candidates from a twelve-card hand).
+		while true do
+			local selected = {}
+			local ids = {}
+			for index = 1, count do
+				local tile = hand[indices[index]]
+				table.insert(selected, tile)
+				table.insert(ids, tile.id)
+			end
+			local play = _LexioRules:ClassifyPlay(selected, session.playerCount)
+			if play.valid and (previous == nil or _LexioRules:ComparePlays(play, previous) > 0) then
+				if best == nil or _LexioRules:ComparePlays(play, best) < 0 then
+					best = play
+					bestIds = ids
+				end
+			end
+			local cursor = count
+			while cursor >= 1 and indices[cursor] == #hand - count + cursor do cursor = cursor - 1 end
+			if cursor < 1 then break end
+			indices[cursor] = indices[cursor] + 1
+			for index = cursor + 1, count do indices[index] = indices[index - 1] + 1 end
+		end
+		log("[VRF] AI RESPONSE seat=" .. tostring(seat) .. " kind=" .. tostring(best ~= nil and best.kind or "pass"))
+		return bestIds
+	end
+
+
+	@ExecSpace("ServerOnly")
+	method void ResetEmptyTable()
+		local session = self.SessionEntity:GetComponent("script.LexioGameSession")
+		if session ~= nil then session:ResetSession() end
+		self.startRequested = false
+		self:CancelStartCountdown("empty_room")
+		for seat = 1, self.RequiredPlayerCount do
+			local userId = self.userIdBySeat[seat]
+			if userId ~= nil then self:RemovePlayer(userId) end
+			self.winsBySeat[seat] = 0
+		end
+		self.privateRoomCode = ""
+		self.explicitReadyRequired = false
+		self.registrationRetryByUserId = {}
+		self.registrationGenerationByUserId = {}
+		self.finishDecisionByUserId = {}
+		self.finishDecisionActive = false
+		self.finishReturnStarted = false
+		self.finishedResultsPublished = false
+		self.finishCountdown = 0
+		self.finishGeneration = self.finishGeneration + 1
+		self._T.FinishedWithAI = false
+		self._T.DisconnectedSeconds = {}
+		self._T.DisconnectGeneration = {}
+		self._T.DisconnectVotes = {}
+		self._T.DisconnectBallotVotes = {}
+		self._T.DisconnectBallotGeneration = (self._T.DisconnectBallotGeneration or 0) + 1
+		self._T.SuspendedPlayers = {}
+		self._T.AIBySeat = {}
+		self._T.KickedBySeat = {}
+		self._T.SeatNames = {}
+		self._T.ClockVersion = nil
+		self._T.TurnSecondsRemaining = 0
+		self._T.TurnCountdown = 0
+		log("[VRF] EMPTY TABLE reset=true table=" .. self.TableId)
+	end
+
+
+	@ExecSpace("ServerOnly")
+	method boolean HasAISeat()
+		for seat = 1, self.RequiredPlayerCount do if self._T.AIBySeat[seat] then return true end end
+		return false
+	end
+
+
+	@ExecSpace("ServerOnly")
+	method boolean ReleaseFinishedParticipant(string userId, Entity player)
+		local host = self.Entity.CurrentMap:GetChildByName("LexioManualSessionHost")
+		local registry = host ~= nil and host:GetComponent("script.LexioTableRegistry") or nil
+		local seat = registry ~= nil and registry.seatByUserId[userId] or nil
+		if seat == nil or seat.tableId ~= self.TableId then return false end
+		local released = false
+		if registry.privateRoomCodeByUserId[userId] ~= nil then released = registry:LeavePrivateRoom(userId, "finished_return")
+		else released = registry:ReleasePlayer(userId, "finished_return") end
+		if released and player ~= nil and isvalid(player) and player.CurrentMap == self.Entity.CurrentMap then
+			local controls = player:GetComponent("script.LexioManualTestControls")
+			if controls ~= nil then controls:ShowFinishedLobby(userId) end
+		end
+		return released
+	end
+
+
+	@ExecSpace("ServerOnly")
+	method void ResetDisconnectBallot()
+		self._T.DisconnectBallotGeneration = (self._T.DisconnectBallotGeneration or 0) + 1
+		self._T.DisconnectBallotVotes = {}
+		self._T.DisconnectBallotRemaining = 30
+		for seat = 1, self.RequiredPlayerCount do
+			if self._T.DisconnectedSeconds[seat] ~= nil and not self._T.AIBySeat[seat] and not self._T.KickedBySeat[seat] then
+				self._T.DisconnectGeneration[seat] = self._T.DisconnectBallotGeneration
+				self._T.DisconnectVotes[seat] = self._T.DisconnectBallotVotes
+			end
+		end
+	end
+
+	@ExecSpace("ServerOnly")
+	method table GetDisconnectBallotCounts()
+		local total = 0
+		local yes = 0
+		local no = 0
+		for seat = 1, self.RequiredPlayerCount do
+			local player = self.playerEntityBySeat[seat]
+			if not self._T.AIBySeat[seat] and player ~= nil and isvalid(player) and player.CurrentMap == self.Entity.CurrentMap then
+				total = total + 1
+				local vote = (self._T.DisconnectBallotVotes or {})[self.userIdBySeat[seat]]
+				if vote == true then yes = yes + 1 elseif vote == false then no = no + 1 end
+			end
+		end
+		return { total = total, yes = yes, no = no, required = math.floor(total / 2) + 1 }
+	end
+
+	@ExecSpace("ServerOnly")
+	method void AbortRoomForRejectedAI()
+		local host = self.Entity.CurrentMap:GetChildByName("LexioManualSessionHost")
+		local registry = host ~= nil and host:GetComponent("script.LexioTableRegistry") or nil
+		local users = self:BuildRequiredUsers()
+		local players = {}
+		if registry ~= nil then for _, userId in pairs(users) do players[userId] = registry.playerByUserId[userId] end end
+		local session = self.SessionEntity:GetComponent("script.LexioGameSession")
+		if session ~= nil then session:ResetSession() end
+		self.startRequested = false
+		self.finishDecisionActive = false
+		self.finishReturnStarted = true
+		for seat = 1, self.RequiredPlayerCount do
+			local userId = users[seat]
+			if userId ~= nil and registry ~= nil then
+				self:ReleaseFinishedParticipant(userId, players[userId])
+				registry:ReleaseReplacedSeat(userId, self.TableId, seat)
+			end
+		end
+		self:ResetEmptyTable()
+		log("[VRF] AI CONTINUE rejected room_closed=true table=" .. self.TableId)
+	end
+
+
+	@ExecSpace("ServerOnly")
+	method void ResolveDisconnectBallotTimeout()
+		self._T.DisconnectBallotVotes = self._T.DisconnectBallotVotes or {}
+		for seat = 1, self.RequiredPlayerCount do
+			local player = self.playerEntityBySeat[seat]
+			local userId = self.userIdBySeat[seat]
+			if userId ~= nil and not self._T.AIBySeat[seat] and player ~= nil and isvalid(player) and player.CurrentMap == self.Entity.CurrentMap and self._T.DisconnectBallotVotes[userId] == nil then self._T.DisconnectBallotVotes[userId] = false end
+		end
+		local votes = self:GetDisconnectBallotCounts()
+		self._T.LastDisconnectBallotResult = votes
+		log("[VRF] AI VOTE timeout yes=" .. tostring(votes.yes) .. " no=" .. tostring(votes.no) .. " total=" .. tostring(votes.total))
+		if votes.yes >= votes.required then
+			for seat = 1, self.RequiredPlayerCount do
+				if self._T.DisconnectedSeconds[seat] ~= nil and not self._T.KickedBySeat[seat] and not self._T.AIBySeat[seat] then self:EnableSeatAI(seat, "continuation_vote") end
+			end
+			self:BroadcastSnapshots()
+		else self:AbortRoomForRejectedAI() end
 	end
 
 end

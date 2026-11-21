@@ -58,7 +58,7 @@ script LexioGameSessionTests extends Component
 		            self:AssertEqual(playerCount, session.playerCount, prefix .. "session_player_count")
 		            self:AssertEqual(playerCount, session.initialLeaderIndex, prefix .. "cloud_three_owner_leads")
 		            local expectedHandCount = 12
-		            if playerCount == 4 then expectedHandCount = 13 end
+		            if playerCount == 4 then expectedHandCount = 12 end
 		            for seat = 1, playerCount do self:AssertEqual(expectedHandCount, #session.hands[seat], prefix .. "hand_count_seat_" .. tostring(seat)) end
 		            local snapshot = session:BuildPublicSnapshot()
 		            self:AssertEqual(playerCount, snapshot.playerCount, prefix .. "public_player_count")
@@ -237,9 +237,18 @@ script LexioGameSessionTests extends Component
 		        self:AssertEqual(0, #session.scoreLedger, "replay_reset_clears_previous_score")
 		        local replayStart = session:StartGame({ "userA", "userB", "userC" }, self:BuildFixedDeckForLeader(1))
 		        self:AssertTrue(replayStart.ok, "replay_round_starts")
-		        self:AssertEqual(64, session.scoreLedger[1], "replay_round_resets_chip_to_64")
-		        self:AssertEqual(64, session.scoreLedger[2], "replay_round_resets_all_chips")
+		        self:AssertEqual(64, session.scoreLedger[1], "fresh_session_starts_chip_at_64")
+		        self:AssertEqual(64, session.scoreLedger[2], "fresh_session_initializes_all_chips")
 		
+		        -- A continued round settles against its carried balance, not a new 64-point ledger.
+		        session.scoreLedger = { 81, 57, 54 }
+		        session.hands[1] = {}
+		        session.winnerIndex = 1
+		        session:CalculateFinishedScores()
+		        self:AssertEqual(81 + session.scoreDeltas[1], session.scoreLedger[1], "continued_round_preserves_winner_balance")
+		        self:AssertEqual(57 + session.scoreDeltas[2], session.scoreLedger[2], "continued_round_preserves_second_balance")
+		        self:AssertEqual(54 + session.scoreDeltas[3], session.scoreLedger[3], "continued_round_preserves_third_balance")
+		        self:AssertEqual(192, session.scoreLedger[1] + session.scoreLedger[2] + session.scoreLedger[3], "continued_round_preserves_total")
 		        self:RunVariablePlayerCountTests()
 		        self:RunIsolationTests()
 		        log("[LexioGameSessionTests] COMPLETE passed=" .. tostring(self.passedCount) .. " failed=" .. tostring(self.failedCount))

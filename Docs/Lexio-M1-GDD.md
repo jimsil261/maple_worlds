@@ -1,3 +1,5 @@
+> **2026-11-20 재개 안내:** 이 문서는 이전 물리 테이블·이동형 카페 설계 기록입니다. 현재 확정된 정적 UI 방향과 11월 24일 출시 작업은 [베타 출시 작업표](Lexio-Beta-Release.md) 및 [현재 상태](Current-Status.md)를 우선합니다. 아래의 과거 완료·미검증 표시는 최신 릴리즈 검증 결과가 아닙니다.
+
 # Lexio M1 — Multi-table Match Hall GDD
 
 > 🔖 **AI note — resuming?** If you're reading this in a new session to continue/resume this game, load the `msw-planning` skill FIRST and follow its resume flow (read `Lexio-Roadmap.md` + `Archive/As-built.md` → reconstruct state → reconcile) — don't edit or implement straight from this doc. **Before touching any `⬜/🟡/✅` state or running a completion, read the skill's `references/build-management.md` in full.**

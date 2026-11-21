@@ -1,3 +1,5 @@
+> **2026-11-20 재개 안내:** 이 문서는 이전 물리 테이블·이동형 카페 설계 기록입니다. 현재 확정된 정적 UI 방향과 11월 24일 출시 작업은 [베타 출시 작업표](Lexio-Beta-Release.md) 및 [현재 상태](Current-Status.md)를 우선합니다. 아래의 과거 완료·미검증 표시는 최신 릴리즈 검증 결과가 아닙니다.
+
 # Lexio M1 — Phase 2 상세 계획
 
 > 🔖 **AI note — resuming?** 새 세션에서 이어갈 때는 `msw-planning` 스킬의 재개 흐름으로 `Archive/As-built.md`, `Lexio-Roadmap.md`, GDD와 모든 Phase 문서를 먼저 읽는다. **구현 또는 `⬜/🟡/✅` 상태 변경 전에는 `references/build-management.md`를 반드시 전체 읽는다.**

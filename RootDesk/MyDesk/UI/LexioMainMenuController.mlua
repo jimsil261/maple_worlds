@@ -70,7 +70,7 @@ script LexioMainMenuController extends Component
 			self:OpenRules()
 		end)
 		self:ConnectButton(self.ExitButton, function()
-			self:OpenExitGuide()
+			_LexioPlayUIController:SetExitConfirmOpen(true)
 		end)
 		self:ConnectButton(self.RulesCloseButton, function()
 			self:CloseRules()
@@ -304,10 +304,12 @@ script LexioMainMenuController extends Component
 
 	@ExecSpace("ClientOnly")
 	method void OpenAutoMatch()
-		if isvalid(self.MatchPanel) then self.MatchPanel.Enable = true end
-		log("[VRF] LexioMainMenu autoMatchOpened=true")
+		local player = _UserService.LocalPlayer
+		local controls = player ~= nil and player:GetComponent("script.LexioManualTestControls") or nil
+		if controls == nil then log_warning("[VRF] QUICK MATCH controls_unavailable") return end
+		controls:OpenAutoQueueMenu()
+		log("[VRF] QUICK MATCH menu requested=true")
 	end
-
 	@ExecSpace("ClientOnly")
 	method void OpenHandGuide()
 		local guideGroup = _EntityService:GetEntityByPath("/ui/LexioMainMenu")
@@ -340,7 +342,7 @@ script LexioMainMenuController extends Component
 		-- 여백 없는 9-slice 패널로 교체해 RectSize 전체를 실제 표시 영역으로 사용한다.
 		if self.HandGuide.SpriteGUIRendererComponent ~= nil then
 			self.HandGuide.SpriteGUIRendererComponent.ImageRUID = "fbf4da2cad8e46599e95186e8ca82b54"
-			self.HandGuide.SpriteGUIRendererComponent.Type = 1
+			self.HandGuide.SpriteGUIRendererComponent.Type = ImageType.Sliced
 			self.HandGuide.SpriteGUIRendererComponent.Color = Color(0.78, 0.62, 0.82, 1)
 		end
 		local title = self.HandGuide:GetChildByName("Title")
@@ -380,7 +382,7 @@ script LexioMainMenuController extends Component
 				row.UITransformComponent.anchoredPosition = Vector2(column == 1 and -690 or 145, positionY)
 				row.UITransformComponent.RectSize = Vector2(300, 132)
 				row.TextGUIRendererComponent.FontSize = 27
-				row.TextGUIRendererComponent.HorizontalAlignment = 1
+				row.TextGUIRendererComponent.HorizontalAlignment = TextHorizontalAlignmentOption.Left
 				for cardIndex = 1, 5 do
 					local card = row:GetChildByName("Card" .. tostring(cardIndex))
 					if card ~= nil then
@@ -436,7 +438,7 @@ script LexioMainMenuController extends Component
 		end
 		for _, item in ipairs(self._T.Connections) do
 			if isvalid(item.entity) then
-				item.entity:DisconnectEvent(item.connection)
+				item.entity:DisconnectEvent(ButtonClickEvent, item.connection)
 			end
 		end
 		self._T.Connections = {}

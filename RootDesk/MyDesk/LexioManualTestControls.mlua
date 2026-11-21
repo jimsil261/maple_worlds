@@ -39,6 +39,37 @@ script LexioManualTestControls extends Component
 	end
 
 	@ExecSpace("ClientOnly")
+	method void OnUpdate(number delta)
+		if _UserService.LocalPlayer ~= self.Entity or self:IsSeated() or self._T.ReconnectOnly == true or not self:IsInLexioGameRoom() then return end
+		self._T.ResumeElapsed = (self._T.ResumeElapsed or 0) + delta
+		if self._T.ResumeElapsed < 2 then return end
+		self._T.ResumeElapsed = 0
+		self:RequestResumeGame(false)
+	end
+
+	@ExecSpace("Server")
+	method void RequestResumeGame(boolean explicitRequest)
+		if self.Entity.PlayerComponent == nil or self.Entity.PlayerComponent.UserId ~= senderUserId then return end
+		local map = self.Entity.CurrentMap
+		local host = map ~= nil and map:GetChildByName("LexioManualSessionHost") or nil
+		local registry = host ~= nil and host:GetComponent("script.LexioTableRegistry") or nil
+		local accepted = registry ~= nil and registry:ReconnectPlayer(senderUserId, self.Entity)
+		if not accepted and explicitRequest then self:ShowFinishedLobby(senderUserId) end
+	end
+
+	@ExecSpace("Client")
+	method void ApplyResumedGame(table roomSnapshot, string chairName)
+		self._T.ReconnectOnly = false
+		self._T.IsSeated = true
+		self._T.IsQueued = false
+		self._T.SeatChairName = chairName
+		self._T.PrivateRoomSnapshot = roomSnapshot
+		self._T.PrivateRoomError = ""
+		_LexioPlayUIController:SetStaticLobbyOpen(true)
+		log("[VRF] RECONNECT UI restored=true")
+	end
+
+	@ExecSpace("ClientOnly")
 	method boolean IsInLexioGameRoom()
 		        if self.Entity.CurrentMap == nil then return false end
 		        if self.Entity.CurrentMapName == "map01" then return true end
@@ -59,9 +90,10 @@ script LexioManualTestControls extends Component
 			log_warning("[VRF] ROOM CHAT rejected missing_seat user=" .. senderUserId)
 			return
 		end
+		message = self:FilterRoomChat(message)
 		self._T.LastRoomChatTime = now
 		log("[VRF] ROOM CHAT send table=" .. seat.tableId .. " user=" .. senderUserId)
-		local nickname = self.Entity.NameTagComponent ~= nil and self.Entity.NameTagComponent.Name or "플레이어"
+		local nickname = self:FilterRoomChat(self.Entity.NameTagComponent ~= nil and self.Entity.NameTagComponent.Name or "플레이어")
 		for userId, memberSeat in pairs(registry.seatByUserId) do
 			if memberSeat.tableId == seat.tableId then
 				local player = registry.playerByUserId[userId]
@@ -95,6 +127,7 @@ script LexioManualTestControls extends Component
 	@ExecSpace("ClientOnly")
 	method void OpenAutoQueueMenu()
 		        if not self:IsInLexioGameRoom() or self:IsSeated() or self._T.IsQueued then return end
+		        self._T.QueueError = ""
 		        self._T.MatchMenuOpen = true
 		        log("[VRF] MATCH SIZE MENU open=true")
 	end
@@ -103,6 +136,7 @@ script LexioManualTestControls extends Component
 	method void ChooseAutoQueueSize(integer required)
 		        if required ~= 0 and required ~= 3 and required ~= 4 and required ~= 5 then return end
 		        if not self:IsInLexioGameRoom() or self:IsSeated() or self._T.IsQueued then return end
+		        self._T.QueueError = ""
 		        self._T.MatchMenuOpen = false
 		        self._T.QueueRequired = required
 		        self:RequestAutoQueue(true, required)
@@ -220,7 +254,7 @@ script LexioManualTestControls extends Component
 		        self._T.PrivateRoomError = accepted and "" or reason
 		        if accepted and snapshot ~= nil then _LexioPlayUIController:SetCreatePopupVisible(false) end
 		        if accepted then self._T.PrivateRoomSnapshot = snapshot end
-		        if snapshot == nil and accepted then self._T.PrivateRoomSnapshot = nil end
+		        if snapshot == nil and accepted then self:ClearRoomClientState() end
 		        log("[VRF] PRIVATE ROOM CLIENT accepted=" .. tostring(accepted) .. " reason=" .. tostring(reason) .. " code=" .. tostring(snapshot ~= nil and snapshot.code or ""))
 	end
 
@@ -302,17 +336,23 @@ script LexioManualTestControls extends Component
 
 	@ExecSpace("Server")
 	method void RequestAutoQueue(boolean join, integer required)
-		        if self.Entity.PlayerComponent == nil or self.Entity.PlayerComponent.UserId ~= senderUserId then return end
-		        if required ~= 0 and required ~= 3 and required ~= 4 and required ~= 5 then return end
-		        local host = self.Entity.CurrentMap:GetChildByName("LexioManualSessionHost")
-		        local registry = host ~= nil and host:GetComponent("script.LexioTableRegistry") or nil
-		        if registry == nil then return end
-		        local accepted = join and registry:JoinQueue(senderUserId, self.Entity, required) or registry:CancelQueue(senderUserId)
-		        if accepted and not join then self:ApplyQueueState(false, 0, required) end
+		if self.Entity.PlayerComponent == nil or self.Entity.PlayerComponent.UserId ~= senderUserId then return end
+		if required ~= 0 and required ~= 3 and required ~= 4 and required ~= 5 then return end
+		local map = self.Entity.CurrentMap
+		local host = map ~= nil and map:GetChildByName("LexioManualSessionHost") or nil
+		local registry = host ~= nil and host:GetComponent("script.LexioTableRegistry") or nil
+		if registry == nil then self:ApplyQueueError("registry_unavailable", senderUserId) return end
+		local accepted = false
+		if join then accepted = registry:JoinQueue(senderUserId, self.Entity, required)
+		else accepted = registry:CancelQueue(senderUserId) end
+		if not accepted then
+			self:ApplyQueueError(registry.seatByUserId[senderUserId] ~= nil and "already_in_room" or "queue_rejected", senderUserId)
+		elseif not join then self:ApplyQueueState(false, 0, required) end
 	end
 
 	@ExecSpace("Client")
 	method void ApplyQueueState(boolean queued, integer position, integer required)
+		        self._T.QueueError = ""
 		        self._T.IsQueued = queued
 		        self._T.QueuePosition = position
 		        self._T.QueueRequired = required
@@ -357,6 +397,18 @@ script LexioManualTestControls extends Component
 		        self:ForceStandForLobby()
 	end
 
+	@ExecSpace("Client")
+	method void ShowFinishedLobby()
+		        -- Discard the finished room view and open the public room browser without map travel.
+		        self:ClearRoomClientState()
+		        _LexioPlayUIController:SetStaticLobbyOpen(true)
+		        local entity = _EntityService:GetEntityByPath("/ui/LexioMainMenu/Controller")
+		        local menu = entity ~= nil and entity:GetComponent("script.LexioMainMenuController") or nil
+		        if menu ~= nil then menu:OpenLobby() end
+		        self:RefreshPrivateRooms()
+		        log("[VRF] FINISHED LOBBY browserOpened=true")
+	end
+
 	@ExecSpace("ClientOnly")
 	method void ToggleSeat()
 		        if self.Entity.CurrentMapName ~= "map01" then return end
@@ -364,7 +416,7 @@ script LexioManualTestControls extends Component
 		            self:RequestReleaseSeat("key_x")
 		            return
 		        end
-		
+
 		        local nearestChair = nil
 		        local nearestTableId = ""
 		        local nearestSeatIndex = 0
@@ -425,6 +477,11 @@ script LexioManualTestControls extends Component
 		        self._T.IsSeated = seated
 		        self._T.SeatChairName = seated and chairName or ""
 		        if seated then
+		            if string.sub(chairName, 1, 13) == "LexioSession_" then
+		                if controller ~= nil then controller.Enable = false end
+		                log("[VRF] STATIC SEAT assigned=" .. chairName)
+		                return
+		            end
 		            local chair = _EntityService:GetEntityByPath("/maps/map01/" .. chairName)
 		            if chair == nil then return end
 		            local chairPosition = chair.TransformComponent.WorldPosition
@@ -672,6 +729,140 @@ script LexioManualTestControls extends Component
 		        end
 		        if event.key == KeyboardKey.X then self:ToggleSeat() return end
 		        if event.key == KeyboardKey.Q then self:ToggleAutoQueue() end
+	end
+
+
+	@ExecSpace("Server")
+	method void RequestSuspendGame()
+		if self.Entity.PlayerComponent == nil or self.Entity.PlayerComponent.UserId ~= senderUserId then return end
+		local map = self.Entity.CurrentMap
+		local host = map ~= nil and map:GetChildByName("LexioManualSessionHost") or nil
+		local registry = host ~= nil and host:GetComponent("script.LexioTableRegistry") or nil
+		local seat = registry ~= nil and registry.seatByUserId[senderUserId] or nil
+		local coordinator = seat ~= nil and registry:GetTableCoordinator(seat.tableId) or nil
+		if coordinator == nil or coordinator.playerEntityBySeat[seat.seatIndex] ~= self.Entity then return end
+		local session = coordinator.SessionEntity:GetComponent("script.LexioGameSession")
+		if session == nil or (session.phase ~= "Playing" and session.phase ~= "LeadPending") then return end
+		coordinator._T.SuspendedPlayers = coordinator._T.SuspendedPlayers or {}
+		coordinator._T.SuspendedPlayers[seat.seatIndex] = self.Entity
+		coordinator:MarkDisconnected(senderUserId)
+		self:ShowReconnectOnly(senderUserId)
+	end
+
+	@ExecSpace("Client")
+	method void ShowReconnectOnly()
+		self._T.ReconnectOnly = true
+		self._T.IsSeated = false
+		self._T.MatchMenuOpen = false
+		self._T.ResumeElapsed = 0
+		log("[VRF] RECONNECT SCREEN opened=true")
+	end
+
+
+	@ExecSpace("Server")
+	method void RequestAbandonGame()
+		if self.Entity.PlayerComponent == nil or self.Entity.PlayerComponent.UserId ~= senderUserId then return end
+		local map = self.Entity.CurrentMap
+		local host = map ~= nil and map:GetChildByName("LexioManualSessionHost") or nil
+		local registry = host ~= nil and host:GetComponent("script.LexioTableRegistry") or nil
+		local seat = registry ~= nil and registry.seatByUserId[senderUserId] or nil
+		if seat == nil then self:ShowFinishedLobby(senderUserId) return end
+		local coordinator = registry:GetTableCoordinator(seat.tableId)
+		if coordinator == nil or coordinator._T.DisconnectedSeconds[seat.seatIndex] == nil or coordinator._T.KickedBySeat[seat.seatIndex] then return end
+		if registry.playerByUserId[senderUserId] ~= self.Entity then return end
+		coordinator._T.KickedBySeat[seat.seatIndex] = true
+		coordinator:EnableSeatAI(seat.seatIndex, "voluntary_leave")
+		registry:DetachReplacedPlayer(senderUserId, seat.tableId, seat.seatIndex)
+		coordinator:BroadcastSnapshots()
+		log("[VRF] VOLUNTARY LEAVE lobby=true user=" .. senderUserId)
+	end
+
+
+	@ExecSpace("ClientOnly")
+	method void ClearRoomClientState()
+		self._T.ReconnectOnly = false
+		        self:ForceStandForLobby()
+		        self._T.PrivateRoomSnapshot = nil
+		        self._T.PrivateRoomError = ""
+		        self._T.RoomChatLines = {}
+		        self._T.RoomChatBubbles = {}
+		        local bridge = self.Entity:GetComponent("script.LexioPlayerBridge")
+		        if bridge ~= nil then
+		            bridge._T.MatchedPublicSnapshot = nil
+		            bridge._T.MatchedPrivateHand = nil
+		            bridge._T.PrivateByVersion = {}
+		            bridge._T.PublicByVersion = {}
+		        end
+		self._T.IsQueued = false
+		self._T.MatchMenuOpen = false
+	end
+
+
+	@ExecSpace("Server")
+	method void RequestUpdatePrivateRoomSettings(integer capacity, boolean usePassword, string password)
+		if self.Entity.PlayerComponent == nil or self.Entity.PlayerComponent.UserId ~= senderUserId then return end
+		local map = self.Entity.CurrentMap
+		local host = map ~= nil and map:GetChildByName("LexioManualSessionHost") or nil
+		local registry = host ~= nil and host:GetComponent("script.LexioTableRegistry") or nil
+		local result = registry ~= nil and registry:UpdatePrivateRoomSettings(senderUserId, self.Entity, capacity, usePassword, password) or { ok = false, reason = "registry_unavailable" }
+		self:ApplyRoomSettingsResult(result.ok, result.reason, senderUserId)
+	end
+
+	@ExecSpace("Client")
+	method void ApplyRoomSettingsResult(boolean accepted, string reason)
+		self._T.RoomSettingsError = accepted and "" or reason
+		if accepted then _LexioPlayUIController:SetRoomSettingsVisible(false) end
+		log("[VRF] ROOM SETTINGS result accepted=" .. tostring(accepted) .. " reason=" .. reason)
+	end
+
+
+	@ExecSpace("Client")
+	method void ApplyQueueError(string reason)
+		self._T.IsQueued = false
+		self._T.QueueError = reason
+		self._T.MatchMenuOpen = true
+		log("[VRF] QUEUE rejected reason=" .. reason)
+	end
+
+	@ExecSpace("ServerOnly")
+	method string FilterRoomChat(string message)
+		if message == nil then return "" end
+		local lowered = string.lower(message)
+		local normalized = lowered
+		local replacementCount = 0
+		-- Remove common invisible separators before checking obfuscated words.
+		for _, separator in ipairs({ "​", "‌", "‍", "﻿", "　", " " }) do normalized, replacementCount = string.gsub(normalized, separator, "") end
+		normalized, replacementCount = string.gsub(normalized, "[%s%p%c]", "")
+		-- Preserve ordinary uses such as '시발점' and '시발역'.
+		local korean = normalized
+		korean, replacementCount = string.gsub(korean, "시발점", "")
+		korean, replacementCount = string.gsub(korean, "시발역", "")
+		local terms = { "씨발", "씨빨", "씨팔", "시발", "시빨", "ㅅㅂ", "ㅆㅂ", "좆", "개새끼", "개새기", "씹새", "병신", "ㅂㅅ", "지랄", "미친놈", "미친년" }
+		for _, word in ipairs(terms) do
+			if string.find(korean, word, 1, true) ~= nil then
+				log("[VRF] ROOM CHAT profanity masked=true")
+				return "***"
+			end
+		end
+		for _, word in ipairs({ "fuck", "fucking", "fucker", "motherfucker", "shit", "bullshit", "bitch", "asshole" }) do
+			local pattern = "%f[%a]" .. word .. "%f[%A]"
+			if string.find(lowered, pattern) ~= nil or string.find(normalized, pattern) ~= nil then
+				log("[VRF] ROOM CHAT profanity masked=true")
+				return "***"
+			end
+		end
+		return message
+	end
+
+	@ExecSpace("Server")
+	method void RequestExitWorld()
+		-- Only the requesting player can leave, without a disciplinary reason.
+		if self.Entity.PlayerComponent == nil or self.Entity.PlayerComponent.UserId ~= senderUserId then return end
+		if Environment:IsMakerPlay() then
+			log("[VRF] WORLD EXIT validated=true makerPreview=true")
+			return
+		end
+		log("[VRF] WORLD EXIT requires platform menu")
 	end
 
 end

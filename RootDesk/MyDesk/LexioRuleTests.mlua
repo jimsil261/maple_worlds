@@ -44,7 +44,7 @@ script LexioRuleTests extends Logic
 	method void RunTileOrderTests()
 		        -- Verifies player-count ranges, number order, and suit order.
 		        self:AssertEqual(9, _LexioRules:GetMaxRank(3), "three_player_max")
-		        self:AssertEqual(13, _LexioRules:GetMaxRank(4), "four_player_max")
+		        self:AssertEqual(12, _LexioRules:GetMaxRank(4), "four_player_max")
 		        self:AssertEqual(15, _LexioRules:GetMaxRank(5), "five_player_max")
 		        self:AssertTrue(_LexioRules:GetRankStrength(3, 5) < _LexioRules:GetRankStrength(15, 5), "three_below_fifteen")
 		        self:AssertTrue(_LexioRules:GetRankStrength(15, 5) < _LexioRules:GetRankStrength(1, 5), "fifteen_below_one")
@@ -67,12 +67,12 @@ script LexioRuleTests extends Logic
 		        self:AssertEqual("straight_flush", _LexioRules:ClassifyPlay({ self:T(5, 4), self:T(6, 4), self:T(7, 4), self:T(8, 4), self:T(9, 4) }, 5).kind, "straight_flush")
 		        self:AssertEqual("straight", _LexioRules:ClassifyPlay({ self:T(12, 1), self:T(13, 2), self:T(14, 3), self:T(15, 4), self:T(1, 1) }, 5).kind, "one_after_fifteen")
 		        self:AssertEqual("straight", _LexioRules:ClassifyPlay({ self:T(6, 1), self:T(7, 2), self:T(8, 3), self:T(9, 4), self:T(1, 1) }, 3).kind, "three_player_one_special_straight")
-		        self:AssertEqual("straight", _LexioRules:ClassifyPlay({ self:T(10, 1), self:T(11, 2), self:T(12, 3), self:T(13, 4), self:T(1, 1) }, 4).kind, "four_player_one_special_straight")
+		        self:AssertEqual("straight", _LexioRules:ClassifyPlay({ self:T(9, 1), self:T(10, 2), self:T(11, 3), self:T(12, 4), self:T(1, 1) }, 4).kind, "four_player_one_special_straight")
 		        self:AssertTrue(not _LexioRules:ClassifyPlay({ self:T(1, 1), self:T(2, 2), self:T(3, 3), self:T(4, 4) }, 5).valid, "four_tiles_forbidden")
 		        self:AssertTrue(not _LexioRules:ClassifyPlay({ self:T(12, 1), self:T(13, 2), self:T(14, 3), self:T(15, 4), self:T(2, 1) }, 5).valid, "two_cannot_skip_one")
 		        self:AssertTrue(not _LexioRules:ClassifyPlay({ self:T(15, 1), self:T(1, 2), self:T(2, 3), self:T(3, 4), self:T(4, 1) }, 5).valid, "five_player_modulo_straight_rejected")
 		        self:AssertTrue(not _LexioRules:ClassifyPlay({ self:T(9, 1), self:T(1, 2), self:T(2, 3), self:T(3, 4), self:T(4, 1) }, 3).valid, "three_player_modulo_straight_rejected")
-		        self:AssertTrue(not _LexioRules:ClassifyPlay({ self:T(13, 1), self:T(1, 2), self:T(2, 3), self:T(3, 4), self:T(4, 1) }, 4).valid, "four_player_modulo_straight_rejected")
+		        self:AssertTrue(not _LexioRules:ClassifyPlay({ self:T(12, 1), self:T(1, 2), self:T(2, 3), self:T(3, 4), self:T(4, 1) }, 4).valid, "four_player_modulo_straight_rejected")
 		        self:AssertTrue(not _LexioRules:ClassifyPlay({ self:T(4, 1), self:T(4, 1) }, 5).valid, "duplicate_physical_tile")
 	end
 

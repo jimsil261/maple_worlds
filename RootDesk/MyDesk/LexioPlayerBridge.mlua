@@ -47,6 +47,13 @@ script LexioPlayerBridge extends Component
 		        self:NotifyClientReady()
 	end
 
+	@ExecSpace("Server")
+	method void RequestDisconnectVote(integer targetSeat, integer generation, boolean agree)
+		if not self:IsAuthenticatedCaller(senderUserId) or self.role ~= "Player" then return end
+		local coordinator = self:GetCoordinator()
+		if coordinator ~= nil then coordinator:VoteDisconnectedSeat(self.boundUserId, self.ownerPlayerEntity, targetSeat, generation, agree) end
+	end
+
 	@ExecSpace("ServerOnly")
 	method boolean IsAuthenticatedCaller(string callerUserId)
 		        if callerUserId == nil or callerUserId == "" then return false end
@@ -155,6 +162,11 @@ script LexioPlayerBridge extends Component
 		            self:CacheAndSend(requestId, signature, "Submit", { ok = false, reason = "not_player", stateVersion = session ~= nil and session.stateVersion or 0 })
 		            return
 		        end
+		        local pauseCoordinator = self:GetCoordinator()
+		        if pauseCoordinator ~= nil and pauseCoordinator:HasPendingDisconnect() then
+		            self:CacheAndSend(requestId, signature, "Submit", { ok = false, reason = "connection_paused", stateVersion = session.stateVersion })
+		            return
+		        end
 		        local result = session:SubmitForUser(senderUserId, tileIds, expectedStateVersion)
 		        self:CacheAndSend(requestId, signature, "Submit", result)
 		        if result.ok then
@@ -178,6 +190,11 @@ script LexioPlayerBridge extends Component
 		        local session = self:GetSession()
 		        if self.role ~= "Player" or session == nil or not session:IsRegisteredUser(senderUserId) then
 		            self:CacheAndSend(requestId, signature, "Pass", { ok = false, reason = "not_player", stateVersion = session ~= nil and session.stateVersion or 0 })
+		            return
+		        end
+		        local pauseCoordinator = self:GetCoordinator()
+		        if pauseCoordinator ~= nil and pauseCoordinator:HasPendingDisconnect() then
+		            self:CacheAndSend(requestId, signature, "Pass", { ok = false, reason = "connection_paused", stateVersion = session.stateVersion })
 		            return
 		        end
 		        local result = session:PassForUser(senderUserId, expectedStateVersion)
