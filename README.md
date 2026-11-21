@@ -69,7 +69,8 @@ node tests/lexio-validation/run.cjs
 - [현재 출시 상태](Docs/Current-Status.md) · [검증 기록](Docs/Verification.md)
 - [기술 포트폴리오](Docs/Portfolio.md) · [후속 로드맵](Docs/Lexio-Roadmap.md)
 - [공개 베타 기록](Docs/Lexio-Beta-Release.md) · [규칙](Docs/rules/LexioOriginalBlackRules.md)
-- [제출용 PDF](output/pdf/김재렬_메이플렉시오_포트폴리오.pdf)
+- [넷마블네오 AI Game Maker 인턴십 제출용 PDF](output/pdf/김재렬_AI크리에이터_인턴십_포트폴리오.pdf)
+- [제출 자료 Google Drive 폴더](https://drive.google.com/drive/folders/1Fg4s4O_B9ZJ_zdJ1Yzbl36RXw83cVdYd): PDF·게임 링크·화면 자료
 
 ## 제작 및 리소스
 

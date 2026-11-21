@@ -30,3 +30,5 @@ output/*
 output/pdf/*
 !output/pdf/김재렬_메이플렉시오_포트폴리오.pdf
 !output/pdf/김재렬_서버개발_포트폴리오_베타출시본.pdf
+
+!output/pdf/김재렬_AI크리에이터_인턴십_포트폴리오.pdf
